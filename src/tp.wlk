@@ -29,16 +29,16 @@ object tpIntegrador {
 		
 		// teclado
 		keyboard.w().onPressDo { 
-			pacman_con_gravedad.arriba()
+			pacman_en_esteroides.arriba()
 		}
 		keyboard.a().onPressDo { 
-			pacman_con_gravedad.izquierda()
+			pacman_en_esteroides.izquierda()
 		}
 		keyboard.s().onPressDo { 
-			pacman_con_gravedad.abajo()
+			pacman_en_esteroides.abajo()
 		}
 		keyboard.d().onPressDo { 
-			pacman_con_gravedad.derecha()
+			pacman_en_esteroides.derecha()
 		}
 	}
 	
