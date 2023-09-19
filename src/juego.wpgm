@@ -1,5 +1,7 @@
 import tp.*
+import menu.*
 
 program juego {
+	tpIntegrador.iniciar(1500, 600, "PAC-MAN 2")
 	tpIntegrador.jugar()
 }
