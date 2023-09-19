@@ -32,6 +32,10 @@ object updater {
 	method start() {
 		game.onTick(1, "actualizar", { self.updateAll() })
 	}
+	
+	method stop() {
+		game.removeTickEvent("actualizar")
+	}
 }
 
 
