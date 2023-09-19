@@ -5,3 +5,6 @@ program juego {
 	tpIntegrador.iniciar(1500, 600, "PAC-MAN 2")
 	tpIntegrador.jugar()
 }
+
+
+// NOTA : las imágenes se importan con el tamaño original
