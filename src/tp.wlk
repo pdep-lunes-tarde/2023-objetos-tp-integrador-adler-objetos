@@ -1,6 +1,7 @@
 import wollok.game.*
 import vectores.Vector
-import global.*
+import global.registry
+import global.updater
 
 
 object tpIntegrador {
@@ -67,7 +68,7 @@ class Pacman {
 	}
 	
 	method morir() {
-		vidas -= 1 // pierde una vida
+		vidas -= 1 						// pierde una vida
 		// animación de muerte
 		// reaparecer en el spawnpoint
 	}
@@ -77,18 +78,22 @@ object pacman_con_gravedad {
 	var property position = game.center()
 	
 	// unidad: pixel
-	var x = position.x() // usamos variable propias para x e y para poder hacer otros calculos
+	var x = position.x() 				// usamos variable propias para x e y para poder hacer otros calculos
 	var y = position.y()
-	var vel_x = 10 // le damos velocidad-x inicial
-	var vel_y = 0
+	var property vel_x = 10 			// le damos velocidad-x inicial
+	var property vel_y = 0
 	const magnitud_fuerza = 15
 	
-	method image() = "assets/pacman.png"
+	// tamaño en pixeles de la imagen utilizada
+	const spriteHeight = 96 // se puede observar la dimensión de la imágen en el .png
+	const spriteWidth = 96
+	method image() = "assets/pacman.png" // TODO: existe función para obtener las dimensioens de la imagen utilizada ??
 	
 	
+	// crean el efecto de que alguien los tira hacia ese sentido indicado
 	method arriba() {
 		//position = position.up(pixeles)
-		vel_y += magnitud_fuerza 						// aplicar fuerza vertical hacia arriba
+		vel_y += magnitud_fuerza 							// aplicar fuerza vertical hacia arriba
 	}
 	method abajo() {
 		//position = position.down(pixeles)
@@ -105,31 +110,32 @@ object pacman_con_gravedad {
 	
 	// todos los updates deben devolver bloques para poder pasarlos como parametros en el actualizador global
 	method update() {
-		x += vel_x
-		y += vel_y
 		vel_x -= vel_x * 0.05 // aplicamos friccion en eje x
 		vel_y -= vel_y * 0.05 // aplicamos friccion en eje y
+		x += vel_x
+		y += vel_y
+		
 		
 		// para que no se salga de la ventana
 		
 		const piso = 0
-		const techo = registry.get("height")
-		const derecha = registry.get("width")
+		const techo = registry.get("height") - spriteHeight // hay q tener en cuenta el tamaño del sprite,
+		const derecha = registry.get("width") - spriteWidth // ya que el pivot está en la esquina abajo-izquierda del sprite
 		const izquierda = 0
 		
 		if (y < piso) {	 					// cuando encuentra el piso
 			y = piso
 			//vel_y = -vel_y * 0.6  		// hace que rebote, medio bugatti
 		} 
-		if (y > techo) { 	// cuando encuentra el techo
-			y = piso		
-		}
 		if (x < izquierda) { 
-			x = derecha
-		}
-		if (x > derecha) {
 			x = izquierda
 		}
+		if (y > techo) { 					// cuando encuentra el techo
+			y = techo   		
+		}									
+		if (x > derecha) {					
+			x = derecha    
+		}							
 		
 		// aplica los cambios de posición
 		position = game.at(x,y)
