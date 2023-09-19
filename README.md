@@ -1,8 +1,10 @@
 # Grupo
 
-Nombre: **COMPLETAR ACA**
+Nombre: **Adler**
 
-Integrantes: **COMPLETAR ACA**
+Integrantes: **Ángela Chen, Damián Katz y Lucas Zheng**
+
+Concepto de juego: **pac-man (en esteroides, si hay presupuesto)**
 
 # Consigna TP Integrador
 
