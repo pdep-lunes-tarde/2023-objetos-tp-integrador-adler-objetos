@@ -16,8 +16,8 @@ object tpIntegrador {
 	  	game.title(title)
 	  	
 	  	// guardo valores globales
-	  	registry.put("width", width)
-	  	registry.put("height", height)
+	  	registry.put("window_width", width)
+	  	registry.put("window_height", height)
 	  	registry.put("pixelesPorMetro", 100)
 	  	
 	  	// agregar visuales
@@ -74,20 +74,46 @@ class Pacman {
 	}
 }
 
+/* TODO: cuando aprendamos los temas necesarios, 
+ * podriamos crear una clase GameObject, 
+ * que tenga metodo update(), 
+ * y que este ya se agregue al updater automaticamente cuando se crea una instancia de la clase 
+ * y que pacman_en_esteroides y cualquier objeto visual sea un hijo de esta clase
+ * Así no tenemos q hardcodearlo para cada objeto actualizable, ayudaría a que el código se vea más limpio
+ * 
+ * la jerarquía sería algo así
+ * 
+ * 							GameObject (tiene propiedad "position")  --> los obstáculos usarían esto directamente
+ * 												|
+ * 												v
+ * 						  UpdatableObject (entiende mensaje "update")
+ * 												|
+ * 												v 
+ * 					Movable (tiene velocidad, aceleracion y algo de fisicas) 
+ * 												|
+ * 							    _______________/ \_______________
+ * 						        | 								|
+ * 								v								v
+ * 		  Jugador (entiende controles, tiene vida)   	    Fantasmas (se peuden comer, ) 
+ * 								|
+ * 								v
+ * 					PacMan (cosas de pacman)
+ * 								 							
+ */
 object pacman_en_esteroides {
 	var property position = game.center()
 	
 	// unidad: pixel
-	var x = position.x() 				// usamos variable propias para x e y para poder hacer otros calculos
+	var x = position.x() 					// usamos variable propias para x e y para poder hacer otros calculos
 	var y = position.y()
-	var property vel_x = 10 			// le damos velocidad-x inicial
+	var property vel_x = 10 				// le damos velocidad-x inicial
 	var property vel_y = 0
 	const magnitud_fuerza = 15
 	
-	// tamaño en pixeles de la imagen utilizada
-	const spriteHeight = 96 // se puede observar la dimensión de la imágen en el .png
-	const spriteWidth = 96
-	method image() = "assets/pacman.png" // TODO: existe función para obtener las dimensioens de la imagen utilizada ??
+	
+	const spriteHeight = 96 			 	// tamaño en pixeles de la imagen utilizada
+	const spriteWidth = 96 					// se puede observar la dimensión de la imágen en el .png
+	method image() = "assets/pacman.png" 	// TODO: existe función para obtener las dimensioens de la imagen utilizada ??
 	
 	
 	// crean el efecto de que alguien los tira hacia ese sentido indicado
@@ -119,8 +145,8 @@ object pacman_en_esteroides {
 		// para que no se salga de la ventana
 		
 		const piso = 0
-		const techo = registry.get("height") - spriteHeight // hay q tener en cuenta el tamaño del sprite,
-		const derecha = registry.get("width") - spriteWidth // ya que el pivot está en la esquina abajo-izquierda del sprite
+		const techo = registry.get("window_height") - spriteHeight // hay q tener en cuenta el tamaño del sprite,
+		const derecha = registry.get("window_width") - spriteWidth // ya que el pivot está en la esquina abajo-izquierda del sprite.
 		const izquierda = 0
 		
 		if (y < piso) {	 					// cuando encuentra el piso
