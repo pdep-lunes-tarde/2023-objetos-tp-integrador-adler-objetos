@@ -21,10 +21,10 @@ object tpIntegrador {
 	  	registry.put("pixelesPorMetro", 100)
 	  	
 	  	// agregar visuales
-	  	game.addVisualCharacter(pacman_con_gravedad)
+	  	game.addVisualCharacter(pacman_en_esteroides)
 		
 		// updater
-		updater.add(pacman_con_gravedad)
+		updater.add(pacman_en_esteroides)
 		updater.start()
 		
 		// teclado
@@ -74,7 +74,7 @@ class Pacman {
 	}
 }
 
-object pacman_con_gravedad {
+object pacman_en_esteroides {
 	var property position = game.center()
 	
 	// unidad: pixel
