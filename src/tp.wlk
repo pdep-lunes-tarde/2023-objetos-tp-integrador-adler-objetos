@@ -1,5 +1,4 @@
 import wollok.game.*
-import vectores.Vector
 import global.registry
 import global.updater
 
@@ -18,10 +17,11 @@ object tpIntegrador {
 	  	// guardo valores globales
 	  	registry.put("window_width", width)
 	  	registry.put("window_height", height)
-	  	registry.put("pixelesPorMetro", 100)
 	  	
 	  	// agregar visuales
 	  	game.addVisualCharacter(pacman_en_esteroides)
+	  	game.addVisual(new Obstaculo())
+	  	
 		
 		// updater
 		updater.add(pacman_en_esteroides)
@@ -40,8 +40,33 @@ object tpIntegrador {
 		keyboard.d().onPressDo { 
 			pacman_en_esteroides.derecha()
 		}
+		
+		//game.whenCollideDo(pacman_en_esteroides, {x => x.say("asdasd")})
 	}
 	
+}
+
+// implementar Vectores
+// colisiones circulos, cuadrados
+// 
+class Vector {
+	const x = 0
+	const y = 0
+	
+	method x() {
+		return x
+	}
+	method y() {
+		return y
+	}
+	
+	method toString() {
+		return "Vector(" + x.toString() + ", " + y.toString() + ")"
+	}
+	
+	method +(otroVector) {
+		return new Vector(x=x + otroVector.x(),y=y+otroVector.y())
+	}
 }
 
 
@@ -54,6 +79,7 @@ object pacman_en_esteroides {
 	var property vel_x = 10 				// le damos velocidad-x inicial
 	var property vel_y = 0
 	const magnitud_fuerza = 15
+	// suponemos que su masa es igual a 1.
 	
 	
 	const spriteHeight = 96 			 	// tamaño en pixeles de la imagen utilizada
@@ -64,7 +90,7 @@ object pacman_en_esteroides {
 	// crean el efecto de que alguien los tira hacia ese sentido indicado
 	method arriba() {
 		//position = position.up(pixeles)
-		vel_y += magnitud_fuerza 							// aplicar fuerza vertical hacia arriba
+		vel_y += magnitud_fuerza * 1						// aplicar fuerza vertical hacia arriba
 	}
 	method abajo() {
 		//position = position.down(pixeles)
@@ -81,10 +107,11 @@ object pacman_en_esteroides {
 	
 	// todos los updates deben devolver bloques para poder pasarlos como parametros en el actualizador global
 	method update() {
-		vel_x -= vel_x * 0.05 // aplicamos friccion en eje x
-		vel_y -= vel_y * 0.05 // aplicamos friccion en eje y
 		x += vel_x
 		y += vel_y
+		vel_x -= vel_x * 0.05 // aplicamos friccion en eje x
+		vel_y -= vel_y * 0.05 // aplicamos friccion en eje y
+		
 		
 		
 		// para que no se salga de la ventana
@@ -106,12 +133,20 @@ object pacman_en_esteroides {
 		}									
 		if (x > derecha) {					
 			x = derecha    
-		}							
+		}				
 		
 		// aplica los cambios de posición
 		position = game.at(x,y)
 	}
 }
+
+class Obstaculo {
+	var property position = game.at(0,0)
+	
+	method image() = "assets/pacman.png" 
+	
+}
+
 
 // deberiamos detectar la colision con el jugador, 
 // pero no entre las distintas instancias de los fantasmas
