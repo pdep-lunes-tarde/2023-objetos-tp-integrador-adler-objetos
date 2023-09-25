@@ -45,61 +45,6 @@ object tpIntegrador {
 }
 
 
-class Pacman {
-	var vidas = 3 // corazones
-	var property position = game.center()
-	
-	const pixelesDeMovimiento = registry.get("cellSize") / 100
-	
-	method image() = "assets/pacman.png"
-
-	
-	method arriba() {
-		position = position.up(pixelesDeMovimiento)
-	}
-	method abajo() {
-		position = position.down(pixelesDeMovimiento)
-	}
-	method derecha() {
-		position = position.right(pixelesDeMovimiento)
-	}
-	method izquierda() {
-		position = position.left(pixelesDeMovimiento)
-	}
-	
-	method morir() {
-		vidas -= 1 						// pierde una vida
-		// animación de muerte
-		// reaparecer en el spawnpoint
-	}
-}
-
-/* TODO: cuando aprendamos los temas necesarios, 
- * podriamos crear una clase GameObject, 
- * que tenga metodo update(), 
- * y que este ya se agregue al updater automaticamente cuando se crea una instancia de la clase 
- * y que pacman_en_esteroides y cualquier objeto visual sea un hijo de esta clase
- * Así no tenemos q hardcodearlo para cada objeto actualizable, ayudaría a que el código se vea más limpio
- * 
- * la jerarquía sería algo así
- * 
- * 							GameObject (tiene propiedad "position")  --> los obstáculos usarían esto directamente
- * 												|
- * 												v
- * 						  UpdatableObject (entiende mensaje "update")
- * 												|
- * 												v 
- * 					Movable (tiene velocidad, aceleracion y algo de fisicas) 
- * 												|
- * 							    _______________/ \_______________
- * 						        | 								|
- * 								v								v
- * 		  Jugador (entiende controles, tiene vida)   	    Fantasmas (se peuden comer, ) 
- * 								|
- * 								v
- * 					PacMan (cosas de pacman)
- * 								 							
- */
 object pacman_en_esteroides {
 	var property position = game.center()
 	
@@ -167,4 +112,23 @@ object pacman_en_esteroides {
 		position = game.at(x,y)
 	}
 }
+
+// deberiamos detectar la colision con el jugador, 
+// pero no entre las distintas instancias de los fantasmas
+class Fantasma {
+	var property position = game.at(0,0) // inicia los fantasmas en el (0,0)
+	
+	// unidad: pixel
+	var x = position.x() 					// usamos variable propias para x e y para poder hacer otros calculos
+	var y = position.y()
+	
+	const spriteHeight = 96 			 	// tamaño en pixeles de la imagen utilizada
+	const spriteWidth = 96 					// se puede observar la dimensión de la imágen en el .png
+	method image() = "assets/pacman.png" 
+	
+	method update() {
+		// acá iría la IA de los fantasmas
+	}
+}
+
 

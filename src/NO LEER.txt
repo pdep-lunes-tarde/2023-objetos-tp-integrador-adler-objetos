@@ -1,0 +1,26 @@
+/* TODO: cuando aprendamos los temas necesarios, 
+ * podriamos crear una clase GameObject, 
+ * que tenga metodo update(), 
+ * y que este ya se agregue al updater automaticamente cuando se crea una instancia de la clase 
+ * y que pacman_en_esteroides y cualquier objeto visual sea un hijo de esta clase
+ * Así no tenemos q hardcodearlo para cada objeto actualizable, ayudaría a que el código se vea más limpio
+ * 
+ * la jerarquía sería algo así
+ * 
+ * 							GameObject (tiene propiedad "position")  --> los obstáculos usarían esto directamente
+ * 												|
+ * 												v
+ * 						  UpdatableObject (entiende mensaje "update")
+ * 												|
+ * 												v 
+ * 					Movable (tiene velocidad, aceleracion y algo de fisicas) 
+ * 												|
+ * 							    _______________/ \_______________
+ * 						        | 								|
+ * 								v								v
+ * 		  Jugador (entiende controles, tiene vida)   	    Fantasmas (se peuden comer, ) 
+ * 								|
+ * 								v
+ * 					PacMan (cosas de pacman)
+ * 								 							
+ */
