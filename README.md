@@ -33,7 +33,12 @@ Les vamos a ir dando preguntas para cada checkpoint que **tienen que** dejar con
 
 a) Detectar un conjunto de objetos que sean polimórficos entre sí, aclarando cuál es la interfaz según la cuál son polimórficos, y _quién_ los trata de manera polimórfica.
 
+las distintas instancias de la clase Fantasma, 
+
 b) Tomar alguna clase definida en su programa y justificar por qué es una clase y no se definió con `object`.
+
+La clase Fantasma está definida como clase y no como objeto ya que de esta forma podremos generar varios objetos fantasma sin tener que hardcodear individualmente a cada uno.
 
 c) De haber algún objeto definido con `object`, justificar por qué.
 
+El objeto que definimos como object es pacman_en_esteroides ya que este es un objeto único del cual no esperamos crear más instancias.
