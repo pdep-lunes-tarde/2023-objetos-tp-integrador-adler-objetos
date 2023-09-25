@@ -33,7 +33,7 @@ Les vamos a ir dando preguntas para cada checkpoint que **tienen que** dejar con
 
 a) Detectar un conjunto de objetos que sean polimórficos entre sí, aclarando cuál es la interfaz según la cuál son polimórficos, y _quién_ los trata de manera polimórfica.
 
-las distintas instancias de la clase Fantasma, 
+Las distintas instancias de la clase Fantasma podríamos decir que son polimórficas entre sí, su interfaz seria image() y update(). 
 
 b) Tomar alguna clase definida en su programa y justificar por qué es una clase y no se definió con `object`.
 
