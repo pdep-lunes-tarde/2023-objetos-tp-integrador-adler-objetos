@@ -49,25 +49,7 @@ object tpIntegrador {
 // implementar Vectores
 // colisiones circulos, cuadrados
 // 
-class Vector {
-	const x = 0
-	const y = 0
-	
-	method x() {
-		return x
-	}
-	method y() {
-		return y
-	}
-	
-	method toString() {
-		return "Vector(" + x.toString() + ", " + y.toString() + ")"
-	}
-	
-	method +(otroVector) {
-		return new Vector(x=x + otroVector.x(),y=y+otroVector.y())
-	}
-}
+
 
 
 object pacman_en_esteroides {
@@ -107,15 +89,7 @@ object pacman_en_esteroides {
 	
 	// todos los updates deben devolver bloques para poder pasarlos como parametros en el actualizador global
 	method update() {
-		x += vel_x
-		y += vel_y
-		vel_x -= vel_x * 0.05 // aplicamos friccion en eje x
-		vel_y -= vel_y * 0.05 // aplicamos friccion en eje y
-		
-		
-		
 		// para que no se salga de la ventana
-		
 		const piso = 0
 		const techo = registry.get("window_height") - spriteHeight // hay q tener en cuenta el tamaño del sprite,
 		const derecha = registry.get("window_width") - spriteWidth // ya que el pivot está en la esquina abajo-izquierda del sprite.
@@ -135,17 +109,18 @@ object pacman_en_esteroides {
 			x = derecha    
 		}				
 		
+		
+		x += vel_x
+		y += vel_y
+		vel_x -= vel_x * 0.05 // aplicamos friccion en eje x
+		vel_y -= vel_y * 0.05 // aplicamos friccion en eje y
+		
 		// aplica los cambios de posición
 		position = game.at(x,y)
 	}
 }
 
-class Obstaculo {
-	var property position = game.at(0,0)
-	
-	method image() = "assets/pacman.png" 
-	
-}
+
 
 
 // deberiamos detectar la colision con el jugador, 
