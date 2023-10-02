@@ -1,6 +1,7 @@
 import wollok.game.*
 import global.registry
 import global.updater
+import vectores.*
 
 
 object tpIntegrador {
@@ -9,9 +10,9 @@ object tpIntegrador {
 	}
 	method iniciar(width, height, title) {
 		// iniciar ventana
-		game.width(width) // nro de celdas
-	  	game.height(height) 
-	  	game.cellSize(1) // fijado a 1 píxel
+		game.width(width/10) // nro de celdas
+	  	game.height(height/10) 
+	  	game.cellSize(10) // fijado a 1 píxel
 	  	game.title(title)
 	  	
 	  	// guardo valores globales
@@ -20,7 +21,7 @@ object tpIntegrador {
 	  	
 	  	// agregar visuales
 	  	game.addVisualCharacter(pacman_en_esteroides)
-	  	game.addVisual(new Obstaculo())
+	  	game.addVisual(new Fantasma())
 	  	
 		
 		// updater
@@ -41,7 +42,7 @@ object tpIntegrador {
 			pacman_en_esteroides.derecha()
 		}
 		
-		//game.whenCollideDo(pacman_en_esteroides, {x => x.say("asdasd")})
+		game.whenCollideDo(pacman_en_esteroides, {x => game.say(pacman_en_esteroides, "choque a " + x.toString())})
 	}
 	
 }
@@ -53,19 +54,21 @@ object tpIntegrador {
 
 
 object pacman_en_esteroides {
-	var property position = game.center()
+	var property position = new Vector(x=0,y=0) // crear un method position 
+	
+	// position enteinde x() e y()
 	
 	// unidad: pixel
 	var x = position.x() 					// usamos variable propias para x e y para poder hacer otros calculos
 	var y = position.y()
-	var property vel_x = 10 				// le damos velocidad-x inicial
+	var property vel_x = 1 				// le damos velocidad-x inicial
 	var property vel_y = 0
-	const magnitud_fuerza = 15
+	const magnitud_fuerza = 2
 	// suponemos que su masa es igual a 1.
 	
 	
-	const spriteHeight = 96 			 	// tamaño en pixeles de la imagen utilizada
-	const spriteWidth = 96 					// se puede observar la dimensión de la imágen en el .png
+	const spriteHeight = 96/10 			 	// tamaño en pixeles de la imagen utilizada
+	const spriteWidth = 96/10 					// se puede observar la dimensión de la imágen en el .png
 	method image() = "assets/pacman.png" 	// TODO: existe función para obtener las dimensioens de la imagen utilizada ??
 	
 	
@@ -89,6 +92,14 @@ object pacman_en_esteroides {
 	
 	// todos los updates deben devolver bloques para poder pasarlos como parametros en el actualizador global
 	method update() {
+		
+		x += vel_x
+		y += vel_y
+		vel_x -= vel_x * 0.05 // aplicamos friccion en eje x
+		vel_y -= vel_y * 0.05 // aplicamos friccion en eje y
+		
+		
+		
 		// para que no se salga de la ventana
 		const piso = 0
 		const techo = registry.get("window_height") - spriteHeight // hay q tener en cuenta el tamaño del sprite,
@@ -109,14 +120,9 @@ object pacman_en_esteroides {
 			x = derecha    
 		}				
 		
-		
-		x += vel_x
-		y += vel_y
-		vel_x -= vel_x * 0.05 // aplicamos friccion en eje x
-		vel_y -= vel_y * 0.05 // aplicamos friccion en eje y
-		
 		// aplica los cambios de posición
-		position = game.at(x,y)
+		position = new Vector(x=x,y=y)  
+		
 	}
 }
 
