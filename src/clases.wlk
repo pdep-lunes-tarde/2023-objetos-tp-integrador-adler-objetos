@@ -15,23 +15,20 @@ class perimetroDeColision {
 }
 
 class GameObject {
-	var property position = new Vector(x=0, y=0)
+	// usamos variable propias para x e y,
+	// hace los cálculos más rápido que los Vectores (ya lo probé, rip performance), ¿¿¿¿con otros tipos de pares ordenados funcionará????
+	var property x = 0
+	var property y = 0
+	// vector mutable. "position" es lo que le importa a wollok game,
+	// por ende usamos "position" nomás para efectuar el cambio de posición.
+	const property position = new Vector(x=x, y=y) // wollok game debe poder leer la posicion, por ende es property
 	var image = "assets/null.png"
-	
-//	method initialize() {
-//		
-//	}
 	
 	method image() = image
 	method image(_image_path) {
 		image = _image_path
 	}
-	
 }
-
-//class StaticObject inherits GameObject { // cualquier obstáculo (con el que el jugador se puede chocar) estático
-//	// agregar tema de colisiones 
-//}
 
 class DynamicObject inherits GameObject {
 	method initialize() {
@@ -40,114 +37,59 @@ class DynamicObject inherits GameObject {
 	method update()
 }
 
-
 class PhysicsObject inherits DynamicObject {
-	var property velocity = new Vector(x=10, y=0)
-	var property acceleration = new Vector(x=0, y=0)
+	var property vel_x = 10
+	var property vel_y = 20
+	var property acel_x = 0
+	var property acel_y = -0.9
 	
 	const masa = 1
 	const coef_friccion = 0.05
 	
 	override method update() {
-		position += velocity
-		velocity += acceleration
-		velocity -= velocity * coef_friccion // aplicamos friccion
-
+		x += vel_x
+		y += vel_y
+		vel_x += acel_x
+		vel_y += acel_y
+		vel_x -= vel_x * coef_friccion // si usamos Masa, entonces debemos cambiar esta implementacion.
+		vel_y -= vel_y * coef_friccion
+		
+		self.control()
+		
+		// efectuamos los cambios
+		position.y(y)
+		position.x(x)
 	}
+	
+	method control()
 }
 
-
-//class Pared inherits StaticObject {
-//	override method image = "assets/pacman.png" // cambiar imagen por la de una pared
-//}
-
- 
-class Pacman inherits PhysicsObject {
-	const magnitud_fuerza = 15
-	
-	const spriteHeight = 96			 	// tamaño en pixeles de la imagen utilizada
-	const spriteWidth = 96				// se puede observar la dimensión de la imágen en el .png	
-	
-	override method image() = "assets/pacman.png" 
-	
-	// crean el efecto de que alguien los tira hacia ese sentido indicado
-	method arriba() {
-		velocity.y(velocity.y() + magnitud_fuerza * masa)								// aplicar fuerza vertical hacia arriba
-	}
-	method abajo() {
-		//velocity += versor_i * magnitud_fuerza * masa	// con esta, RIP PERFORMANCE 
-		velocity.y(velocity.y() - magnitud_fuerza * masa)								// aplicar fuerza vertical hacia abajo
-	}
-	method derecha() {
-		velocity.x(velocity.x() + magnitud_fuerza * masa)								// aplicar fuerza horizontal hacia derecha
-	}
-	method izquierda() {
-		velocity.x(velocity.x() - magnitud_fuerza * masa)								// aplicar fuerza horizontal hacia izquierda
-	}
-}
-
-
-// deberiamos detectar la colision con el jugador, 
-// pero no entre las distintas instancias de los fantasmas
-class Fantasma inherits PhysicsObject {	
-	const spriteHeight = 96 			 	// tamaño en pixeles de la imagen utilizada
-	const spriteWidth = 96 					// se puede observar la dimensión de la imágen en el .png
-	override method image() = "assets/pacman.png" 
-	
-	override method update() {
-		// acá iría la IA de los fantasmas
-	}
-}
-
-
-// guardo esto aca
-
-object pacman {
-	const property position = new Vector(x=0,y=0) // crear un method position 
-	
-	// usamos variable propias para x e y,
-	// es más rápido que con vectores (ya lo probé, rip performance), ¿¿¿¿con otros tipos de pares ordenados funcionará????
-	var x = position.x()
-	var y = position.y()
-	var property vel_x = 10 				// le damos velocidad-x inicial
-	var property vel_y = 0
-	const magnitud_fuerza = 15
-	// suponemos que su masa es igual a 1.
-	
+object pacman inherits PhysicsObject {
+	const magnitud_fuerza = 20
 	
 	const spriteHeight = 96			 	// tamaño en pixeles de la imagen utilizada
 	const spriteWidth = 96				// se puede observar la dimensión de la imágen en el .png
-	method image() = "assets/pacman.png" 	// TODO: existe función para obtener las dimensioens de la imagen utilizada ??
-	
+	method image() = "assets/pacman.png" 	
 	
 	// crean el efecto de que alguien los tira hacia ese sentido indicado
 	method arriba() {
 		//position = position.up(pixeles)
-		vel_y += magnitud_fuerza * 1						// aplicar fuerza vertical hacia arriba
+		vel_y += magnitud_fuerza * masa						// aplicar fuerza vertical hacia arriba
 	}
 	method abajo() {
 		//position = position.down(pixeles)
-		vel_y -= magnitud_fuerza							// aplicar fuerza vertical hacia abajo
+		vel_y -= magnitud_fuerza * masa							// aplicar fuerza vertical hacia abajo
 	}
 	method derecha() {
 		//position = position.right(pixeles)
-		vel_x += magnitud_fuerza							// aplicar fuerza horizontal hacia derecha
+		vel_x += magnitud_fuerza * masa							// aplicar fuerza horizontal hacia derecha
 	}
 	method izquierda() {
 		//position = position.left(pixeles)
-		vel_x -= magnitud_fuerza							// aplicar fuerza horizontal hacia izquierda
+		vel_x -= magnitud_fuerza * masa							// aplicar fuerza horizontal hacia izquierda
 	}
 	
-	// todos los updates deben devolver bloques para poder pasarlos como parametros en el actualizador global
-	method update() {
-		
-		x += vel_x
-		y += vel_y
-		vel_x -= vel_x * 0.05 // aplicamos friccion en eje x
-		vel_y -= vel_y * 0.05 // aplicamos friccion en eje y
-		
-		
-		
+	override method control() {
 		// para que no se salga de la ventana
 		const piso = 0
 		const techo = registry.get("window_height") - spriteHeight // hay q tener en cuenta el tamaño del sprite,
@@ -166,12 +108,7 @@ object pacman {
 		}									
 		if (x > derecha) {					
 			x = derecha    
-		}				
-		
-		// aplica los cambios de posición
-		position.y(y)
-		position.x(x)
-		
+		}
 	}
 }
 

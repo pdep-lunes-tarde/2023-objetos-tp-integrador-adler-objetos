@@ -23,6 +23,7 @@ class Vector {
 	
 	// como vector mutable -> impacta menos a la performance del juego, 
 	// pero el juego va más fluido cuando se trabaja con variables x e y separadas.
+	// asique utilizamos vectores solo para cambiar 
 	method y(_y) {
 		y = _y
 	}
