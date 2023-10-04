@@ -26,6 +26,8 @@ object tpIntegrador {
 	  	game.addVisualCharacter(pacman)
 	  	game.addVisual(new GameObject(position = new Vector(x=1, y=1)))
 	  	
+	  	CollisionFrame
+	  	
 		// empezar el actualizador global
 		updater.add(pacman)
 		updater.start()
