@@ -19,14 +19,11 @@ object tpIntegrador {
 	  	// guardo valores globales
 	  	registry.put("window_width", width)
 	  	registry.put("window_height", height)
-	  	//registry.put("pixelDeCelda", pixelDeCelda)
 	  	
 	  	// agregar visuales
-	  	//const pacman = new Pacman()
-	  	game.addVisualCharacter(pacman)
+	  	const pacman = new Pacman()
+	  	game.addVisual(pacman) // el uso de addVisualCharacter o addVisual para el personaje es indiferente, utilizamos teclas "wasd"
 	  	game.addVisual(new GameObject(position = new Vector(x=1, y=1)))
-	  	
-	  	CollisionFrame
 	  	
 		// empezar el actualizador global
 		updater.add(pacman)

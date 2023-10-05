@@ -22,14 +22,19 @@ class Vector {
 	}
 	
 	// como vector mutable -> impacta menos a la performance del juego, 
-	// pero el juego va más fluido cuando se trabaja con variables x e y separadas.
-	// asique utilizamos vectores solo para cambiar 
+	// el juego va más fluido cuando trabajamos con variables x e y separadas.
+	// asique utilizamos vectores solo para cambiar el property "position" de los objetos q es lo que le importa a wollok 
 	method y(_y) {
 		y = _y
 	}
 	method x(_x) {
 		x = _x
 	}
+	method at(_x, _y) {
+		self.x(_x)
+		self.y(_y)
+	}
+	
 	method sumarle(otroVector) {
 		x += otroVector.x()
 		y += otroVector.y()
