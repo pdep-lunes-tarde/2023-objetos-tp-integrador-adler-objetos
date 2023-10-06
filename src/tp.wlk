@@ -31,8 +31,8 @@ object tpIntegrador {
 	  	
 	  	const hitbox = new FrameDeColision(objetoAsociado=pacman)
 	  	hitbox.agregarPerimetro(
-			new Rectangulo(altura=10, ancho=10), 
-			vector.at(10,10)
+			new Rectangulo(altura=96, ancho=96), 
+			vector.at(0,0)
 		)
 	  	
 		// empezar el actualizador global
