@@ -11,17 +11,17 @@ object tpIntegrador {
 	method jugar() {
 		game.start()
 	}
-	method iniciar(width, height, title) {
+	method iniciar(width, height, title, pixeles) {
 		// iniciar ventana
-		game.width(width) // nro de celdas
-	  	game.height(height) 
-	  	game.cellSize(1) // fijado a 1 píxel
+		game.width(width/pixeles) // nro de celdas
+	  	game.height(height/pixeles) 
+	  	game.cellSize(pixeles) // fijado a 1 píxel
 	  	game.title(title)
-	  	game.boardGround("assets/background.png")
+	  	game.ground("assets/400 puntos.png")
 	  	
 	  	// guardo valores globales
-	  	registry.put("window_width", width)
-	  	registry.put("window_height", height)
+	  	registry.put("window_width", width/pixeles)
+	  	registry.put("window_height", height/pixeles)
 	  	
 	  	// agregar visuales
 	  	const pacman = new Pacman()
@@ -31,7 +31,7 @@ object tpIntegrador {
 	  	
 	  	const hitbox = new FrameDeColision(objetoAsociado=pacman)
 	  	hitbox.agregarPerimetro(
-			new Rectangulo(altura=96, ancho=96), 
+			new Rectangulo(altura=96/pixeles, ancho=96/pixeles), 
 			vector.at(0,0)
 		)
 	  	
@@ -56,6 +56,6 @@ object tpIntegrador {
 			game.stop()
 		}
 		
-		game.whenCollideDo(pacman, {x => game.say(pacman, "choque a " + x.toString())})    
+		//game.whenCollideDo(pacman, {x => game.say(pacman, "choque a " + x.toString())})    
 	}	
 }

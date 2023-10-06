@@ -66,14 +66,23 @@ class PhysicsObject inherits DynamicObject {
 		position.xy(x, y)
 	}
 	
-	method control() // método abstracto
+	method control() {
+		self.controlColisiones()
+	}
+	
+	method controlColisiones() {
+ 		frameDeColision.perimetro().forEach { ptoColision =>
+			ptoColision.pivote_x(x)
+			ptoColision.pivote_y(y)
+		}
+ 	}
 }
 
 class Pacman inherits PhysicsObject {
-	const property magnitud_fuerza = 20
+	const property magnitud_fuerza = 1
 	
-	const spriteHeight = 96			 	// tamaño en pixeles de la imagen utilizada
-	const spriteWidth = 96				// se puede observar la dimensión de la imágen en el .png
+	const spriteHeight = 96/25			 	// tamaño en pixeles de la imagen utilizada divido por el tamaño de pixel de una casilla
+	const spriteWidth = 96/25				// se puede observar la dimensión de la imágen en el .png
 	override method image() = "assets/pacman.png" 	
 	
 	// crean el efecto de que alguien los tira hacia el sentido indicado
@@ -99,20 +108,22 @@ class Pacman inherits PhysicsObject {
 		
 		if (y < piso) {	 								// cuando encuentra el piso
 			y = piso
-			vel_y = (-vel_y * 0.6)						// hacemos que rebote con una leve perdida de energia 	
+			vel_y = (-vel_y * 0.5)						// hacemos que rebote con una leve perdida de energia 	
 		}
 		if (x < izquierda) { 
 			x = izquierda
-			vel_x = (-vel_x * 0.6)
+			vel_x = (-vel_x * 0.5)
 		}
 		if (y > techo) { 								// cuando encuentra el techo
 			y = techo
-			vel_y = (-vel_y * 0.6)   		
+			vel_y = (-vel_y * 0.5)   		
 		}									
 		if (x > derecha) {					
 			x = derecha
-			vel_x = (-vel_x * 0.6)
-		} 
+			vel_x = (-vel_x * 0.5)
+		}
+		
+		super()
 	}
 }
 

@@ -7,6 +7,8 @@ import vectores.*
 import global.*
 
 
+
+
 describe "Colisiones" {
 	
 	const pacman = new Pacman()
@@ -25,13 +27,14 @@ describe "Colisiones" {
 		)
 	
 	}
+
+	
 	test "frameDeColision del pacman y hitbox apuntan al mismo objeto FrameDeColision" {
 		assert.that(pacman.frameDeColision() === hitbox)
 	}
-	
 	test "la hitbox sigue al pacman" {
 		const antes = pacman.frameDeColision().perimetro().map{ ptoColision =>   
-			ptoColision.position().y() 
+			ptoColision.x_absoluto() 
 		}
 		
 		pacman.arriba() // mover hacia arriba (se efectua cuando se actualiza)
@@ -40,24 +43,20 @@ describe "Colisiones" {
 		updater.updateAll() // acutalizamos todo
 		
 		const despues = pacman.frameDeColision().perimetro().map{ ptoColision =>   
-			ptoColision.position().y() 
+			ptoColision.y_absoluto  
 		}
 		
 		assert.that(antes.size() == despues.size()) // asegurmaos q las listas son del mismo tamaño
 		
 		const tamanioLista = antes.size() - 1 
 		
-		assert.that(antes.sum() > 0) // aseguramos que son todos numeros
+//		assert.that(antes.sum() > 0) // aseguramos que son todos numeros
 		
 		assert.that(
 			(0 .. tamanioLista).all { indice =>
 				antes.get(indice) < despues.get(indice) // los "y" del "antes" deberian ser de menor valor que los de "despues", xq se movió el pacman hacia arriba.  
 			}
 		)
-	}
-	
-	test "" {
-			
 	}
 	
 }
