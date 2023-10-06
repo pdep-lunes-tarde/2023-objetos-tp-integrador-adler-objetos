@@ -1,7 +1,7 @@
 import wollok.game.*
+
 import global.*
 import vectores.*
-import global.*
 
 
 
@@ -12,17 +12,17 @@ class GameObject {
 	var property y = 0
 	// "position" es lo que le importa a wollok game,
 	// por ende usamos "position" nomás para efectuar el cambio de posición. Utilizamos un vector mutable que entiende mensajes "x()" e "y()".
-	const property position = new Vector(x=x, y=y) // wollok game debe poder leer la posicion, por ende es property
+	const property position = vector.at(x,y) // wollok game debe poder leer la posicion, por ende es property
 	var image = "assets/null.png"
 	
+	var property frameDeColision = null // definirlo con (new FrameDeColision())
+	
+	method asignarFrame(_frameDeColision) {
+		frameDeColision = _frameDeColision
+	}
 	method image() = image
 	method image(_image_path) {
 		image = _image_path
-	}
-	
-	override method initialize() {
-		super()
-		
 	}
 	
 }
@@ -37,10 +37,10 @@ class DynamicObject inherits GameObject {
 
 
 class PhysicsObject inherits DynamicObject {
-	var vel_x = 10 // magnitud en pixeles por milisegundo
-	var vel_y = 10
-	var acel_x = 0 // pixeles por milisegundo al cuadrado 
-	var acel_y = 0
+	var property vel_x = 0 // magnitud en pixeles por milisegundo
+	var property vel_y = 0
+	var property acel_x = 0 // pixeles por milisegundo al cuadrado 
+	var property acel_y = 0
 	
 	const masa = 1
 	const coef_friccion = 0.05
@@ -59,19 +59,18 @@ class PhysicsObject inherits DynamicObject {
 		vel_x -= vel_x * coef_friccion // si usamos Masa, entonces debemos cambiar esta implementacion.
 		vel_y -= vel_y * coef_friccion
 		
-		
 		// controlamos los valores antes de efectuar los cambios 
 		self.control() 
 		
 		// efectuamos los cambios
-		position.at(x, y)
+		position.xy(x, y)
 	}
 	
 	method control() // método abstracto
 }
 
 class Pacman inherits PhysicsObject {
-	const magnitud_fuerza = 20
+	const property magnitud_fuerza = 20
 	
 	const spriteHeight = 96			 	// tamaño en pixeles de la imagen utilizada
 	const spriteWidth = 96				// se puede observar la dimensión de la imágen en el .png

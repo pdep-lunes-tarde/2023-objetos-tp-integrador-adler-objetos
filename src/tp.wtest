@@ -1,16 +1,100 @@
 import tp.*
+import global.*
+import wollok.game.*
+import colisiones.*
+import gameObjects.*
+import vectores.*
+import global.*
 
 
-describe "group of tests" {
+describe "Colisiones" {
+	
+	const pacman = new Pacman()
+	
+	const hitbox = new FrameDeColision(objetoAsociado=pacman)
 
-	test "testX" {
-
-		assert.that(true)
-
+	method initialize() {
+		registry.put("window_width", 1500)
+		registry.put("window_height", 600)
+		updater.add(pacman)
+		 
+		//hitbox.agregarPerimetro(forma, vector.at(10,10))
+		pacman.frameDeColision().agregarPerimetro(
+			new Rectangulo(altura=10, ancho=10), 
+			vector.at(10,10)
+		)
+	
+	}
+	test "frameDeColision del pacman y hitbox apuntan al mismo objeto FrameDeColision" {
+		assert.that(pacman.frameDeColision() === hitbox)
 	}
 	
-	test "Test de ejemplo" {
-		assert.equals(4, 2 + 2)
+	test "la hitbox sigue al pacman" {
+		const antes = pacman.frameDeColision().perimetro().map{ ptoColision =>   
+			ptoColision.position().y() 
+		}
+		
+		pacman.arriba() // mover hacia arriba (se efectua cuando se actualiza)
+		updater.updateAll() // acutalizamos todo
+		updater.updateAll() // acutalizamos todo
+		updater.updateAll() // acutalizamos todo
+		
+		const despues = pacman.frameDeColision().perimetro().map{ ptoColision =>   
+			ptoColision.position().y() 
+		}
+		
+		assert.that(antes.size() == despues.size()) // asegurmaos q las listas son del mismo tamaño
+		
+		const tamanioLista = antes.size() - 1 
+		
+		assert.that(antes.sum() > 0) // aseguramos que son todos numeros
+		
+		assert.that(
+			(0 .. tamanioLista).all { indice =>
+				antes.get(indice) < despues.get(indice) // los "y" del "antes" deberian ser de menor valor que los de "despues", xq se movió el pacman hacia arriba.  
+			}
+		)
 	}
 	
+	test "" {
+			
+	}
+	
+}
+
+//describe "Tests en tiempo de ejecución" {
+//	
+//	method initialize() {
+//		tpIntegrador.iniciar(1500, 600, "PAC-MAN 2") // altura y ancho (en pixeles) de la ventana, nombre de ventana, pixeles por celda
+//		tpIntegrador.jugar()
+//	}
+//	
+//	test "Test de ejemplo" {
+//		assert.equals(4, 2 + 2)
+//	}
+//	
+//	test "Pacman se mueve hacia arriba" {
+//		const pacman = registry.get("pacman")
+//		pacman.arriba()
+//		assert.that(pacman.vel_y() > 0)
+//	}
+//	test "Pacman se mueve hacia la derecha" {
+//		const pacman = registry.get("pacman")
+//		pacman.derecha()
+//		assert.that(pacman.vel_x() > 0)
+//	}
+//	test "Pacman se mueve hacia abajo" {
+//		const pacman = registry.get("pacman")
+//		pacman.abajo()
+//		assert.that(pacman.vel_y() < 0)
+//	}
+//	
+//	test "Pacman se mueve hacia la izquierda" {
+//		const pacman = registry.get("pacman")
+//		pacman.izquierda()
+//		assert.that(pacman.vel_x() < 0)
+//	}
+//	
+//	
+//	
 }
