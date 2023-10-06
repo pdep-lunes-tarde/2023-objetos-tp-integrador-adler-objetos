@@ -30,7 +30,7 @@ class Vector {
 	method x(_x) {
 		x = _x
 	}
-	method at(_x, _y) {
+	method xy(_x, _y) {
 		self.x(_x)
 		self.y(_y)
 	}
@@ -53,7 +53,11 @@ const versor_i = new Vector(x=1,y=0)
 const versor_j = new Vector(x=0,y=1)
 
 
-
+object vector {
+	method at(_x, _y) {
+		return new Vector(x=_x, y=_y)
+	}
+}
 
 
 

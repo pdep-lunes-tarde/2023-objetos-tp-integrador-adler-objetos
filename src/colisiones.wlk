@@ -1,38 +1,40 @@
+import wollok.game.*
+
 import gameObjects.*
 import vectores.*
+import global.*
 
-// valores iniciales: x, y, traslacionRelativa (opcional), objectoAsociado
-class PuntoDeColision inherits DynamicObject {
-	const traslacionRelativa = new Vector(x=0,y=0) 
-	// tiene posición asignada y una imagen null.png
-	const objectoAsociado // asignarle un gameObject al momento de crear un PuntoDeColision
-	override method update() { 
-		position.x(x + objectoAsociado.x() + traslacionRelativa.x()) 	// las variables propias x e y guardan la posición relativa al gameObject asociado.
-		position.y(y + objectoAsociado.y() + traslacionRelativa.y())	// mientras que las variables x e y del "position" son las coors absolutas.
-	}
-}
 
+// cosnt frame = new FrameDeColision(objetoAsociado=new GameObject())
+// frame.agregarPerimetro(new Rectangulo(altura=10, ancho=10),)
 class FrameDeColision { // debe seguir la posicion del gameObject asignado
 	const property perimetro = new List() // lista que contiene a los PuntoDeColision
+	const property objetoAsociado // hay que pasarle un gameObject al crear una instancia de la clase
 	
-	method agregarPerimetro(gameObject, forma, traslacionRelativa) {
-		perimetro.addAll(forma.generarPerimetro(gameObject, traslacionRelativa))
+	method initialize() {
+		objetoAsociado.asignarFrame(self)	// se asigna solo al GameObject, el cual entiende el mensaje "frameDeColision()"
 	}
 	
+	method agregarPerimetro(forma, traslacionRelativa) {
+		forma.generarPerimetro(objetoAsociado, traslacionRelativa)
+		perimetro.addAll(forma.perimetroGenerado())
+	}
 }
 
-const hitbox = new FrameColision()
-const forma = new Rectangulo(altura=10, ancho=10)
-//hitbox.agregarPerimetro(new GameObject(), forma, new Vector(x=10,x=10))
+
+
+
+
 
 class Forma {
-	const perimetro = new List()
+	const property perimetroGenerado = new List()
 	method generarPerimetro(gameObject, traslacionRelativa)
 	
-	method crearPtoEn(x, y, gameObject, traslacionRelativa) {
-		const ptoColision = new PuntoDeColision(x=x, y=y, objectoAsociado=gameObject, traslacionRelativa=traslacionRelativa)
-		perimetro.add(ptoColision)
+	method crearPtoEn(ptoRelativo, gameObject, traslacionRelativa) {
+		const ptoColision = new PuntoDeColision(x=ptoRelativo.x(), y=ptoRelativo.y(), objetoAsociado=gameObject, traslacionRelativa=traslacionRelativa)
+		perimetroGenerado.add(ptoColision)
 		game.addVisual(ptoColision)
+		updater.add(ptoColision) // agregamos cada uno al updater
 	}
 }
 class Rectangulo inherits Forma {
@@ -44,19 +46,19 @@ class Rectangulo inherits Forma {
 		// las coordenadas pasadas por parametro son relativas al pivote del gameObject asociado
 		// desde el punto (x0, y0) nos movemos hacia la derecha
 		(0 .. 0+ancho).forEach { x =>
-			self.crearPtoEn(x, 0, gameObject, traslacionRelativa)
+			self.crearPtoEn(vector.at(x, 0), gameObject, traslacionRelativa)
 		}
 		// desde el punto (x0+ancho, y0), nos movemos hacia arriba
 		(0 .. 0+altura).forEach { y =>
-			self.crearPtoEn(x=0+ancho, y=y, gameObject, traslacionRelativa)
+			self.crearPtoEn(vector.at(0+ancho, y), gameObject, traslacionRelativa)
 		}
 		// desde el punto (x0+ancho, y0+altura), nos movemos hacia la izquierda
 		(0+ancho .. 0).forEach { x =>
-			self.crearPtoEn(x=x, y=0+altura, gameObject, traslacionRelativa)
+			self.crearPtoEn(vector.at(x, 0+altura), gameObject, traslacionRelativa)
 		}
 		// desde el punto (x0, y0+altura), nos movemos hacia abajo
 		(0+altura .. 0).forEach { y =>
-			self.crearPtoEn(x=0, y=y, gameObject, traslacionRelativa
+			self.crearPtoEn(vector.at(0, y), gameObject, traslacionRelativa
 		}
 		
 		// Fin algoritmo, tenemos guardado en "perimetro" un cuadrado que superpone al gameObject dado
@@ -65,11 +67,17 @@ class Rectangulo inherits Forma {
 class Circulo inherits Forma {
 	const property radio
 	
-	override method generarPerimetro(gameObject) {
-		const hitbox = new FrameDeColision()
-		hitbox.agregarPerimetro()
-	}
+	override method generarPerimetro(gameObject)
 }
 
-//const perimetro1 = new PerimetroDeColision(forma = new Rectangulo(altura=10, ancho=10))
-//const perimetro2 = new PerimetroDeColision(forma = new Circulo(radio=5))  
+
+// x, y, traslacionRelativa (opcional), objectoAsociado
+class PuntoDeColision inherits DynamicObject {
+	const traslacionRelativa = vector.at(0,0) 
+	// tiene posición asignada y una imagen null.png
+	const objetoAsociado // asignarle un gameObject al momento de crear un PuntoDeColision
+	override method update() {
+		position.x(x + objetoAsociado.x() + traslacionRelativa.x()) 	// las variables propias x e y guardan la posición relativa al gameObject asociado.
+		position.y(y + objetoAsociado.y() + traslacionRelativa.y())	    // mientras que las variables x e y del "position" son las coors absolutas.
+	}
+}

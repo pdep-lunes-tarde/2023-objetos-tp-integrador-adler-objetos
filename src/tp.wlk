@@ -1,7 +1,9 @@
 import wollok.game.*
+
 import global.*
 import vectores.*
-import clases.*
+import gameObjects.*
+
 
 
 object tpIntegrador {
@@ -22,8 +24,9 @@ object tpIntegrador {
 	  	
 	  	// agregar visuales
 	  	const pacman = new Pacman()
+	  	registry.put("pacman", pacman) // lo guardo para poder acceder en los tests
 	  	game.addVisual(pacman) // el uso de addVisualCharacter o addVisual para el personaje es indiferente, utilizamos teclas "wasd"
-	  	game.addVisual(new GameObject(position = new Vector(x=1, y=1)))
+	  	game.addVisual(new GameObject(x=1,y=1))
 	  	
 		// empezar el actualizador global
 		updater.add(pacman)
@@ -41,6 +44,9 @@ object tpIntegrador {
 		}
 		keyboard.d().onPressDo { 
 			pacman.derecha()
+		}
+		keyboard.q().onPressDo {
+			game.stop()
 		}
 		
 		game.whenCollideDo(pacman, {x => game.say(pacman, "choque a " + x.toString())})
