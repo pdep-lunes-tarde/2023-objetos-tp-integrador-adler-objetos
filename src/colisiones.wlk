@@ -5,6 +5,17 @@ import vectores.*
 import global.*
 
 
+// x, y, traslacionRelativa (opcional), objectoAsociado
+class PuntoDeColision inherits DynamicObject {
+	const traslacionRelativa = vector.at(0,0) 
+	// tiene posición asignada y una imagen null.png
+	const objetoAsociado // asignarle un gameObject al momento de crear un PuntoDeColision
+	override method update() {
+		position.x(x + objetoAsociado.x() + traslacionRelativa.x()) 	// las variables propias x e y guardan la posición relativa al gameObject asociado.
+		position.y(y + objetoAsociado.y() + traslacionRelativa.y())	    // mientras que las variables x e y del "position" son las coors absolutas.
+	}
+}
+
 // cosnt frame = new FrameDeColision(objetoAsociado=new GameObject())
 // frame.agregarPerimetro(new Rectangulo(altura=10, ancho=10),)
 class FrameDeColision { // debe seguir la posicion del gameObject asignado
@@ -22,8 +33,7 @@ class FrameDeColision { // debe seguir la posicion del gameObject asignado
 }
 
 
-
-
+// COLISIONES DEBEN PROCESARSE EN TORNO AL JUGADOR
 
 
 class Forma {
@@ -31,7 +41,7 @@ class Forma {
 	method generarPerimetro(gameObject, traslacionRelativa)
 	
 	method crearPtoEn(ptoRelativo, gameObject, traslacionRelativa) {
-		const ptoColision = new PuntoDeColision(x=ptoRelativo.x(), y=ptoRelativo.y(), objetoAsociado=gameObject, traslacionRelativa=traslacionRelativa)
+		const ptoColision = new PuntoDeColision(x=ptoRelativo.x(), y=ptoRelativo.y(), objetoAsociado=gameObject, traslacionRelativa=traslacionRelativa, image="assets/pixel.png")
 		perimetroGenerado.add(ptoColision)
 		game.addVisual(ptoColision)
 		updater.add(ptoColision) // agregamos cada uno al updater
@@ -68,16 +78,4 @@ class Circulo inherits Forma {
 	const property radio
 	
 	override method generarPerimetro(gameObject)
-}
-
-
-// x, y, traslacionRelativa (opcional), objectoAsociado
-class PuntoDeColision inherits DynamicObject {
-	const traslacionRelativa = vector.at(0,0) 
-	// tiene posición asignada y una imagen null.png
-	const objetoAsociado // asignarle un gameObject al momento de crear un PuntoDeColision
-	override method update() {
-		position.x(x + objetoAsociado.x() + traslacionRelativa.x()) 	// las variables propias x e y guardan la posición relativa al gameObject asociado.
-		position.y(y + objetoAsociado.y() + traslacionRelativa.y())	    // mientras que las variables x e y del "position" son las coors absolutas.
-	}
 }

@@ -3,6 +3,7 @@ import wollok.game.*
 import global.*
 import vectores.*
 import gameObjects.*
+import colisiones.*
 
 
 
@@ -28,6 +29,12 @@ object tpIntegrador {
 	  	game.addVisual(pacman) // el uso de addVisualCharacter o addVisual para el personaje es indiferente, utilizamos teclas "wasd"
 	  	game.addVisual(new GameObject(x=1,y=1))
 	  	
+	  	const hitbox = new FrameDeColision(objetoAsociado=pacman)
+	  	hitbox.agregarPerimetro(
+			new Rectangulo(altura=10, ancho=10), 
+			vector.at(10,10)
+		)
+	  	
 		// empezar el actualizador global
 		updater.add(pacman)
 		updater.start()
@@ -49,7 +56,6 @@ object tpIntegrador {
 			game.stop()
 		}
 		
-		game.whenCollideDo(pacman, {x => game.say(pacman, "choque a " + x.toString())})
 		game.whenCollideDo(pacman, {x => game.say(pacman, "choque a " + x.toString())})    
 	}	
 }
