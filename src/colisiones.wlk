@@ -5,7 +5,7 @@ import vectores.*
 import global.*
 
 
-// x_relativo, y_relativo, traslacionRelativa (opcional)
+// x_relativo, y_relativo, objetoAsociado, traslacionRelativa (opcional)
 class PuntoDeColision {
 	const traslacionRelativa = vector.at(0,0) 
 	const property trasRel_x = traslacionRelativa.x()
@@ -13,10 +13,12 @@ class PuntoDeColision {
 	var property x_relativo
 	var property y_relativo
 	
-	var property x_absoluto = 0 // si no uso position.x()
-	var property y_absoluto = 0 // si no uso position.y()
-	
 	const property position = vector.at(x_relativo+trasRel_x,y_relativo+trasRel_y)
+	
+//	var property image = "assets/pixel.png"
+//	method image(_image) {
+//		image = _image
+//	}
 	
 	method pivote_x(_x) {
 		position.x(_x + x_relativo + trasRel_x)
@@ -24,10 +26,27 @@ class PuntoDeColision {
 	method pivote_y(_y) {
 		position.y(_y + y_relativo + trasRel_y)
 	}
-	
-	method image() = "assets/null_mini.png"
-	
 }
+//
+//object colisiones {
+//	const property listaFrames = new List()
+//	var mostrandoColisiones = false
+//	
+//	method toggleColisiones() {
+//		if (mostrandoColisiones) {
+//			listaFrames.forEach{ frame => frame.perimetro().forEach{ ptoColision =>
+//				ptoColision.image("assets/pixel.png")
+//			}}
+//			mostrandoColisiones = false
+//		} 
+//		else {
+//			listaFrames.forEach{ frame => frame.perimetro().forEach{ ptoColision =>
+//				ptoColision.image("")
+//			}}
+//			mostrandoColisiones = true
+//		}
+//	}
+//}
 
 // cosnt frame = new FrameDeColision(objetoAsociado=new GameObject())
 // frame.agregarPerimetro(new Rectangulo(altura=10, ancho=10),)
@@ -57,7 +76,6 @@ class Forma {
 		const ptoColision = new PuntoDeColision(x_relativo=ptoRelativo.x(), y_relativo=ptoRelativo.y(), traslacionRelativa=traslacionRelativa)
 		perimetroGenerado.add(ptoColision)
 		game.addVisual(ptoColision)
-		//updater.add(ptoColision) // agregamos cada uno al updater
 	}
 }
 class Rectangulo inherits Forma {
@@ -68,22 +86,21 @@ class Rectangulo inherits Forma {
 		// Algoritmo para crear el rectangulo: 
 		// las coordenadas pasadas por parametro son relativas al pivote del gameObject asociado
 		// desde el punto (x0, y0) nos movemos hacia la derecha
-		(0 .. 0+ancho).forEach { x =>
+		(0 .. ancho-1).forEach { x =>
 			self.crearPtoEn(vector.at(x, 0), traslacionRelativa)
 		}
 		// desde el punto (x0+ancho, y0), nos movemos hacia arriba
-		(0 .. 0+altura).forEach { y =>
-			self.crearPtoEn(vector.at(0+ancho, y), traslacionRelativa)
+		(1 .. altura-1).forEach { y =>
+			self.crearPtoEn(vector.at(ancho-1, y), traslacionRelativa)
 		}
 		// desde el punto (x0+ancho, y0+altura), nos movemos hacia la izquierda
-		(0+ancho .. 0).forEach { x =>
-			self.crearPtoEn(vector.at(x, 0+altura), traslacionRelativa)
+		(ancho-2 .. 0).forEach { x =>
+			self.crearPtoEn(vector.at(x, altura-1), traslacionRelativa)
 		}
 		// desde el punto (x0, y0+altura), nos movemos hacia abajo
-		(0+altura .. 0).forEach { y =>
-			self.crearPtoEn(vector.at(0, y), traslacionRelativa
+		(altura-2 .. 1).forEach { y =>
+			self.crearPtoEn(vector.at(0, y), traslacionRelativa)
 		}
-		
 		// Fin algoritmo, tenemos guardado en "perimetro" un cuadrado que superpone al gameObject dado
 	}
 }

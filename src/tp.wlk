@@ -17,26 +17,30 @@ object tpIntegrador {
 	  	game.height(height/pixeles) 
 	  	game.cellSize(pixeles) // fijado a 1 píxel
 	  	game.title(title)
-	  	game.ground("assets/400 puntos.png")
+	  	game.ground("assets/null.png")
 	  	
 	  	// guardo valores globales
 	  	registry.put("window_width", width/pixeles)
 	  	registry.put("window_height", height/pixeles)
+	  	registry.put("casillas_pixeles", pixeles)
 	  	
 	  	// agregar visuales
 	  	const pacman = new Pacman()
 	  	registry.put("pacman", pacman) // lo guardo para poder acceder en los tests
-	  	game.addVisual(pacman) // el uso de addVisualCharacter o addVisual para el personaje es indiferente, utilizamos teclas "wasd"
-	  	game.addVisual(new GameObject(x=1,y=1))
 	  	
-	  	const hitbox = new FrameDeColision(objetoAsociado=pacman)
-	  	hitbox.agregarPerimetro(
-			new Rectangulo(altura=96/pixeles, ancho=96/pixeles), 
-			vector.at(0,0)
-		)
+
+		// con 100 va bien
+		// con 500 se lagea
+		(0..50).forEach { n => 
+			const obstaculo = new GameObject(x=n,y=n)
+			(new FrameDeColision(objetoAsociado=obstaculo)).agregarPerimetro(
+				new Rectangulo(altura=obstaculo.spriteHeight(), ancho=obstaculo.spriteWidth()), 
+				vector.at(0,0)
+			)
+		}
+		
 	  	
 		// empezar el actualizador global
-		updater.add(pacman)
 		updater.start()
 		
 		// teclado
@@ -55,7 +59,12 @@ object tpIntegrador {
 		keyboard.q().onPressDo {
 			game.stop()
 		}
+//		keyboard.t().onPressDo {
+//			colisiones.toggleColisiones()
+//		}
 		
-		//game.whenCollideDo(pacman, {x => game.say(pacman, "choque a " + x.toString())})    
+//		game.whenCollideDo(pacman, {x => 
+//			game.say(pacman, "choque a " + x.identity())
+//		})
 	}	
 }
