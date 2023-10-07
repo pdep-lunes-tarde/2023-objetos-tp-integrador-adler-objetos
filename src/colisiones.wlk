@@ -15,10 +15,10 @@ class PuntoDeColision {
 	
 	const property position = vector.at(x_relativo+trasRel_x,y_relativo+trasRel_y)
 	
-//	var property image = "assets/pixel.png"
-//	method image(_image) {
-//		image = _image
-//	}
+	var property image = "assets/pixel.png"
+	method image(_image) {
+		image = _image
+	}
 	
 	method pivote_x(_x) {
 		position.x(_x + x_relativo + trasRel_x)

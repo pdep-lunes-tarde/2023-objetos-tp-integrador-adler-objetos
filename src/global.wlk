@@ -39,3 +39,31 @@ object updater {
 }
 
 
+object timer { 
+	const timeUnit = ms // ms | s | h 
+	var elapsed_time_ms = 0 
+	
+	method start() {
+		game.onTick(1, "elapse", { elapsed_time_ms++ }) // contar cada milisegundo que pasa desde que se inicia el contador
+	}
+	
+	method stop() {
+		game.removeTickEvent("elapse")
+		return elapsed_time_ms
+	}
+}
+
+object ms { // milisegundos
+	
+}
+
+object s { // segundos 
+	
+}
+
+object h { // hora
+	
+}
+
+
+

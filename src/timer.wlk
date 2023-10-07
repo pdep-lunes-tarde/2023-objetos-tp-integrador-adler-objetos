@@ -1,6 +1,6 @@
 import wollok.game.*
 
-class Timer { 
+class Clock { 
 	const timeUnit = ms // ms | s | h 
 	var elapsed_time_ms = 0
 	

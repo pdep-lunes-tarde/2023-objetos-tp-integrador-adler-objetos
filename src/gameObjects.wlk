@@ -35,7 +35,7 @@ class GameObject {
 	
 }
 
-class DynamicObject inherits GameObject {
+class UpdatableObject inherits GameObject {
 	override method initialize() {
 		super()
 		updater.add(self) // se agrega al updater al crearse una instancia de la clase
@@ -44,7 +44,40 @@ class DynamicObject inherits GameObject {
 }
 
 
-class PhysicsObject inherits DynamicObject {
+class VerletObject {
+	/* Basado en: https://www.youtube.com/watch?v=lS_qeBy3aQI 
+	 * */
+	var pos_x 		// posicion actual
+	var pos_y
+	var pos_old_x 	// posicion anterior
+	var pos_old_y
+	var acc_x 		// aceleración
+	var acc_y
+	
+	method updatePosition(dt) {
+		const vel_x = pos_x - pos_old_x
+		const vel_y = pos_y - pos_old_y
+		
+		// guardamos las posiciones actuales 
+		pos_old_x = pos_x
+		pos_old_y = pos_y
+		
+		// verlet integration
+		pos_x += vel_x + acc_x * dt*dt
+		pos_y += vel_y + acc_y * dt*dt
+		
+		// reiniciamos el valor de la aceleracion
+		acc_x = 0
+		acc_y = 0 
+	}
+	
+	method accelerate(_acc_x, _acc_y) {
+		acc_x += _acc_x
+		acc_y += _acc_y 
+	}
+}
+
+class PhysicsObject inherits UpdatableObject {
 	var property vel_x = 0 // magnitud en pixeles por milisegundo
 	var property vel_y = 0
 	var property acel_x = 0 // pixeles por milisegundo al cuadrado 
@@ -55,8 +88,8 @@ class PhysicsObject inherits DynamicObject {
 	
 	override method initialize() {
 		super()	
-		vel_x = 5	
-		vel_y = 2
+		vel_x = 20	
+		vel_y = 10
 	}
 	
 	override method update() {
@@ -88,7 +121,7 @@ class PhysicsObject inherits DynamicObject {
 }
 
 class Pacman inherits PhysicsObject {
-	const property magnitud_fuerza = 1
+	const property magnitud_fuerza = 0.2
 	
 	var orientacion = "der"
 	var animacionEstado = "abierto"

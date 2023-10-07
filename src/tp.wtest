@@ -8,18 +8,20 @@ import global.*
 
 
 
-
 describe "Colisiones" {
 	
-	const pacman = new Pacman()
-	
-	const hitbox = new FrameDeColision(objetoAsociado=pacman)
+	var pacman 
+	var hitbox 
 
 	method initialize() {
 		registry.put("window_width", 1500)
 		registry.put("window_height", 600)
+		registry.put("casillas_pixeles", 25)
 		updater.add(pacman)
 		 
+		pacman = new Pacman() 
+		hitbox = new FrameDeColision(objetoAsociado=pacman)
+		
 		//hitbox.agregarPerimetro(forma, vector.at(10,10))
 		pacman.frameDeColision().agregarPerimetro(
 			new Rectangulo(altura=10, ancho=10), 
@@ -34,7 +36,7 @@ describe "Colisiones" {
 	}
 	test "la hitbox sigue al pacman" {
 		const antes = pacman.frameDeColision().perimetro().map{ ptoColision =>   
-			ptoColision.x_absoluto() 
+			ptoColision.position().y() 
 		}
 		
 		pacman.arriba() // mover hacia arriba (se efectua cuando se actualiza)
@@ -43,7 +45,7 @@ describe "Colisiones" {
 		updater.updateAll() // acutalizamos todo
 		
 		const despues = pacman.frameDeColision().perimetro().map{ ptoColision =>   
-			ptoColision.y_absoluto  
+			ptoColision.position().y()
 		}
 		
 		assert.that(antes.size() == despues.size()) // asegurmaos q las listas son del mismo tamaño
