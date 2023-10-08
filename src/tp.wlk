@@ -28,27 +28,18 @@ object tpIntegrador {
 	  	const pacman = new Pacman()
 	  	registry.put("pacman", pacman) // lo guardo para poder acceder en los tests
 	  	
-
-		// con 100 va bien
-		// con 500 se lagea
-		(0..0).forEach { n => 
-			const obstaculo = new GameObject(x=n,y=n)
-			(new FrameDeColision(objetoAsociado=obstaculo)).agregarPerimetro(
-				new Rectangulo(altura=obstaculo.spriteHeight(), ancho=obstaculo.spriteWidth()), 
-				vector.at(0,0)
-			)
+		(0..5).forEach { n =>
+			new ObjetosQueSaltan(x0=n, y0=80)
 		}
-		
-		const obstaculo1 = new GameObject(x=1,y=1)
-		(new FrameDeColision(objetoAsociado=obstaculo1)).agregarPerimetro(
-			new Rectangulo(altura=obstaculo1.spriteHeight(), ancho=obstaculo1.spriteWidth()), 
-			vector.at(0,0)
-		)
-		const obstaculo2 = new GameObject(x=2,y=2)
-		(new FrameDeColision(objetoAsociado=obstaculo2)).agregarPerimetro(
-			new Rectangulo(altura=obstaculo2.spriteHeight(), ancho=obstaculo2.spriteWidth()), 
-			vector.at(0,0)
-		)
+
+
+//		(0..0).forEach { n => 
+//			const obstaculo = new GameObject(x=n,y=n)
+//			(new FrameDeColision(objetoAsociado=obstaculo)).agregarPerimetro(
+//				new Rectangulo(altura=obstaculo.spriteHeight(), ancho=obstaculo.spriteWidth()), 
+//				vector.at(0,0)
+//			)
+//		}
 	  	
 		// empezar el actualizador global
 		updater.start()

@@ -39,9 +39,17 @@ class Vector {
 		x += otroVector.x()
 		y += otroVector.y()
 	}
+	method sumarle(_x, _y) {
+		x += _x
+		y += _y
+	}
 	method restarle(otroVector) {
 		x -= otroVector.x()
 		y -= otroVector.y()
+	}
+	method restarle(_x, _y) {
+		x -= _x
+		y -= _y
 	}
 	method multiplicarle(escalar) {
 		x *= escalar

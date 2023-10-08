@@ -9,3 +9,8 @@ program juego {
 
 // NOTA : las imágenes se importan con el tamaño original.
 
+// NOTA: el numero de pixeles de celda debe ser divisor de los pixeles del personaje, sino se ven mal las colisiones
+
+// 20 pixels de celda, y 40 pixeles de personaje
+// 25 pixels de celda, y 50 pixeles de personaje
+// 20 pixels de celda, y 40 pixeles de personaje
