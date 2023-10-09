@@ -20,6 +20,9 @@ class Vector {
 	method *(escalar) {
 		return new Vector(x = x*escalar, y = y*escalar)
 	}
+	method /(escalar) {
+		return new Vector(x = x/escalar, y = y/escalar)
+	}
 	
 	// como vector mutable -> impacta menos a la performance del juego, 
 	// el juego va más fluido cuando trabajamos con variables x e y separadas.
@@ -33,6 +36,9 @@ class Vector {
 	method xy(_x, _y) {
 		self.x(_x)
 		self.y(_y)
+	}
+	method xy(_vector) {
+		self.xy(_vector.x(), _vector.y())
 	}
 	
 	method sumarle(otroVector) {

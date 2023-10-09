@@ -20,17 +20,17 @@ class GameObject {
 	method asignarFrame(_frameDeColision) {
 		frameDeColision = _frameDeColision
 	}
-	method spriteHeight() = 50/registry.get("casillas_pixeles")			 	// tamaño en pixeles de la imagen utilizada divido por el tamaño de pixel de una casilla
-	method spriteWidth() = 50/registry.get("casillas_pixeles")				// se puede observar la dimensión de la imágen en el .png
+	method spriteHeight() = 60/registry.get("casillas_pixeles")			 	// tamaño en pixeles de la imagen utilizada divido por el tamaño de pixel de una casilla
+	method spriteWidth() = 60/registry.get("casillas_pixeles")				// se puede observar la dimensión de la imágen en el .png
 	method image() = "assets/null.png"
 	
 	override method initialize() {
 		super() 
 		game.addVisual(self)
-//		(new FrameDeColision(objetoAsociado=self)).agregarPerimetro(
-//			new Rectangulo(altura=self.spriteHeight(), ancho=self.spriteWidth()), 
-//			vector.at(0,0)
-//		)
+		(new FrameDeColision(objetoAsociado=self)).agregarPerimetro(
+			new Rectangulo(altura=self.spriteHeight(), ancho=self.spriteWidth()), 
+			vector.at(0,0)
+		)
 	}
 	
 }
@@ -93,7 +93,7 @@ class VerletObject {
 		// guardamos las posiciones actuales 
 		pos_old_x = pos_x
 		pos_old_y = pos_y
-				
+			
 		// actualizamos la posicion 
 		pos_x += vel_x + acc_x *dt*dt 
 		pos_y += vel_y + acc_y *dt*dt
@@ -116,13 +116,15 @@ class VerletObject {
 	}
 	
 	method applyConstraint() {
-		const pos = new Vector(x=100, y=100)
-		const radius = 50
-		const to_obj = position - pos
+		const pos = new Vector(x=30, y=16)
+		const radius = 5
+		const to_obj = vector.at(pos_x,pos_y) - pos
 		const dist = to_obj.magnitud()
-		if (dist > radius - 20) {
+		if (dist > radius - 3) {
 			const n = to_obj / dist
-			position.xy(pos + n * (radius - 20))
+			const v = (pos + n * (radius - 3))
+			pos_x = v.x()
+			pos_y = v.y()
 		}
 	}
 	
@@ -203,11 +205,11 @@ class PhysicsObject inherits UpdatableObject {
 }
 
 class Pacman inherits PhysicsObject {
-	const property magnitud_fuerza = 5 / registry.get("casillas_pixeles")
+	const property magnitud_fuerza = 10 / registry.get("casillas_pixeles")
 	
 	var orientacion = "der"
-	var animacionEstado = "abierto"
-	var aux = "abierto"+"-"+orientacion
+	var animacionEstado = "cerrado"
+	var aux = "cerrado"+"-"+orientacion
 	override method image() = "assets/PACMAN/"+aux+".png"
 	
 	/* PARA LAS COLISIONES. 
@@ -295,31 +297,8 @@ class Pacman inherits PhysicsObject {
 		
 		
 		
-//		super()
+		super()
 	}
 	
 	
 }
-
-
-
-
-//// deberiamos detectar la colision con el jugador, 
-//// pero no entre las distintas instancias de los fantasmas
-//class Fantasma {
-//	var property position = game.at(0,0) // inicia los fantasmas en el (0,0)
-//	
-//	// unidad: pixel
-//	var x = position.x() 					// usamos variable propias para x e y para poder hacer otros calculos
-//	var y = position.y()
-//	
-//	const spriteHeight = 96 			 	// tamaño en pixeles de la imagen utilizada
-//	const spriteWidth = 96 					// se puede observar la dimensión de la imágen en el .png
-//	method image() = "assets/pacman.png" 
-//	
-//	method update() {
-//		// acá iría la IA de los fantasmas
-//	}
-//}
-
-

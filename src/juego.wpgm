@@ -2,7 +2,7 @@ import tp.*
 import menu.*
 
 program juego {
-	tpIntegrador.iniciar(1500, 800, "PAC-MAN 2", 25) // altura y ancho (en pixeles) de la ventana, nombre de ventana, pixeles por celda
+	tpIntegrador.iniciar(1500, 800, "PAC-MAN 2", 20) // altura y ancho (en pixeles) de la ventana, nombre de ventana, pixeles por celda
 	tpIntegrador.jugar() 
 }
 
@@ -14,3 +14,7 @@ program juego {
 // 20 pixels de celda, y 40 pixeles de personaje
 // 25 pixels de celda, y 50 pixeles de personaje
 // 20 pixels de celda, y 40 pixeles de personaje
+
+
+// CAMBIAR DIMENSIONES DE LOS OBJETOS DE 50 A 60 
+// DEJAR PIXELES DE CELDAS EN 20, ASI CADA OBJETO TIENE 3 PTOS DE COLISIONES POR CARA.
