@@ -18,3 +18,13 @@ program juego {
 
 // CAMBIAR DIMENSIONES DE LOS OBJETOS DE 50 A 60 
 // DEJAR PIXELES DE CELDAS EN 20, ASI CADA OBJETO TIENE 3 PTOS DE COLISIONES POR CARA.
+
+// FLAG DE COLISIONES
+
+
+
+/* [frame1, frame2, frame3]
+ * 
+ * frame1 y frame2 tienen ptos de colision en comun => frame1 colisona con frame2 
+ * 
+ * */

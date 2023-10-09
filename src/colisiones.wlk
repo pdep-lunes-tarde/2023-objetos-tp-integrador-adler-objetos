@@ -61,6 +61,9 @@ class FrameDeColision { // debe seguir la posicion del gameObject asignado
 	method agregarPerimetro(forma, traslacionRelativa) {
 		forma.generarPerimetro(traslacionRelativa)
 		perimetro.addAll(forma.perimetroGenerado())
+		perimetro.forEach { puntoDeColision =>
+			game.onCollideDo(puntoDeColision, { conQueColisione => console.println(puntoDeColision.toString() + " choco con " + conQueColisione.toString() + " -- " + " en el objeto " + objetoAsociado.toString()) })
+		}
 	}
 }
 
