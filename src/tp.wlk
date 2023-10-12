@@ -17,7 +17,7 @@ object tpIntegrador {
 	  	game.height(height/pixeles) 
 	  	game.cellSize(pixeles) // fijado a 1 píxel
 	  	game.title(title)
-	  	game.ground("assets/null.png")
+	  	game.ground("assets/backgroudn.png")
 	  	
 	  	// guardo valores globales
 	  	registry.put("window_width", width/pixeles)
@@ -31,7 +31,6 @@ object tpIntegrador {
 		(0..5).forEach { n =>
 			new ObjetosQueSaltan(x0=n*5, y0=100)
 		}
-
 
 //		(0..0).forEach { n => 
 //			const obstaculo = new GameObject(x=n,y=n)

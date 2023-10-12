@@ -205,7 +205,7 @@ class PhysicsObject inherits UpdatableObject {
 }
 
 class Pacman inherits PhysicsObject {
-	const property magnitud_fuerza = 10 / registry.get("casillas_pixeles")
+	const property magnitud_fuerza = 15 / registry.get("casillas_pixeles")
 	
 	var orientacion = "der"
 	var animacionEstado = "cerrado"
@@ -232,7 +232,7 @@ class Pacman inherits PhysicsObject {
 //		})
 		
 		
-		game.onTick(100, "animacion-pacman", { 
+		game.onTick(80, "animacion-pacman", { 
 				if(animacionEstado == "abierto") {
 					animacionEstado = "medio"
 					aux = animacionEstado+"-"+orientacion
