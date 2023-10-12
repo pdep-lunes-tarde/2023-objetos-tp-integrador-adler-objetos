@@ -17,7 +17,7 @@ object tpIntegrador {
 	  	game.height(height/pixeles) 
 	  	game.cellSize(pixeles) // fijado a 1 píxel
 	  	game.title(title)
-	  	game.ground("assets/background.png")
+	  	game.ground("assets/null.png")
 	  	
 	  	// guardo valores globales
 	  	registry.put("window_width", width/pixeles)
@@ -28,15 +28,18 @@ object tpIntegrador {
 	  	const pacman = new Pacman()
 	  	registry.put("pacman", pacman) // lo guardo para poder acceder en los tests
 	  	
-//		(0..5).forEach { n =>
-//			new ObjetosQueSaltan(x0=n*5, y0=80)
-//		}
-
-		const salta = new ObjetosQueSaltan(x0=30, y0=16)
-
-		(0..0).forEach { n => 
-			const obstaculo = new GameObject(x=n,y=n)
+		(0..5).forEach { n =>
+			new ObjetosQueSaltan(x0=n*5, y0=100)
 		}
+
+
+//		(0..0).forEach { n => 
+//			const obstaculo = new GameObject(x=n,y=n)
+//			(new FrameDeColision(objetoAsociado=obstaculo)).agregarPerimetro(
+//				new Rectangulo(altura=obstaculo.spriteHeight(), ancho=obstaculo.spriteWidth()), 
+//				vector.at(0,0)
+//			)
+//		}
 	  	
 		// empezar el actualizador global
 		updater.start()
