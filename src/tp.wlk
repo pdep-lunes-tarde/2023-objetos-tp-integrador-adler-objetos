@@ -17,19 +17,20 @@ object tpIntegrador {
 	  	game.height(height/pixeles) 
 	  	game.cellSize(pixeles) // fijado a 1 píxel
 	  	game.title(title)
-	  	game.ground("assets/backgroudn.png")
+	  	game.ground("assets/background.png")
 	  	
 	  	// guardo valores globales
 	  	registry.put("window_width", width/pixeles)
 	  	registry.put("window_height", height/pixeles)
 	  	registry.put("casillas_pixeles", pixeles)
+	  	registry.put("coef", pixeles/45) // 45 es el tamaño en pixeles
+	  	
 	  	
 	  	// agregar visuales
-	  	const pacman = new Pacman()
-	  	registry.put("pacman", pacman) // lo guardo para poder acceder en los tests
 	  	
-		(0..5).forEach { n =>
-			new ObjetosQueSaltan(x0=n*5, y0=100)
+	  	
+		(1..2).forEach { n =>
+			new Fantasma(x0=n*5, y0=100)
 		}
 
 //		(0..0).forEach { n => 
@@ -45,16 +46,16 @@ object tpIntegrador {
 		
 		// teclado
 		keyboard.w().onPressDo { 
-			pacman.arriba()
+			jugador.arriba()
 		}
 		keyboard.a().onPressDo { 
-			pacman.izquierda()
+			jugador.izquierda()
 		}
 		keyboard.s().onPressDo { 
-			pacman.abajo()
+			jugador.abajo()
 		}
 		keyboard.d().onPressDo { 
-			pacman.derecha()
+			jugador.derecha()
 		}
 		keyboard.q().onPressDo {
 			game.stop()

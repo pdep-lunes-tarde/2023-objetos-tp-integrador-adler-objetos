@@ -2,9 +2,15 @@ import tp.*
 import menu.*
 
 program juego {
-	tpIntegrador.iniciar(1500, 800, "PAC-MAN 2", 20) // altura y ancho (en pixeles) de la ventana, nombre de ventana, pixeles por celda
+	tpIntegrador.iniciar(1125, 900, "PAC-MAN 2", 15) // altura y ancho (en pixeles) de la ventana, nombre de ventana, pixeles por celda
 	tpIntegrador.jugar() 
 }
+
+// iniciar(1200, 900, "PAC-MAN 2", 15) ---> altura en grillas = 60
+// 											ancho en grillas = 80
+
+
+// NOTÉ QUE EL JUEGO CON EL TIEMPO SE VUELVE CADA VEZ MÁS LENTO, PREGUNTAR A QUÉ PODRÍA DEBERSE.
 
 
 // NOTA : las imágenes se importan con el tamaño original.

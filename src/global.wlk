@@ -24,13 +24,34 @@ object updater {
 		update_list.remove(updatableObject)
 	}
 	
-	method updateAll() {
+	method updateAll(dt) {
 		// envia el mensaje "update" a cada objeto guardado en la lista update_list
-		update_list.forEach({updatableObject => updatableObject.update()}) 
+		update_list.forEach({updatableObject => updatableObject.update(dt)}) 
 	}
 	
 	method start() {
-		game.onTick(1, "actualizar", { self.updateAll() })
+		const dt = 1 // tiempo (en ms) que pasa entre cada actualizacion
+		const substeps = 1 // si es igual a 2, ent por cada tick de juego, actualiza dos veces, para mejores fisicas. se re traba asiq sadge :(
+		const sub_dt = dt / substeps
+		
+		
+		game.onTick(dt, "actualizar", {
+			(1 .. substeps).forEach{ a => 
+				self.updateAll(sub_dt)
+			}
+		})
+
+//		var i=0
+//		update_list.forEach({updatableObject => 
+//			// agregar un reloj propio para cada objeto. parece que es mejor para la performance del juego
+//			game.onTick(dt, "actualizar"+i, {
+//				(1 .. substeps).forEach{ a => 
+//					updatableObject.update(sub_dt)
+//				}
+//			})
+//			i++
+//		}) 
+		
 	}
 	
 	method stop() {

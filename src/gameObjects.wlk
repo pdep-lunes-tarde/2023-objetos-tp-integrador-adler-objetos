@@ -20,15 +20,15 @@ class GameObject {
 	method asignarFrame(_frameDeColision) {
 		frameDeColision = _frameDeColision
 	}
-	method spriteHeight() = 60/registry.get("casillas_pixeles")			 	// tamaño en pixeles de la imagen utilizada divido por el tamaño de pixel de una casilla
-	method spriteWidth() = 60/registry.get("casillas_pixeles")				// se puede observar la dimensión de la imágen en el .png
+	method height() = 60/registry.get("casillas_pixeles")			 	// tamaño en pixeles de la imagen utilizada divido por el tamaño de pixel de una casilla
+	method width() = 60/registry.get("casillas_pixeles")				// se puede observar la dimensión de la imágen en el .png
 	method image() = "assets/null.png"
 	
 	override method initialize() {
 		super() 
 		game.addVisual(self)
 		(new FrameDeColision(objetoAsociado=self)).agregarPerimetro(
-			new Rectangulo(altura=self.spriteHeight(), ancho=self.spriteWidth()), 
+			new Rectangulo(altura=self.height(), ancho=self.width()), 
 			vector.at(0,0)
 		)
 	}
@@ -41,124 +41,6 @@ class UpdatableObject inherits GameObject {
 		updater.add(self) // se agrega al updater al crearse una instancia de la clase
 	}
 	method update() 
-}
-
-
-class ObjetosQueSaltan inherits VerletObject {
-	override method image() = "assets/FANTASMA/rojo_arriba1.png"
-	override method initialize() {
-		super()
-		game.onTick(1, "saltar", {
-			if (pos_y <= 0) {
-				self.accelerate(0, 2)
-				self.accelerate((-1).randomUpTo(1), 0)
-			}
-		})
-	}
-}
-
-class VerletObject {
-	/* Basado en: https://www.youtube.com/watch?v=lS_qeBy3aQI 
-	 * */
-	// valores iniciales (por si queremos definirlos al momento de crear una instancia de VerletObject)
-	const x0 = 0  
-	const y0 = 0 
-//	const vel_x0 = 0
-//	const vel_y0 = 0
-	
-	var pos_x = x0 					// posicion actual (para hacer cálculos)
-	var pos_y = x0
-	var property position = new Vector(x=x0, y=y0) // posicion actual (para wollok) 
-	var pos_old_x = x0 //- vel_x0 	// posicion anterior
-	var pos_old_y = x0 //- vel_y0
-	var acc_x = 0 	 				// aceleración
-	var acc_y = 0
-	
-	override method initialize() {
-		updater.add(self)
-		game.addVisual(self)
-	}
-	method spriteHeight() = 50/registry.get("casillas_pixeles")	
-	method spriteWidth() = 50/registry.get("casillas_pixeles")	
-	method image() = "assets/null.png"
-	
-	method updatePosition() {
-		// el valor corresponde al numero de ticks definido en el game.onTick()
-		const dt = 1 // si incremento los ticks del updater, pero no del dt, entocnes se va a ver en cámara lenta
-		
-		// calculamos la velocidad con las posiciones actual y anterior
-		const vel_x = pos_x - pos_old_x
-		const vel_y = pos_y - pos_old_y
-		
-		// guardamos las posiciones actuales 
-		pos_old_x = pos_x
-		pos_old_y = pos_y
-			
-		// actualizamos la posicion 
-		pos_x += vel_x + acc_x *dt*dt 
-		pos_y += vel_y + acc_y *dt*dt
-		
-		// reiniciamos el valor de la aceleracion
-		acc_x = 0
-		acc_y = 0 
-		
-		// aplicamos cambios en wollok game
-		position.xy(pos_x, pos_y)
-	}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
-	
-	method accelerate(_acc_x, _acc_y) {
-		acc_x += _acc_x
-		acc_y += _acc_y
-	}
-	
-	method applyGravity() {
-		self.accelerate(0, -0.1)
-	}
-	
-	method applyConstraint() {
-		const pos = new Vector(x=30, y=16)
-		const radius = 5
-		const to_obj = vector.at(pos_x,pos_y) - pos
-		const dist = to_obj.magnitud()
-		if (dist > radius - 3) {
-			const n = to_obj / dist
-			const v = (pos + n * (radius - 3))
-			pos_x = v.x()
-			pos_y = v.y()
-		}
-	}
-	
-	method applyWallConstraint() {
-		const piso = 0
-		const techo = registry.get("window_height") - self.spriteHeight() // hay q tener en cuenta el tamaño del sprite,
-		const derecha = registry.get("window_width") - self.spriteWidth() // ya que el pivot está en la esquina abajo-izquierda del sprite.
-		const izquierda = 0
-		
-		if (pos_y < piso) {	 								// cuando encuentra el piso
-			pos_y = piso
-			pos_old_y = piso
-		}
-		if (pos_x < izquierda) { 
-			pos_x = izquierda
-			pos_old_x = izquierda
-		}
-		if (pos_y > techo) { 								// cuando encuentra el techo
-			pos_y = techo
-			pos_old_y = techo
-		}									
-		if (pos_x > derecha) {					
-			pos_x = derecha
-			pos_old_x = derecha
-		}
-		
-	}
-	
-	method update() {
-		self.applyGravity()
-		self.applyWallConstraint()
-		//self.applyConstraint()
-		self.updatePosition() 
-	}
 }
 
 class PhysicsObject inherits UpdatableObject {
@@ -204,12 +86,185 @@ class PhysicsObject inherits UpdatableObject {
  	}
 }
 
-class Pacman inherits PhysicsObject {
-	const property magnitud_fuerza = 15 / registry.get("casillas_pixeles")
+
+class VerletObject {
+	
+	const frameDeColision = new List() // lista de puntos de colision
+	
+	/* Basado en: https://www.youtube.com/watch?v=lS_qeBy3aQI
+	 * 			  https://www.youtube.com/watch?v=-GWTDhOQU6M 
+	 * */  
+	// valores iniciales (por si queremos definirlos al momento de crear una instancia de VerletObject)
+	const x0 = 0  
+	const y0 = 0 
+//	const vel_x0 = 0
+//	const vel_y0 = 0
+	
+	var property pos_x = x0 					// posicion actual (para hacer cálculos)
+	var property pos_y = x0
+	var property position = new Vector(x=x0, y=y0) // posicion actual (para wollok) 
+	var pos_old_x = x0 //- vel_x0 	// posicion anterior
+	var pos_old_y = x0 //- vel_y0
+	var property acc_x = 0 	 				// aceleración
+	var property acc_y = 0
+	
+	const g = 0.981 * registry.get("coef")
+	
+	override method initialize() {
+		updater.add(self)
+		game.addVisual(self)
+	}
+	method height() = 45/registry.get("casillas_pixeles")	
+	method width() = 45/registry.get("casillas_pixeles")	
+	method image() = "assets/null.png"
+	
+	method controlColisiones() {
+		// vemos si en el camino entre pos_old y pos hay algun obstaculo 
+		 
+	}
+	
+	method updatePosition(dt) {
+		// el valor corresponde al numero de ticks definido en el game.onTick()
+		// si los ticks del updater son mayores al valor del dt, entocnes se va a ver en cámara lenta
+		
+		// calculamos la velocidad con las posiciones actual y anterior
+		const vel_x = pos_x - pos_old_x  
+		const vel_y = pos_y - pos_old_y
+		
+		// guardamos las posiciones actuales 
+		pos_old_x = pos_x
+		pos_old_y = pos_y
+			
+		// calculamos la nueva posicion con Integración de Verlet (agregue 0.95 para simular friccion)
+		pos_x += vel_x * 0.95 + acc_x *dt*dt 
+		pos_y += vel_y * 0.95 + acc_y *dt*dt
+		
+		self.controlColisiones() // antes de aplicar cambios, verificamos si pos_x y pos_y chocan algo
+		
+		// reiniciamos el valor de la aceleracion
+		acc_x = 0
+		acc_y = 0 
+		
+		// aplicamos cambios en wollok game
+		position.xy(pos_x, pos_y)
+	}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+	
+	method accelerate(_acc_x, _acc_y) {
+		acc_x += _acc_x
+		acc_y += _acc_y
+	}
+	
+	method applyConstraint() {
+		const pos = new Vector(x=30, y=16)
+		const radius = 5
+		const to_obj = vector.at(pos_x,pos_y) - pos
+		const dist = to_obj.magnitud()
+		if (dist > radius - 3) {
+			const n = to_obj / dist
+			const v = (pos + n * (radius - 3))
+			pos_x = v.x()
+			pos_y = v.y()
+		}
+	}
+	
+	method applyWallConstraint(dt) {
+		const piso = 0
+		const techo = registry.get("window_height") - self.height() // hay q tener en cuenta el tamaño del sprite,
+		const derecha = registry.get("window_width") - self.width() // ya que el pivot está en la esquina abajo-izquierda del sprite.
+		const izquierda = 0
+		
+		const vel_x = (pos_x - pos_old_x)/dt  
+		const vel_y = (pos_y - pos_old_y)/dt
+		
+		if (pos_y < piso) {	 								// cuando encuentra el piso
+			pos_y = piso
+			pos_old_y = pos_y + vel_y						
+		}
+		if (pos_x < izquierda) { 
+			pos_x = izquierda
+			pos_old_x = pos_x + vel_x
+		}
+		if (pos_y > techo) { 								// cuando encuentra el techo
+			pos_y = techo
+			pos_old_y = pos_y + vel_y
+		}									
+		if (pos_x > derecha) {					
+			pos_x = derecha
+			pos_old_x = pos_x + vel_x
+		}
+		
+	}
+
+	method update(dt) {
+		self.applyWallConstraint(dt)
+		//self.applyConstraint()
+		self.updatePosition(dt) 
+	}
+	
+	
+	method colisionConObstaculo(obstaculo) {
+		const eje_colision = self.position() - self.position() // solo nos importa el ángulo de este vector, para conocer la direccion del rebote
+		
+		
+	}
+}
+
+class Fantasma inherits VerletObject {
+	const fuerza = 0.4 * registry.get("coef")
+	
+	override method image() = "assets/FANTASMA/rojo_arriba1.png"
+	override method initialize() {
+		super()
+	}
+	
+	method applyGravity() {
+		self.accelerate(0, -g)
+	}
+	
+	
+	method followPlayer() {
+		const jugador_pos = jugador.position()
+		const a_x = jugador.acc_x()
+		const a_y = jugador.acc_y()
+	
+		// SOLUCIONAR PROBLEMA DE QUE SE PONEN A ORBITAR AL JUGADOR, NUNCA LO ALCANZA
+		
+		const jugador_vel = jugador_pos - vector.at(jugador.pos_x(),jugador.pos_y()) 
+		const pos_diff = jugador_pos - self.position()
+		const eje = pos_diff + jugador_vel * 5 + vector.at(a_x*a_x, a_y*a_y)
+		const hacia = eje / eje.magnitud()
+			
+		if ((a_x != 0) or (a_y != 0)) { // si el jugador acelera...
+			self.accelerate(hacia.x() * fuerza * 3, hacia.y() * fuerza * 3) // va mas rapido
+		} else {
+			self.accelerate(hacia.x() * fuerza, hacia.y() * fuerza)
+		}
+	}
+	override method update(dt) {
+		//self.applyGravity()
+		self.followPlayer() 
+		super(dt) 
+	}
+	
+	
+	// resuelve la colision entre fantasma y jugador
+	method colisionConJugador() {
+		
+	}
+	
+	
+}
+
+const jugador = new Pacman()
+class Pacman inherits VerletObject {
+	const property  fuerza = 3 * registry.get("coef")
 	
 	var orientacion = "der"
 	var animacionEstado = "cerrado"
 	var aux = "cerrado"+"-"+orientacion
+	
+	const masa = 1
+	
 	override method image() = "assets/PACMAN/"+aux+".png"
 	
 	/* PARA LAS COLISIONES. 
@@ -231,74 +286,45 @@ class Pacman inherits PhysicsObject {
 //			}	
 //		})
 		
-		
 		game.onTick(80, "animacion-pacman", { 
-				if(animacionEstado == "abierto") {
-					animacionEstado = "medio"
-					aux = animacionEstado+"-"+orientacion
-				} 
-				else if(animacionEstado == "medio") {
-					animacionEstado = "cerrado"
-					aux = animacionEstado 
-				} 
-				else {
-					animacionEstado = "abierto"
-					aux = animacionEstado+"-"+orientacion
-				}
+			if(animacionEstado == "abierto") {
+				animacionEstado = "medio"
+				aux = animacionEstado+"-"+orientacion
+			} 
+			else if(animacionEstado == "medio") {
+				animacionEstado = "cerrado"
+				aux = animacionEstado 
+			} 
+			else {
+				animacionEstado = "abierto"
+				aux = animacionEstado+"-"+orientacion
 			}
-		)
+		})
 	}
 	 
 	
 	// crean el efecto de que alguien los tira hacia el sentido indicado
 	method arriba() {
-		vel_y += magnitud_fuerza * masa							
+		self.accelerate(0, fuerza * masa)							
 		orientacion = "arriba"
 	}
 	method abajo() {
-		vel_y -= magnitud_fuerza * masa	
+		self.accelerate(0, -fuerza * masa)		
 		orientacion = "abajo"						
 	}
 	method derecha() {
-		vel_x += magnitud_fuerza * masa	
+		self.accelerate(fuerza * masa, 0)		
 		orientacion = "der"						
 	}
 	method izquierda() {
-		vel_x -= magnitud_fuerza * masa
+		self.accelerate(-fuerza * masa, 0)
 		orientacion = "izq"							
 	}
 	
-	
-	override method control() {
-		// para que no se salga de la ventana
-		const piso = 0
-		const techo = registry.get("window_height") - self.spriteHeight() // hay q tener en cuenta el tamaño del sprite,
-		const derecha = registry.get("window_width") - self.spriteWidth() // ya que el pivot está en la esquina abajo-izquierda del sprite.
-		const izquierda = 0
+	method colisionConFantasma() {
 		
-		const porcentaje_rebote = 0.3
-		
-		if (y < piso) {	 								// cuando encuentra el piso
-			y = piso
-			vel_y = (-vel_y * porcentaje_rebote)						// hacemos que rebote con una leve perdida de energia 	
-		}
-		if (x < izquierda) { 
-			x = izquierda
-			vel_x = (-vel_x * porcentaje_rebote)
-		}
-		if (y > techo) { 								// cuando encuentra el techo
-			y = techo
-			vel_y = (-vel_y * porcentaje_rebote)   		
-		}									
-		if (x > derecha) {					
-			x = derecha
-			vel_x = (-vel_x * porcentaje_rebote)
-		}
-		
-		
-		
-		super()
 	}
 	
-	
 }
+
+
