@@ -29,8 +29,8 @@ object tpIntegrador {
 	  	// agregar visuales
 	  	
 	  	
-		(1..2).forEach { n =>
-			new Fantasma(x0=n*5, y0=100)
+		(1..3).forEach { n =>
+			new Fantasma(x0=n*5, y0=game.center().y())
 		}
 
 //		(0..0).forEach { n => 

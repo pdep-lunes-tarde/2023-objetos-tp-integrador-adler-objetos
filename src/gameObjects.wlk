@@ -95,8 +95,8 @@ class VerletObject {
 	 * 			  https://www.youtube.com/watch?v=-GWTDhOQU6M 
 	 * */  
 	// valores iniciales (por si queremos definirlos al momento de crear una instancia de VerletObject)
-	const x0 = 0  
-	const y0 = 0 
+	const x0 = game.center().x() 
+	const y0 = game.center().y() 
 //	const vel_x0 = 0
 //	const vel_y0 = 0
 	
@@ -178,7 +178,7 @@ class VerletObject {
 		
 		if (pos_y < piso) {	 								// cuando encuentra el piso
 			pos_y = piso
-			pos_old_y = pos_y + vel_y						
+			pos_old_y = pos_y + vel_y 						
 		}
 		if (pos_x < izquierda) { 
 			pos_x = izquierda
@@ -210,8 +210,6 @@ class VerletObject {
 }
 
 class Fantasma inherits VerletObject {
-	const fuerza = 0.4 * registry.get("coef")
-	
 	override method image() = "assets/FANTASMA/rojo_arriba1.png"
 	override method initialize() {
 		super()
@@ -221,7 +219,6 @@ class Fantasma inherits VerletObject {
 		self.accelerate(0, -g)
 	}
 	
-	
 	method followPlayer() {
 		const jugador_pos = jugador.position()
 		const a_x = jugador.acc_x()
@@ -230,15 +227,13 @@ class Fantasma inherits VerletObject {
 		// SOLUCIONAR PROBLEMA DE QUE SE PONEN A ORBITAR AL JUGADOR, NUNCA LO ALCANZA
 		
 		const jugador_vel = jugador_pos - vector.at(jugador.pos_x(),jugador.pos_y()) 
-		const pos_diff = jugador_pos - self.position()
-		const eje = pos_diff + jugador_vel * 5 + vector.at(a_x*a_x, a_y*a_y)
-		const hacia = eje / eje.magnitud()
-			
-		if ((a_x != 0) or (a_y != 0)) { // si el jugador acelera...
-			self.accelerate(hacia.x() * fuerza * 3, hacia.y() * fuerza * 3) // va mas rapido
-		} else {
-			self.accelerate(hacia.x() * fuerza, hacia.y() * fuerza)
-		}
+		const diff = jugador_pos - self.position()
+		var hacia = diff + jugador_vel
+		hacia = hacia / hacia.magnitud()
+		
+		
+		const c = registry.get("coef")
+		self.accelerate(hacia.x()*c, hacia.y()*c)
 	}
 	override method update(dt) {
 		//self.applyGravity()
