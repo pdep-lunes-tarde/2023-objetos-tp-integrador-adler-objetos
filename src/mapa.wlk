@@ -1,3 +1,7 @@
+import global.*
+import vectores.*
+import wollok.game.*
+
 object mapa {
 	/*
 	 * Diseñamos el nivel de los juegos 
@@ -34,7 +38,29 @@ object mapa {
 		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-	]
-	
-	
+	]	
 }
+
+
+class Circulo {
+	const property position = registry.get("centro") - vector.at(800/2/20,800/2/20)
+	method image() = "assets/circulo150.png"
+	
+	method initialize() {
+		super()
+		game.addVisual(self)
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

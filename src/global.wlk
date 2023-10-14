@@ -24,22 +24,15 @@ object updater {
 		update_list.remove(updatableObject)
 	}
 	
-	method updateAll(dt) {
+	method updateAll() {
 		// envia el mensaje "update" a cada objeto guardado en la lista update_list
-		update_list.forEach({updatableObject => updatableObject.update(dt)}) 
+		update_list.forEach({updatableObject => updatableObject.update()}) 
 	}
 	
 	method start() {
 		const dt = 1 // tiempo (en ms) que pasa entre cada actualizacion
-		const substeps = 1 // si es igual a 2, ent por cada tick de juego, actualiza dos veces, para mejores fisicas. se re traba asiq sadge :(
-		const sub_dt = dt / substeps
-		
-		
-		game.onTick(dt, "actualizar", {
-			(1 .. substeps).forEach{ a => 
-				self.updateAll(sub_dt)
-			}
-		})
+
+		game.onTick(dt, "actualizar", { self.updateAll() })
 
 //		var i=0
 //		update_list.forEach({updatableObject => 
@@ -58,33 +51,3 @@ object updater {
 		game.removeTickEvent("actualizar")
 	}
 }
-
-
-object timer { 
-	const timeUnit = ms // ms | s | h 
-	var elapsed_time_ms = 0 
-	
-	method start() {
-		game.onTick(1, "elapse", { elapsed_time_ms++ }) // contar cada milisegundo que pasa desde que se inicia el contador
-	}
-	
-	method stop() {
-		game.removeTickEvent("elapse")
-		return elapsed_time_ms
-	}
-}
-
-object ms { // milisegundos
-	
-}
-
-object s { // segundos 
-	
-}
-
-object h { // hora
-	
-}
-
-
-

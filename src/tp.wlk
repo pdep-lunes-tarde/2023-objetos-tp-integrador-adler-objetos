@@ -4,7 +4,7 @@ import global.*
 import vectores.*
 import gameObjects.*
 import colisiones.*
-
+import mapa.*
 
 
 object tpIntegrador {
@@ -20,17 +20,25 @@ object tpIntegrador {
 	  	game.ground("assets/background.png")
 	  	
 	  	// guardo valores globales
-	  	registry.put("window_width", width/pixeles)
-	  	registry.put("window_height", height/pixeles)
+	  	registry.put("grid_width", width/pixeles) // ancho (numero de celdas) de la grilla 
+	  	registry.put("grid_height", height/pixeles)
 	  	registry.put("casillas_pixeles", pixeles)
-	  	registry.put("coef", pixeles/45) // 45 es el tamaño en pixeles
+	  	
+	  	registry.put("centro", vector.at(width/pixeles/2, height/pixeles/2))
 	  	
 	  	
 	  	// agregar visuales
 	  	
+	  	const sine_Pol_mclaur_O10 = { x => 
+	  		return x-((x**3)/6)+((x**5)/120)-((x**7)/5040)+((x**9)/362880)
+	  	}
+	  	const cosine = {x => 
+	  		const a = 90 - x
+	  		return sine_Pol_mclaur_O10.apply(a)
+	  	}
 	  	
-		(1..3).forEach { n =>
-			new Fantasma(x0=n*5, y0=game.center().y())
+		3.times { n =>
+			new Fantasma(x0=game.center().x(), y0=game.center().y())
 		}
 
 //		(0..0).forEach { n => 
@@ -60,6 +68,16 @@ object tpIntegrador {
 		keyboard.q().onPressDo {
 			game.stop()
 		}
+		keyboard.t().onPressDo {
+			console.println(jugador.toString()+": rapidez = "+jugador.rapidez())
+			jugador.tp(jugador.x0(), jugador.y0())
+		}
+		keyboard.r().onPressDo { // reiniciar su posicion, con velocidad 0
+			jugador.reiniciar()
+			
+		}
+		
+		
 //		keyboard.t().onPressDo {
 //			colisiones.toggleColisiones()
 //		}

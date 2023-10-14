@@ -6,8 +6,29 @@ class Vector {
 		return "Vector(" + x.toString() + ", " + y.toString() + ")"
 	}
 	
-	method magnitud() {
+	method modulo() {
 		return (x.square() + y.square()).squareRoot()
+	}
+	method magnitud() = self.modulo() // alias de modulo.
+	
+	method distanciaCon(otroVector) {
+		return (otroVector - self).magnitud()
+	}
+	method versor() {
+		return self/self.magnitud()
+	}
+	method vectorProyeccionSobre(otroVector) {
+		/* El vector proyección de U sobre V es:
+		 * el producto entre el versor de V 
+		 * y el módulo de dicha proyección.
+		 * Si el objetivo final es obtener el módulo del vector proyección, 
+		 * usar directamente el método "escalarProyeccionSobre(otroVector)" 
+		 * y NO: unVector.vectorProyeccionSobre(otroVector).modulo()
+		 */
+		return otroVector.versor() * self.escalarProyeccionSobre(otroVector)
+	}
+	method escalarProyeccionSobre(otroVector) {
+		return (self % otroVector) / (otroVector.modulo())
 	}
 	
 	// como vector inmutable -> es horrible para la performance D:
@@ -19,6 +40,9 @@ class Vector {
 	}
 	method *(escalar) {
 		return new Vector(x = x*escalar, y = y*escalar)
+	}
+	method %(otroVector) { // usamos % para representar producto escalar entre dos vectores
+		return x * otroVector.x() + y * otroVector.y()
 	}
 	method /(escalar) {
 		return new Vector(x = x/escalar, y = y/escalar)

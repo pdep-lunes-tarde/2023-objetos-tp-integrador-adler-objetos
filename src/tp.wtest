@@ -60,8 +60,22 @@ describe "Colisiones" {
 			}
 		)
 	}
-	
 }
+
+
+describe "vectores.wlk" {
+	test "El modulo de la proyeccion de v=(1,2) sobre u=(3,5) debe ser aprox 5,814, redondeado 6" {
+		const v = vector.at(1,2)
+		const u = vector.at(3,5)
+		
+		const proy = u.escalarProyeccionSobre(v)
+		
+		assert.equals(6, proy.roundUp()) 
+		
+	}
+}
+
+
 
 //describe "Tests en tiempo de ejecución" {
 //	

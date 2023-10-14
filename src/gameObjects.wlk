@@ -86,29 +86,43 @@ class PhysicsObject inherits UpdatableObject {
  	}
 }
 
+// valor inicial: en
+class Sangre {
+	const en = registry.get("centro") 
+	const property position = en
+	method image() = "assets/PACMAN/sangre3.png"
+	
+	method initialize() {
+		super()
+		game.addVisual(self)
+		game.schedule(3000, {game.removeVisual(self)}) // se elimina dsp de un rato
+	}
+}
+
 
 class VerletObject {
-	
 	const frameDeColision = new List() // lista de puntos de colision
 	
 	/* Basado en: https://www.youtube.com/watch?v=lS_qeBy3aQI
 	 * 			  https://www.youtube.com/watch?v=-GWTDhOQU6M 
 	 * */  
 	// valores iniciales (por si queremos definirlos al momento de crear una instancia de VerletObject)
-	const x0 = game.center().x() 
-	const y0 = game.center().y() 
+	const property x0 = registry.get("centro").x() - self.height() // dimension de los objetos divddo por dimension de cada celda  
+	const property y0 = registry.get("centro").y() - self.width()
 //	const vel_x0 = 0
 //	const vel_y0 = 0
 	
 	var property pos_x = x0 					// posicion actual (para hacer cálculos)
-	var property pos_y = x0
+	var property pos_y = y0
 	var property position = new Vector(x=x0, y=y0) // posicion actual (para wollok) 
-	var pos_old_x = x0 //- vel_x0 	// posicion anterior
-	var pos_old_y = x0 //- vel_y0
+	var property pos_old_x = x0 //- vel_x0 	// posicion anterior
+	var property pos_old_y = y0 //- vel_y0
 	var property acc_x = 0 	 				// aceleración
 	var property acc_y = 0
 	
-	const g = 0.981 * registry.get("coef")
+	const masa = 1
+	
+	const g = 0.98
 	
 	override method initialize() {
 		updater.add(self)
@@ -118,9 +132,64 @@ class VerletObject {
 	method width() = 45/registry.get("casillas_pixeles")	
 	method image() = "assets/null.png"
 	
+	method reiniciar() {
+		pos_x = x0 					
+		pos_y = y0
+		pos_old_x = x0  	
+		pos_old_y = y0 
+		acc_x = 0 	 				
+		acc_y = 0
+	}
+	
+	method tp(x, y) {
+		// cambia su posicion pero conserva la velocidad que tenía
+		const vel_x = pos_x - pos_old_x
+		const vel_y = pos_y - pos_old_y
+		
+		pos_x = x
+		pos_y = y
+		pos_old_x = pos_x - vel_x
+		pos_old_y = pos_y - vel_y
+	}
+	
+	method morir() {
+		console.println("Rip.")
+		const s = new Sangre(en=vector.at(pos_x,pos_y))
+		//game.removeVisual(self)
+	}
+	
+	method accelerate(_acc_x, _acc_y) {
+		acc_x += _acc_x
+		acc_y += _acc_y
+	}
+	
+	method rapidez() {
+		const vel_x = pos_x - pos_old_x
+		const vel_y = pos_y - pos_old_y
+		return (vel_x*vel_x+vel_y*vel_y).squareRoot()
+	}
+	
+	method estaEnRapidezLetal(ejeDeChoque) { // si la magnitud de su velocidad es letal en caso de encontrarse con una pared
+		const vel_x = pos_x - pos_old_x
+		const vel_y = pos_y - pos_old_y
+		
+		// NO SÉ SI TIENE SIQUIERA SENTIDO ESTO QUE PLANTEO PERO SUENA PIOLA 
+		
+		// rapidez_efectiva es la magnitud de la velocidad perpendicular al plano de choque, 
+		// osea que es la componente de la velocidad que es paralela al eje de choque,
+		// rapidez_efectiva es la rapidez que realmente nos importa para calcular la energia del choque.
+		const rapidez_efectiva = vector.at(vel_x, vel_y).escalarProyeccionSobre(ejeDeChoque) 
+		const energiaChoque = (masa * rapidez_efectiva*rapidez_efectiva)/2
+		if (energiaChoque > 20) {
+			console.println(self.toString()+": "+ energiaChoque.toString()+" joules")
+		}	
+		return energiaChoque > 60
+	}
+	
 	method controlColisiones() {
 		// vemos si en el camino entre pos_old y pos hay algun obstaculo 
-		 
+		
+		
 	}
 	
 	method updatePosition(dt) {
@@ -149,36 +218,38 @@ class VerletObject {
 		position.xy(pos_x, pos_y)
 	}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
 	
-	method accelerate(_acc_x, _acc_y) {
-		acc_x += _acc_x
-		acc_y += _acc_y
-	}
-	
-	method applyConstraint() {
-		const pos = new Vector(x=30, y=16)
-		const radius = 5
-		const to_obj = vector.at(pos_x,pos_y) - pos
-		const dist = to_obj.magnitud()
-		if (dist > radius - 3) {
-			const n = to_obj / dist
-			const v = (pos + n * (radius - 3))
-			pos_x = v.x()
-			pos_y = v.y()
+	method applyCircleConstraint() { // trampa circular invisible
+		const radio = 65 // 20 x 15px  
+		const circulo_centro = registry.get("centro")
+		const ejeDeChoque = circulo_centro - vector.at(pos_x, pos_y)
+		const dist = ejeDeChoque.magnitud()
+		
+		if (dist > radio) { // si se sale del circulo, entonces...
+			const diff = dist - radio
+			const moverHacia = ejeDeChoque.versor() * diff
+			pos_x += moverHacia.x()
+			pos_y += moverHacia.y()
+//			pos_old_x -= moverHacia.x()
+//			pos_old_y -= moverHacia.y()
+			
+			if (self.estaEnRapidezLetal(ejeDeChoque)) {
+				self.morir()
+			}
 		}
 	}
 	
-	method applyWallConstraint(dt) {
+	method applyWallConstraint() {
 		const piso = 0
-		const techo = registry.get("window_height") - self.height() // hay q tener en cuenta el tamaño del sprite,
-		const derecha = registry.get("window_width") - self.width() // ya que el pivot está en la esquina abajo-izquierda del sprite.
+		const techo = registry.get("grid_height") - self.height() // hay q tener en cuenta el tamaño del sprite,
+		const derecha = registry.get("grid_width") - self.width() // ya que el pivot está en la esquina abajo-izquierda del sprite.
 		const izquierda = 0
 		
-		const vel_x = (pos_x - pos_old_x)/dt  
-		const vel_y = (pos_y - pos_old_y)/dt
+		const vel_x = (pos_x - pos_old_x) 
+		const vel_y = (pos_y - pos_old_y)
 		
 		if (pos_y < piso) {	 								// cuando encuentra el piso
 			pos_y = piso
-			pos_old_y = pos_y + vel_y 						
+			pos_old_y = pos_y + vel_y				
 		}
 		if (pos_x < izquierda) { 
 			pos_x = izquierda
@@ -194,11 +265,20 @@ class VerletObject {
 		}
 		
 	}
+	method applyGravity() {
+		self.accelerate(0,-g)
+	}
 
-	method update(dt) {
-		self.applyWallConstraint(dt)
-		//self.applyConstraint()
-		self.updatePosition(dt) 
+	method update() {
+		const dt = 1
+		const substep = 1 // hacemos substeps para mejores físicas. poner en 1 para deshabilitarlo
+		const sub_dt = dt / substep
+		substep.times { i =>
+			//self.applyGravity()
+			self.applyWallConstraint()
+			self.applyCircleConstraint()
+			self.updatePosition(sub_dt) 
+		}
 	}
 	
 	
@@ -228,17 +308,14 @@ class Fantasma inherits VerletObject {
 		
 		const jugador_vel = jugador_pos - vector.at(jugador.pos_x(),jugador.pos_y()) 
 		const diff = jugador_pos - self.position()
-		var hacia = diff + jugador_vel
-		hacia = hacia / hacia.magnitud()
+		const hacia = (diff + jugador_vel).versor()
 		
-		
-		const c = registry.get("coef")
-		self.accelerate(hacia.x()*c, hacia.y()*c)
+		self.accelerate(hacia.x(), hacia.y())
 	}
-	override method update(dt) {
-		//self.applyGravity()
-		self.followPlayer() 
-		super(dt) 
+	override method update() {
+		self.applyGravity()
+		//self.followPlayer() 
+		super()
 	}
 	
 	
@@ -252,13 +329,11 @@ class Fantasma inherits VerletObject {
 
 const jugador = new Pacman()
 class Pacman inherits VerletObject {
-	const property  fuerza = 3 * registry.get("coef")
+	const property fuerza = 30
 	
 	var orientacion = "der"
 	var animacionEstado = "cerrado"
 	var aux = "cerrado"+"-"+orientacion
-	
-	const masa = 1
 	
 	override method image() = "assets/PACMAN/"+aux+".png"
 	
@@ -271,16 +346,7 @@ class Pacman inherits VerletObject {
 	 * */
 	
 	override method initialize() {
-		super()
-		
-//		game.whenCollideDo(self, {x => 
-//			frameDeColision.forEach { ptoColision => 
-//				if (not (x === ptoColision)) {
-//					game.say(self, "Choque a " + x.identity())
-//				} 
-//			}	
-//		})
-		
+		super()		
 		game.onTick(80, "animacion-pacman", { 
 			if(animacionEstado == "abierto") {
 				animacionEstado = "medio"
@@ -297,7 +363,6 @@ class Pacman inherits VerletObject {
 		})
 	}
 	 
-	
 	// crean el efecto de que alguien los tira hacia el sentido indicado
 	method arriba() {
 		self.accelerate(0, fuerza * masa)							
