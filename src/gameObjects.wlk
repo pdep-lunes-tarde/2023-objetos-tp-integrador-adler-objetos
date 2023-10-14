@@ -187,9 +187,12 @@ class VerletObject {
 		return energiaChoque > 60
 	}
 	
-	method controlColisiones() {
-		// vemos si en el camino entre pos_old y pos hay algun obstaculo 
-		
+	method ColisionConOtroVerletObject() {
+		/* https://www.youtube.com/watch?v=eED4bSkYCB8
+		 * - Checkear cada par -> HORRIBLE
+		 * - Sweep & Prune -> método de los intervalos -> muuuuuuuuuchisimo mejor q el anterior
+		 * - Space partitioning -> Uniform grids / K-D Trees /  
+		 */
 		
 	}
 	
@@ -208,8 +211,6 @@ class VerletObject {
 		// calculamos la nueva posicion con Integración de Verlet (agregue 0.95 para simular friccion)
 		pos_x += vel_x * 0.95 + acc_x *dt*dt 
 		pos_y += vel_y * 0.95 + acc_y *dt*dt
-		
-		self.controlColisiones() // antes de aplicar cambios, verificamos si pos_x y pos_y chocan algo
 		
 		// reiniciamos el valor de la aceleracion
 		acc_x = 0
@@ -233,8 +234,14 @@ class VerletObject {
 			if (self.estaEnRapidezLetal(ejeDeChoque)) {
 				self.morir()
 			}
+			/* A GRANDES VELOCIDADES, SE BUGGEA, SOLUCIONES:
+			 * - Hacer substeps.
+			 * - Implementar Continious collision detection.
+			 * - Hacer que rebote, reduce las ocurrencias de bug, aunque a veces sigue pasando. 
+			 * */
+			
 			pos_x += moverHacia.x()
-			pos_y += moverHacia.y()  // con substep = 2 se buggea menos
+			pos_y += moverHacia.y()  
 			const vel_x = pos_x - pos_old_x 
 			const vel_y = pos_y - pos_old_y
 //			pos_old_x = pos_x + vel_x * (1-coef_perdida_energia) 
