@@ -29,6 +29,7 @@ object tpIntegrador {
 	  	
 	  	// agregar visuales
 	  	
+		// Aproximacion del Seno con un polinomio de mclaurin de orden 10
 	  	const sine_Pol_mclaur_O10 = { x => 
 	  		return x-((x**3)/6)+((x**5)/120)-((x**7)/5040)+((x**9)/362880)
 	  	}
@@ -38,8 +39,13 @@ object tpIntegrador {
 	  	}
 	  	
 		3.times { n =>
-			new Fantasma(x0=game.center().x(), y0=game.center().y())
+			const fantasma = new Fantasma(x0=game.center().x()-1 + n*3, y0=game.center().y()+65, vel_x0=30, hayFriccion=false)
+			game.onTick(1, "aceleracion radial", {
+				const aceleracionRadial = registry.get("centro") - fantasma.position()
+				fantasma.accelerate(aceleracionRadial) // acelerar hacia el centro. Aceleracion radial.
+			})
 		}
+		
 
 //		(0..0).forEach { n => 
 //			const obstaculo = new GameObject(x=n,y=n)

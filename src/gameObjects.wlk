@@ -7,171 +7,120 @@ import colisiones.*
 
 
 class GameObject {
-	// usamos variable propias x e y,
-	// hace los cálculos muchisimo más rápido que los Vectores (ya lo probé, rip performance), ¿¿¿¿con otros tipos de pares ordenados funcionará????
-	var property x = 0
-	var property y = 0
+	// valores iniciales (por si queremos definirlos al momento de crear una instancia de la clase)
+	const property x0 = registry.get("centro").x() - self.width()/5
+	const property y0 = registry.get("centro").y() - self.height()/5
+	const vel_x0 = 0
+	const vel_y0 = 0
+
 	// "position" es lo que le importa a wollok game,
-	// por ende usamos "position" nomás para efectuar el cambio de posición. Utilizamos un vector mutable que entiende mensajes "x()" e "y()".
-	const property position = vector.at(x,y) // wollok game debe poder leer la posicion, por ende es property
+	// por ende usamos "position" nomás para efectuar el cambio de posición. 
+	// Utilizamos un vector mutable que entiende mensajes "x()" e "y()".
+	var property position = new Vector(x=x0, y=y0) 				// posicion actual (para wollok)
 	
-	var property frameDeColision = null // definirlo con (new FrameDeColision())
+	const property frameDeColision = new List() 				// lista de puntos de colision. Variable constante, pero lista mutable. 
+																//Con poder acceder a esta ya podemos modificarla a gusto.
 	
-	method asignarFrame(_frameDeColision) {
-		frameDeColision = _frameDeColision
-	}
-	method height() = 60/registry.get("casillas_pixeles")			 	// tamaño en pixeles de la imagen utilizada divido por el tamaño de pixel de una casilla
-	method width() = 60/registry.get("casillas_pixeles")				// se puede observar la dimensión de la imágen en el .png
+	method height() = 45/registry.get("casillas_pixeles")		// tamaño en pixeles de la imagen utilizada divido por el tamaño de pixel de una casilla
+	method width() = 45/registry.get("casillas_pixeles")		// se puede observar la dimensión de la imágen en el .png
 	method image() = "assets/null.png"
 	
 	override method initialize() {
 		super() 
-		game.addVisual(self)
-		(new FrameDeColision(objetoAsociado=self)).agregarPerimetro(
-			new Rectangulo(altura=self.height(), ancho=self.width()), 
-			vector.at(0,0)
-		)
+		game.addVisual(self) 									// se muestra automáticamente en pantalla al crearse una instancia de la clase
 	}
-	
-}
 
+	method eliminar() {
+		game.removeVisual(self)
+	}
+}
 class UpdatableObject inherits GameObject {
 	override method initialize() {
 		super()
-		updater.add(self) // se agrega al updater al crearse una instancia de la clase
+		updater.add(self) 	// se agrega al updater al crearse una instancia de la clase
 	}
 	method update() 
 }
 
-class PhysicsObject inherits UpdatableObject {
-	var property vel_x = 0 // magnitud en pixeles por milisegundo
-	var property vel_y = 0
-	var property acel_x = 0 // pixeles por milisegundo al cuadrado 
-	var property acel_y = 0
-	
-	const masa = 1
-	const coef_friccion = 0.05
+// valor inicial: en
+class Sangre inherits GameObject {
+	override method image() = "assets/PACMAN/sangre3.png"
 	
 	override method initialize() {
-		super()	
-		vel_x = 20	
-		vel_y = 10
-	}
-	
-	override method update() {
-		// actualizamos las cantidades fisicas
-		x += vel_x
-		y += vel_y
-		vel_x += acel_x
-		vel_y += acel_y
-		vel_x -= vel_x * coef_friccion // si usamos Masa, entonces debemos cambiar esta implementacion.
-		vel_y -= vel_y * coef_friccion
-		
-		// controlamos los valores antes de efectuar los cambios 
-		self.control() 
-		
-		// efectuamos los cambios
-		position.xy(x, y)
-	}
-	
-	method control() {
-		self.controlColisiones()
-	}
-	
-	method controlColisiones() {
- 		frameDeColision.perimetro().forEach { ptoColision =>
-			ptoColision.pivote_x(x)
-			ptoColision.pivote_y(y)
-		}
- 	}
-}
-
-// valor inicial: en
-class Sangre {
-	const en = registry.get("centro") 
-	const property position = en
-	method image() = "assets/PACMAN/sangre3.png"
-	
-	method initialize() {
 		super()
-		game.addVisual(self)
-		game.schedule(3000, {game.removeVisual(self)}) // se elimina dsp de un rato
+		game.schedule(3000, {game.removeVisual(self)}) 	// se elimina dsp de un rato
 	}
 }
 
-
-class VerletObject {
-	const frameDeColision = new List() // lista de puntos de colision
-	
+class VerletObject inherits UpdatableObject {	
 	/* Basado en: https://www.youtube.com/watch?v=lS_qeBy3aQI
 	 * 			  https://www.youtube.com/watch?v=-GWTDhOQU6M 
 	 * */  
-	// valores iniciales (por si queremos definirlos al momento de crear una instancia de VerletObject)
-	const property x0 = registry.get("centro").x() - self.width()/5
-	const property y0 = registry.get("centro").y() - self.height()/5
-//	const vel_x0 = 0
-//	const vel_y0 = 0
 	
-	var property pos_x = x0 					// posicion actual (para hacer cálculos)
-	var property pos_y = y0
-	var property position = new Vector(x=x0, y=y0) // posicion actual (para wollok) 
-	var property pos_old_x = x0 //- vel_x0 	// posicion anterior
-	var property pos_old_y = y0 //- vel_y0
+	/* usamos variable propias x e y, hace los cálculos muchisimo 
+	 * más rápido que los Vectores (ya lo probé, rip performance), 
+	 * ¿¿¿¿con otros tipos de pares ordenados funcionará???? 
+	 * */
+	var property x = x0 					// posicion actual (para hacer cálculos)
+	var property y = y0
+	var property old_x = x0 - vel_x0 		// posicion anterior
+	var property old_y = y0 - vel_y0
+
 	var property acc_x = 0 	 				// aceleración
 	var property acc_y = 0
 	
+	const hayFriccion = true
 	const masa = 1
 	
 	const g = 0.98
 	
 	override method initialize() {
-		updater.add(self)
-		game.addVisual(self)
+		super()
 	}
-	method height() = 45/registry.get("casillas_pixeles")	
-	method width() = 45/registry.get("casillas_pixeles")	
-	method image() = "assets/null.png"
 	
 	method reiniciar() {
-		pos_x = x0 					
-		pos_y = y0
-		pos_old_x = x0  	
-		pos_old_y = y0 
+		x = x0 					
+		y = y0
+		old_x = x0  	
+		old_y = y0 
 		acc_x = 0 	 				
 		acc_y = 0
 	}
 	
-	method tp(x, y) {
-		// cambia su posicion pero conserva la velocidad que tenía
-		const vel_x = pos_x - pos_old_x
-		const vel_y = pos_y - pos_old_y
+	method tp(_x, _y) {  					// cambia su posicion pero conserva la velocidad que tenía
+		const vel_x = x - old_x
+		const vel_y = y - old_y
 		
-		pos_x = x
-		pos_y = y
-		pos_old_x = pos_x - vel_x
-		pos_old_y = pos_y - vel_y
+		x = _x
+		y = _x
+		old_x = x - vel_x
+		old_y = y - vel_y
 	}
 	
 	method morir() {
 		console.println("Rip.")
-		const s = new Sangre(en=vector.at(pos_x,pos_y))
-		//game.removeVisual(self)
+		const s = new Sangre(x0=x, y0=y)
+		//self.eliminar()
 	}
 	
 	method accelerate(_acc_x, _acc_y) {
 		acc_x += _acc_x
 		acc_y += _acc_y
 	}
+	method accelerate(_vector) {
+		acc_x += _vector.x()
+		acc_y += _vector.y()
+	}
 	
 	method rapidez() {
-		const vel_x = pos_x - pos_old_x
-		const vel_y = pos_y - pos_old_y
+		const vel_x = x - old_x
+		const vel_y = y - old_y
 		return (vel_x*vel_x+vel_y*vel_y).squareRoot()
 	}
 	
 	method estaEnRapidezLetal(ejeDeChoque) { // si la magnitud de su velocidad es letal en caso de encontrarse con una pared
-		const vel_x = pos_x - pos_old_x
-		const vel_y = pos_y - pos_old_y
+		const vel_x = x - old_x
+		const vel_y = y - old_y
 		
 		// NO SÉ SI TIENE SIQUIERA SENTIDO ESTO QUE PLANTEO PERO SUENA PIOLA 
 		
@@ -193,7 +142,6 @@ class VerletObject {
 		 * - Sweep & Prune -> método de los intervalos -> muuuuuuuuuchisimo mejor q el anterior
 		 * - Space partitioning -> Uniform grids / K-D Trees /  
 		 */
-		
 	}
 	
 	method updatePosition(dt) {
@@ -201,33 +149,39 @@ class VerletObject {
 		// si los ticks del updater son mayores al valor del dt, entocnes se va a ver en cámara lenta
 		
 		// calculamos la velocidad con las posiciones actual y anterior
-		const vel_x = pos_x - pos_old_x  
-		const vel_y = pos_y - pos_old_y
+		const vel_x = x - old_x  
+		const vel_y = y - old_y
 		
 		// guardamos las posiciones actuales 
-		pos_old_x = pos_x
-		pos_old_y = pos_y
+		old_x = x
+		old_y = y
 			
 		// calculamos la nueva posicion con Integración de Verlet (agregue 0.95 para simular friccion)
-		pos_x += vel_x * 0.95 + acc_x *dt*dt 
-		pos_y += vel_y * 0.95 + acc_y *dt*dt
+		if (hayFriccion) {
+			x += vel_x * 0.95 + acc_x *dt*dt 
+			y += vel_y * 0.95 + acc_y *dt*dt
+		} 
+		else {
+			x += vel_x + acc_x *dt*dt 
+			y += vel_y + acc_y *dt*dt
+		}
 		
 		// reiniciamos el valor de la aceleracion
 		acc_x = 0
 		acc_y = 0 
 		
 		// aplicamos cambios en wollok game
-		position.xy(pos_x, pos_y)
+		position.xy(x, y)
 	}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
 	
 	method applyCircleConstraint(posicion, radio) { // trampa circular invisible
 		const circulo_centro = posicion
-		const ejeDeChoque = circulo_centro - vector.at(pos_x, pos_y)
+		const ejeDeChoque = circulo_centro - vector.at(x, y)
 		const dist = ejeDeChoque.magnitud()
 		
 		const coef_perdida_energia = 0.05
 		
-		if (dist > radio) { // si se sale del circulo, entonces...
+		if (dist > radio) {  // si se sale del circulo, entonces...
 			const diff = dist - radio
 			const moverHacia = ejeDeChoque.versor() * diff
 		
@@ -240,12 +194,12 @@ class VerletObject {
 			 * - Hacer que rebote, reduce las ocurrencias de bug, aunque a veces sigue pasando. 
 			 * */
 			
-			pos_x += moverHacia.x()
-			pos_y += moverHacia.y()  
-			const vel_x = pos_x - pos_old_x 
-			const vel_y = pos_y - pos_old_y
-//			pos_old_x = pos_x + vel_x * (1-coef_perdida_energia) 
-//			pos_old_y = pos_y + vel_y * (1-coef_perdida_energia) 
+			x += moverHacia.x()
+			y += moverHacia.y()  
+//			const vel_x = x - old_x 
+//			const vel_y = y - old_y
+//			old_x = x + vel_x * (1-coef_perdida_energia) 
+//			old_y = y + vel_y * (1-coef_perdida_energia) 
 		}
 	}
 	
@@ -257,24 +211,24 @@ class VerletObject {
 		
 		const coef_perdida_energia = 0.05
 		
-		const vel_x = (pos_x - pos_old_x) * (1-coef_perdida_energia) 
-		const vel_y = (pos_y - pos_old_y) * (1-coef_perdida_energia)
+		const vel_x = (x - old_x) * (1-coef_perdida_energia) 
+		const vel_y = (y - old_y) * (1-coef_perdida_energia)
 		
-		if (pos_y < piso) {	 								// cuando encuentra el piso
-			pos_y = piso
-			pos_old_y = pos_y + vel_y				
+		if (y < piso) {	 								// cuando encuentra el piso
+			y = piso
+			old_y = y + vel_y				
 		}
-		if (pos_x < izquierda) { 
-			pos_x = izquierda
-			pos_old_x = pos_x + vel_x
+		if (x < izquierda) { 
+			x = izquierda
+			old_x = x + vel_x
 		}
-		if (pos_y > techo) { 								// cuando encuentra el techo
-			pos_y = techo
-			pos_old_y = pos_y + vel_y
+		if (y > techo) { 								// cuando encuentra el techo
+			y = techo
+			old_y = y + vel_y
 		}									
-		if (pos_x > derecha) {					
-			pos_x = derecha
-			pos_old_x = pos_x + vel_x
+		if (x > derecha) {					
+			x = derecha
+			old_x = x + vel_x
 		}
 		
 	}
@@ -294,11 +248,9 @@ class VerletObject {
 		}
 	}
 	
-	
 	method colisionConObstaculo(obstaculo) {
-		const eje_colision = self.position() - self.position() // solo nos importa el ángulo de este vector, para conocer la direccion del rebote
-		
-		
+		const eje_colision = obstaculo.position() - self.position()
+			
 	}
 }
 
@@ -319,7 +271,7 @@ class Fantasma inherits VerletObject {
 	
 		// SOLUCIONAR PROBLEMA DE QUE SE PONEN A ORBITAR AL JUGADOR, NUNCA LO ALCANZA
 		
-		const jugador_vel = jugador_pos - vector.at(jugador.pos_x(),jugador.pos_y()) 
+		const jugador_vel = jugador_pos - vector.at(jugador.x(),jugador.y()) 
 		const diff = jugador_pos - self.position()
 		const hacia = (diff + jugador_vel).versor()
 		
