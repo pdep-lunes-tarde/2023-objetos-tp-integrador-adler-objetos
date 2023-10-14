@@ -44,6 +44,7 @@ object tpIntegrador {
 				const aceleracionRadial = registry.get("centro") - fantasma.position()
 				fantasma.accelerate(aceleracionRadial) // acelerar hacia el centro. Aceleracion radial.
 			})
+			// el fantasma necesita velocidad inicial suficiente para ponerse en orbita y seguir un MOA.
 		}
 		
 
