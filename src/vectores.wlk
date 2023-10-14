@@ -31,6 +31,39 @@ class Vector {
 		return (self % otroVector) / (otroVector.modulo())
 	}
 	
+	method apuntaHacia() {
+		if (x==0) {
+			if (y==0) {
+				return null // no apunta a nada
+			} 
+			if (y>0) {
+				return norte 
+			}
+			if (y<0) {
+				return sur
+			} 
+		}
+		if (x>0) {
+			if (x==y) {
+				return noreste
+			}
+			if (x==-y) {
+				return sureste
+			}
+			return este
+		}
+		else if (x<0) {
+			if (x==y) {
+				return suroeste
+			}
+			if (x==-y) {
+				return noroeste
+			}
+			return oeste
+		}
+		return null
+	}
+	
 	// como vector inmutable -> es horrible para la performance D:
 	method +(otroVector) {
 		return new Vector(x = x+otroVector.x(), y = y+otroVector.y())
@@ -98,9 +131,47 @@ object vector {
 }
 
 
+// cardinales 
+object norte {
+	method versor() {
+		return new Vector(x=0,y=1)
+	}
+}
+object sur {
+	method versor() {
+		return new Vector(x=0,y=-1)
+	}
+}
+object este {
+	method versor() {
+		return new Vector(x=1,y=0)
+	}
+}
+object oeste {
+	method versor() {
+		return new Vector(x=-1,y=0)
+	}
+}
 
-
-
-
+object noreste {
+	method versor() {
+		return (new Vector(x=1,y=1)).versor()
+	}
+}
+object noroeste {
+	method versor() {
+		return (new Vector(x=-1,y=1)).versor()
+	}
+}
+object sureste {
+	method versor() {
+		return (new Vector(x=1,y=-1)).versor()
+	}
+}
+object suroeste {
+	method versor() {
+		return (new Vector(x=-1,y=-1)).versor()
+	}
+}
 
 

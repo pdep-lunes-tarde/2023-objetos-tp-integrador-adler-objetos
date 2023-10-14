@@ -107,8 +107,8 @@ class VerletObject {
 	 * 			  https://www.youtube.com/watch?v=-GWTDhOQU6M 
 	 * */  
 	// valores iniciales (por si queremos definirlos al momento de crear una instancia de VerletObject)
-	const property x0 = registry.get("centro").x() - self.height() // dimension de los objetos divddo por dimension de cada celda  
-	const property y0 = registry.get("centro").y() - self.width()
+	const property x0 = registry.get("centro").x() - self.width()/5
+	const property y0 = registry.get("centro").y() - self.height()/5
 //	const vel_x0 = 0
 //	const vel_y0 = 0
 	
@@ -179,9 +179,10 @@ class VerletObject {
 		// osea que es la componente de la velocidad que es paralela al eje de choque,
 		// rapidez_efectiva es la rapidez que realmente nos importa para calcular la energia del choque.
 		const rapidez_efectiva = vector.at(vel_x, vel_y).escalarProyeccionSobre(ejeDeChoque) 
+//		const rapidez_efectiva = vector.at(vel_x, vel_y).modulo()
 		const energiaChoque = (masa * rapidez_efectiva*rapidez_efectiva)/2
 		if (energiaChoque > 20) {
-			console.println(self.toString()+": "+ energiaChoque.toString()+" joules")
+			console.println(self.toString()+": Energia = "+ energiaChoque.toString())
 		}	
 		return energiaChoque > 60
 	}
@@ -218,23 +219,26 @@ class VerletObject {
 		position.xy(pos_x, pos_y)
 	}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
 	
-	method applyCircleConstraint() { // trampa circular invisible
-		const radio = 65 // 20 x 15px  
-		const circulo_centro = registry.get("centro")
+	method applyCircleConstraint(posicion, radio) { // trampa circular invisible
+		const circulo_centro = posicion
 		const ejeDeChoque = circulo_centro - vector.at(pos_x, pos_y)
 		const dist = ejeDeChoque.magnitud()
+		
+		const coef_perdida_energia = 0.05
 		
 		if (dist > radio) { // si se sale del circulo, entonces...
 			const diff = dist - radio
 			const moverHacia = ejeDeChoque.versor() * diff
-			pos_x += moverHacia.x()
-			pos_y += moverHacia.y()
-//			pos_old_x -= moverHacia.x()
-//			pos_old_y -= moverHacia.y()
-			
+		
 			if (self.estaEnRapidezLetal(ejeDeChoque)) {
 				self.morir()
 			}
+			pos_x += moverHacia.x()
+			pos_y += moverHacia.y()  // con substep = 2 se buggea menos
+			const vel_x = pos_x - pos_old_x 
+			const vel_y = pos_y - pos_old_y
+//			pos_old_x = pos_x + vel_x * (1-coef_perdida_energia) 
+//			pos_old_y = pos_y + vel_y * (1-coef_perdida_energia) 
 		}
 	}
 	
@@ -244,8 +248,10 @@ class VerletObject {
 		const derecha = registry.get("grid_width") - self.width() // ya que el pivot está en la esquina abajo-izquierda del sprite.
 		const izquierda = 0
 		
-		const vel_x = (pos_x - pos_old_x) 
-		const vel_y = (pos_y - pos_old_y)
+		const coef_perdida_energia = 0.05
+		
+		const vel_x = (pos_x - pos_old_x) * (1-coef_perdida_energia) 
+		const vel_y = (pos_y - pos_old_y) * (1-coef_perdida_energia)
 		
 		if (pos_y < piso) {	 								// cuando encuentra el piso
 			pos_y = piso
@@ -271,12 +277,12 @@ class VerletObject {
 
 	method update() {
 		const dt = 1
-		const substep = 1 // hacemos substeps para mejores físicas. poner en 1 para deshabilitarlo
+		const substep = 2 // hacemos substeps para mejores físicas. poner en 1 para deshabilitarlo
 		const sub_dt = dt / substep
 		substep.times { i =>
 			//self.applyGravity()
 			self.applyWallConstraint()
-			self.applyCircleConstraint()
+			self.applyCircleConstraint(registry.get("centro"), 65)
 			self.updatePosition(sub_dt) 
 		}
 	}
@@ -329,7 +335,7 @@ class Fantasma inherits VerletObject {
 
 const jugador = new Pacman()
 class Pacman inherits VerletObject {
-	const property fuerza = 30
+	const property fuerza = 20
 	
 	var orientacion = "der"
 	var animacionEstado = "cerrado"

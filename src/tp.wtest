@@ -73,6 +73,36 @@ describe "vectores.wlk" {
 		assert.equals(6, proy.roundUp()) 
 		
 	}
+	test "(9, 7) apunta hacia este" {
+		const v = vector.at(9,7)
+		assert.equals(este, v.apuntaHacia())
+	}
+	test "(3, 10) apunta hacia norte" {
+		const v = vector.at(3,10)
+		assert.equals(norte, v.apuntaHacia())
+	}
+	test "(3, 10) y (-1, 9) apunta hacia norte" {
+		const v = vector.at(3,10)
+		const u = vector.at(-1,9)
+		assert.equals(norte, v.apuntaHacia())
+		assert.equals(norte, u.apuntaHacia())
+	}
+	test "(-3, 1) y (-7, -4) apunta hacia oeste" {
+		const v = vector.at(-3,1)
+		const u = vector.at(-7,-4)
+		assert.equals(oeste, v.apuntaHacia())
+		assert.equals(oeste, u.apuntaHacia())
+	}
+	test "(-2, -9) y (6, -8) apunta hacia sur" {
+		const v = vector.at(-2,-9)
+		const u = vector.at(6,-8)
+		assert.equals(sur, v.apuntaHacia())
+		assert.equals(sur, u.apuntaHacia())
+	}
+	test "(-7, -7) apunta hacia suroeste" {
+		const v = vector.at(-7,-7)
+		assert.equals(suroeste, v.apuntaHacia())
+	}
 }
 
 
