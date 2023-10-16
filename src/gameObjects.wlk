@@ -4,14 +4,16 @@ import global.*
 import vectores.*
 import colisiones.*
 
-
-
+// valores iniciales (por si queremos definirlos al momento de crear una instancia de la clase)
+// x0, y0, vel_x0, vel_y0, collidable, frameDeColision (deberia hacerlo automatico)
 class GameObject {
-	// valores iniciales (por si queremos definirlos al momento de crear una instancia de la clase)
+	
 	const property x0 = registry.get("centro").x() - self.width()/5
 	const property y0 = registry.get("centro").y() - self.height()/5
 	const vel_x0 = 0
 	const vel_y0 = 0
+	
+	var property doCollision = true
 
 	// "position" es lo que le importa a wollok game,
 	// por ende usamos "position" nomás para efectuar el cambio de posición. 
@@ -26,14 +28,33 @@ class GameObject {
 	method image() = "assets/null.png"
 	
 	override method initialize() {
-		super() 
+		super()
 		game.addVisual(self) 									// se muestra automáticamente en pantalla al crearse una instancia de la clase
+		if (doCollision) {
+			colisiones.conjuntoObjetos().add(self)
+		}
 	}
 
 	method eliminar() {
 		game.removeVisual(self)
+		colisiones.conjuntoObjetos().remove(self)
+	}
+	
+	method doCollision(_state) { 
+		doCollision = _state
+		if (_state) {
+			colisiones.conjuntoObjetos().add(self)
+		}
+		else {
+			colisiones.conjuntoObjetos().remove(self)
+		}
+	}
+	method toggleCollision() { // permite togglear las colisiones del gameObject
+		self.doCollision(not doCollision)
 	}
 }
+
+
 class UpdatableObject inherits GameObject {
 	override method initialize() {
 		super()
@@ -44,7 +65,7 @@ class UpdatableObject inherits GameObject {
 
 // valor inicial: en
 class Sangre inherits GameObject {
-	override method image() = "assets/PACMAN/sangre3.png"
+	override method image() = "assets/PACMAN/sangre3.png" 
 	
 	override method initialize() {
 		super()
@@ -76,6 +97,7 @@ class VerletObject inherits UpdatableObject {
 	
 	override method initialize() {
 		super()
+
 	}
 	
 	method reiniciar() {
@@ -99,7 +121,7 @@ class VerletObject inherits UpdatableObject {
 	
 	method morir() {
 		console.println("Rip.")
-		const s = new Sangre(x0=x, y0=y)
+		const s = new Sangre(x0=x, y0=y, doCollision=false)
 		//self.eliminar()
 	}
 	
@@ -134,14 +156,6 @@ class VerletObject inherits UpdatableObject {
 			console.println(self.toString()+": Energia = "+ energiaChoque.toString())
 		}	
 		return energiaChoque > 60
-	}
-	
-	method ColisionConOtroVerletObject() {
-		/* https://www.youtube.com/watch?v=eED4bSkYCB8
-		 * - Checkear cada par -> HORRIBLE
-		 * - Sweep & Prune -> método de los intervalos -> muuuuuuuuuchisimo mejor q el anterior
-		 * - Space partitioning -> Uniform grids / K-D Trees /  
-		 */
 	}
 	
 	method updatePosition(dt) {
@@ -189,6 +203,7 @@ class VerletObject inherits UpdatableObject {
 				self.morir()
 			}
 			/* A GRANDES VELOCIDADES, SE BUGGEA, SOLUCIONES:
+			 * - Limitar las velocidades
 			 * - Hacer substeps.
 			 * - Implementar Continious collision detection.
 			 * - Hacer que rebote, reduce las ocurrencias de bug, aunque a veces sigue pasando. 
@@ -247,12 +262,64 @@ class VerletObject inherits UpdatableObject {
 			self.updatePosition(sub_dt) 
 		}
 	}
-	
-	method colisionConObstaculo(obstaculo) {
-		const eje_colision = obstaculo.position() - self.position()
-			
-	}
+
+	method resolverColisionCon(objeto)
 }
+
+object jugador inherits VerletObject {
+	const property fuerza = 20
+
+	var orientacion = "der"
+	var animacionEstado = "cerrado"
+	var aux = "cerrado"+"-"+orientacion
+
+	const radio = self.width()/2
+	
+	override method image() = "assets/PACMAN/"+aux+".png"
+	method animacion() {
+		if(animacionEstado == "abierto") {
+			animacionEstado = "medio"
+			aux = animacionEstado+"-"+orientacion
+		} 
+		else if(animacionEstado == "medio") {
+			animacionEstado = "cerrado"
+			aux = animacionEstado 
+		} 
+		else {
+			animacionEstado = "abierto"
+			aux = animacionEstado+"-"+orientacion
+		}
+	}
+	
+	override method initialize() {
+		super()		
+		game.onTick(80, "animacion-pacman", { self.animacion() })
+	}
+
+	// crean el efecto de que alguien los tira hacia el sentido indicado
+	method arriba() {
+		self.accelerate(0, fuerza * masa)							
+		orientacion = "arriba"
+	}
+	method abajo() {
+		self.accelerate(0, -fuerza * masa)		
+		orientacion = "abajo"						
+	}
+	method derecha() {
+		self.accelerate(fuerza * masa, 0)		
+		orientacion = "der"						
+	}
+	method izquierda() {
+		self.accelerate(-fuerza * masa, 0)
+		orientacion = "izq"							
+	}
+
+	override method resolverColisionCon(objeto) {
+		game.say(self, "Choque con "+objeto.toString())
+		self.morir()
+	}		
+}
+
 
 class Fantasma inherits VerletObject {
 	override method image() = "assets/FANTASMA/rojo_arriba1.png"
@@ -278,78 +345,13 @@ class Fantasma inherits VerletObject {
 		self.accelerate(hacia.x(), hacia.y())
 	}
 	override method update() {
-		self.applyGravity()
+		//self.applyGravity()
 		//self.followPlayer() 
 		super()
 	}
 	
-	
-	// resuelve la colision entre fantasma y jugador
-	method colisionConJugador() {
-		
-	}
-	
-	
+	override method resolverColisionCon(objeto) {
+		game.say(self, "Choque con "+objeto.toString())
+		self.morir()
+	}	
 }
-
-const jugador = new Pacman()
-class Pacman inherits VerletObject {
-	const property fuerza = 20
-	
-	var orientacion = "der"
-	var animacionEstado = "cerrado"
-	var aux = "cerrado"+"-"+orientacion
-	
-	override method image() = "assets/PACMAN/"+aux+".png"
-	
-	/* PARA LAS COLISIONES. 
-	 * DIVIDIR LA PANTALLA EN VARIAS CELDAS, DEBEN SER MAS GRANDES QUE LAS DE WOLLOK
-	 * LLEVAR REGISTRO INDIVIDUAL DE LAS CELDAS QUE OCUPA CADA GAMEOBJECT
-	 * SI OTRO GAMEOBJECT COMPARTE ALGUNA CELDA SIMULTANEAMENTE CON EL JUGADOR...
-	 * ENTONCES, VERIFICAMOS SI EN ESA CELDA SE DA REALMENTE UNA COLISION. 
-	 * 
-	 * */
-	
-	override method initialize() {
-		super()		
-		game.onTick(80, "animacion-pacman", { 
-			if(animacionEstado == "abierto") {
-				animacionEstado = "medio"
-				aux = animacionEstado+"-"+orientacion
-			} 
-			else if(animacionEstado == "medio") {
-				animacionEstado = "cerrado"
-				aux = animacionEstado 
-			} 
-			else {
-				animacionEstado = "abierto"
-				aux = animacionEstado+"-"+orientacion
-			}
-		})
-	}
-	 
-	// crean el efecto de que alguien los tira hacia el sentido indicado
-	method arriba() {
-		self.accelerate(0, fuerza * masa)							
-		orientacion = "arriba"
-	}
-	method abajo() {
-		self.accelerate(0, -fuerza * masa)		
-		orientacion = "abajo"						
-	}
-	method derecha() {
-		self.accelerate(fuerza * masa, 0)		
-		orientacion = "der"						
-	}
-	method izquierda() {
-		self.accelerate(-fuerza * masa, 0)
-		orientacion = "izq"							
-	}
-	
-	method colisionConFantasma() {
-		
-	}
-	
-}
-
-

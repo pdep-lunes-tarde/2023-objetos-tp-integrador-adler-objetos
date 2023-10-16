@@ -23,19 +23,18 @@ object tpIntegrador {
 	  	registry.put("grid_width", width/pixeles) // ancho (numero de celdas) de la grilla 
 	  	registry.put("grid_height", height/pixeles)
 	  	registry.put("casillas_pixeles", pixeles)
-	  	
 	  	registry.put("centro", vector.at(width/pixeles/2, height/pixeles/2))
 	  	
 	  	
 	  	// agregar visuales
-	  	
+		
 		// Aproximacion del Seno con un polinomio de mclaurin de orden 10
-	  	const sine_Pol_mclaur_O10 = { x => 
+	  	const seno_Pol_mclaur_O10 = { x => 
 	  		return x-((x**3)/6)+((x**5)/120)-((x**7)/5040)+((x**9)/362880)
 	  	}
-	  	const cosine = {x => 
+	  	const coseno = {x => 
 	  		const a = 90 - x
-	  		return sine_Pol_mclaur_O10.apply(a)
+	  		return seno_Pol_mclaur_O10.apply(a)
 	  	}
 	  	
 		3.times { n =>
@@ -46,20 +45,14 @@ object tpIntegrador {
 			})
 			// el fantasma necesita velocidad inicial suficiente para ponerse en orbita y seguir un MOA.
 		}
+	  	
 		
 
-//		(0..0).forEach { n => 
-//			const obstaculo = new GameObject(x=n,y=n)
-//			(new FrameDeColision(objetoAsociado=obstaculo)).agregarPerimetro(
-//				new Rectangulo(altura=obstaculo.spriteHeight(), ancho=obstaculo.spriteWidth()), 
-//				vector.at(0,0)
-//			)
-//		}
-	  	
 		// empezar el actualizador global
 		updater.start()
 		
-		// teclado
+		
+		// TECLADO
 		keyboard.w().onPressDo { 
 			jugador.arriba()
 		}
@@ -80,14 +73,14 @@ object tpIntegrador {
 			jugador.tp(jugador.x0(), jugador.y0())
 		}
 		keyboard.r().onPressDo { // reiniciar su posicion, con velocidad 0
-			jugador.reiniciar()
-			
+			jugador.reiniciar()	
 		}
-		
-		
-//		keyboard.t().onPressDo {
-//			colisiones.toggleColisiones()
-//		}
+		keyboard.k().onPressDo { // matar al jugador
+			jugador.morir()
+		}
+		keyboard.x().onPressDo { // deletear al jugador
+			jugador.eliminar() // EXISTE MANERA DE BORRAR EL OBJETO DEL PROGRAMA Y NO SOLO DEL MAPA? 
+		}
 		
 //		game.whenCollideDo(pacman, {x => 
 //			game.say(pacman, "choque a " + x.identity())
