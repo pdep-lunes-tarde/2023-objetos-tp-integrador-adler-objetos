@@ -17,7 +17,7 @@ object tpIntegrador {
 	  	game.height(height/pixeles) 
 	  	game.cellSize(pixeles) // fijado a 1 píxel
 	  	game.title(title)
-	  	game.ground("assets/background.png")
+	  	//game.ground("assets/background.png")
 	  	
 	  	// guardo valores globales
 	  	registry.put("grid_width", width/pixeles) // ancho (numero de celdas) de la grilla 
