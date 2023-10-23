@@ -17,10 +17,10 @@ object menu {
 	  	game.addVisual(titulo)
 	  	
 	  	keyboard.q().onPressDo {
-	  		tpIntegrador.iniciar(1200, 900, "PAC-MAN 2", 5)
-	  		game.ground("assets/background.png")
-			tpIntegrador.jugar()
 			game.removeVisual(titulo)
+	  		tpIntegrador.iniciar(1200, 900, "PAC-MAN 2", 5)
+			tpIntegrador.jugar()
+			
 		}
 	  
 	}
