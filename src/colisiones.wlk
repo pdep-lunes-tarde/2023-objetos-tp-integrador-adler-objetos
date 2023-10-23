@@ -11,7 +11,7 @@ object colisiones {
 	
 	method initialize() {
 		super()
-		game.onTick(1, "checkPlayerCollisions", { self.checkCollisionsOf(jugador) })
+		//game.onTick(1, "checkPlayerCollisions", { self.checkCollisionsOf(jugador) })
 	}
 	/* PARA LAS COLISIONES. 
 	 * DIVIDIR LA PANTALLA EN VARIAS CELDAS, DEBEN SER MAS GRANDES QUE LAS DE WOLLOK

@@ -7,22 +7,23 @@ object menu {
 	method mostrarMenu() {
 		game.start()
 	}
-	method iniciarMenu(width, height, title, pixeles){
-		// iniciar ventana
-		game.width(width/pixeles) // nro de celdas
-	  	game.height(height/pixeles) 
-	  	game.cellSize(pixeles) // fijado a 1 píxel
-	  	game.title(title)
-	  	game.boardGround("assets/background.png") 
+	method iniciarMenu(width, height, pixeles){
 	  	game.addVisual(titulo)
+	  	const txt = new Texto(
+	  		text="Presiona q para comenzar el juego",
+	  		x=width/pixeles/2,
+	  		y=height/pixeles/2,
+	  		textColor="#F3FF00"
+	  	)
+	  	game.addVisual(txt)
 	  	
+	  	// PRESIONAR Q PARA EMPEZAR EL JUEGO
 	  	keyboard.q().onPressDo {
-			game.removeVisual(titulo)
-	  		tpIntegrador.iniciar(1200, 900, "PAC-MAN 2", 5)
-			tpIntegrador.jugar()
-			
+	  		game.removeVisual(titulo)
+	  		game.removeVisual(txt)
+	  		tpIntegrador.iniciar(1200, 900, "PAC-MAN 2: ", 5)
+			tpIntegrador.jugar()	
 		}
-	  
 	}
 	
 }
@@ -34,8 +35,10 @@ object titulo {
 
 }
 
-object texto {
-	method position() = game.at(20,30)// Falta fijar bien la posicion para que se vea
-	
-	method text() = "Presiona q para comenzar el juego"
+class Texto {
+	const x 
+	const y 
+	const property text
+	const property textColor
+	method position() = game.at(x,y)
 }

@@ -2,11 +2,8 @@ import tp.*
 import menu.*
 
 program juego {
-	/*
 	tpIntegrador.iniciar(1200, 900, "PAC-MAN 2", 5) // altura y ancho (en pixeles) de la ventana, nombre de ventana, pixeles por celda
-	tpIntegrador.jugar() */
-	menu.iniciarMenu(1200, 900, "PAC-MAN 2", 5)
-	menu.mostrarMenu()
+	tpIntegrador.jugar()
 }
 
 // iniciar(1200, 900, "PAC-MAN 2", 15) ---> altura en grillas = 60
