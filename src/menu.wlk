@@ -4,7 +4,7 @@ import tp.*
 /* Acá vamos a diseñar el menu de entrada para el juego */
 
 object menu {
-	method jugar() {
+	method mostrarMenu() {
 		game.start()
 	}
 	method iniciarMenu(width, height, title, pixeles){
