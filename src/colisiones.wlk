@@ -11,7 +11,6 @@ object colisiones {
 	
 	method initialize() {
 		super()
-		//game.onTick(1, "checkPlayerCollisions", { self.checkCollisionsOf(jugador) })
 	}
 	/* PARA LAS COLISIONES. 
 	 * DIVIDIR LA PANTALLA EN VARIAS CELDAS, DEBEN SER MAS GRANDES QUE LAS DE WOLLOK
@@ -20,43 +19,50 @@ object colisiones {
 	 * ENTONCES, VERIFICAMOS SI EN ESA CELDA SE DA REALMENTE UNA COLISION. 
 	 * */
 	method checkCollisionsOf(objetoPrincipal) {
+		
+		//objetoPrincipal.checkCollisionsWith(conjuntoObjetos)
+		
 		/* https://www.youtube.com/watch?v=eED4bSkYCB8
 		 * - Checkear cada par -> HORRIBLE
 		 * - Sweep & Prune -> método de los intervalos -> muuuuuuuuuchisimo mejor q el anterior
 		 * - Space partitioning -> Uniform grids / K-D Trees /  
 		 */
-
+		
 		// sprite del pacman es de 45 pixeles de largo
 		// el largo de una celda es de 5 pixeles 
 		// sprite del pacman es de 9 celdas de largo
 		// el radio del pacman seria de 4.5 celdas
-		const radio = objetoPrincipal.width() / 2
+		const p_radio = objetoPrincipal.radio()
+		const p_x0 = objetoPrincipal.x()
+ 		const p_y0 = objetoPrincipal.y()
+ 		const p_x1 = p_x0 + objetoPrincipal.width()
+ 		const p_centro = vector.at(p_x0+p_radio, p_y0+p_radio) 
+		const obj_radio = p_radio // suponemos q son un poco mas grandes
+		
 		// Sweep & Prune 
 
-		game.say(objetoPrincipal, "Chequeando colisiones...")
+//		game.say(objetoPrincipal, "Chequeando colisiones...")
 
-		conjuntoObjetos.forEach({obj =>
-			if (obj != objetoPrincipal) {
-				const obj_x0 = obj.x()
-				const obj_x1 = obj_x0 + obj.width()
-				const p_x0 = objetoPrincipal.x()
-				const p_y0 = objetoPrincipal.y()
-				const p_x1 = p_x0 + objetoPrincipal.width()
-				
-				// si se solapan en el eje x, entonces puede haber colision
-				if (obj_x0 < p_x1 and p_x0 < obj_x1) {
-					const p_centro = vector.at(p_x0+radio, p_y0+radio) 
-					const eje_colision = obj.position() - p_centro
-					const dist = eje_colision.magnitud()
-					// const diff = dist - radio
-					// const moverHacia = eje_colision.versor() * diff
-					if (dist < radio) { // CONFIRMADO HAY COLISION
-						jugador.resolverColisionCon(obj)
-						obj.resolverColisionCon(jugador)	
-					}
-				}
-			} 
-		})
+		 conjuntoObjetos.forEach({obj =>
+		 	if (obj != objetoPrincipal) {
+		 		const obj_x0 = obj.x()
+		 		const obj_x1 = obj_x0 + obj.width()
+		 	
+		 		// si se solapan en el eje x, entonces puede haber colision
+		 		if (obj_x0 < p_x1 and p_x0 < obj_x1) {
+		 			const eje_colision = obj.position()+vector.at(obj_radio, obj_radio) - p_centro
+		 			const dist = eje_colision.magnitud()
+		 			
+		 			if (dist < p_radio+obj_radio) { // CONFIRMADO HAY COLISION
+		 				const diff = dist - (p_radio+obj_radio)
+		 			 	const moverHacia = eje_colision.versor() * diff
+		 			 	
+		 				objetoPrincipal.resolverColisionCon(obj, moverHacia)
+		 				obj.resolverColisionCon(objetoPrincipal, -moverHacia)	// se mueve a la direccion contraria
+		 			}
+		 		}
+		 	} 
+		 })
 	}	
 }
 

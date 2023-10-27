@@ -1,5 +1,6 @@
 import global.*
 import vectores.*
+import gameObjects.*
 import wollok.game.*
 
 object mapa {
@@ -39,6 +40,39 @@ object mapa {
 		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 	]	
+	
+	method iniciar() { // acá agregamos los objetos del juego
+		
+		const jugador = new Pacman() 
+		
+		// Aproximacion del Seno con un polinomio de mclaurin de orden 10
+	  	const seno_Pol_mclaur_O10 = { x => 
+	  		return x-((x**3)/6)+((x**5)/120)-((x**7)/5040)+((x**9)/362880)
+	  	}
+	  	const coseno = {x => 
+	  		const a = 90 - x
+	  		return seno_Pol_mclaur_O10.apply(a)
+	  	}
+	  	
+	  	
+//	  	const bolaDeFuego = new Proyectil(x0=game.center().x(), y0=game.center().y())
+//	  	const pelota = new Pelota()
+	  	
+		// fantasmas normales 
+		2.times { n =>
+			const fantasma = new Fantasma(jugador=jugador, x0=game.center().x()+n, y0=game.center().y())
+		}
+		
+		 // fantasmas haciendo MOA
+//		 3.times { n =>
+//		 	const fantasma = new Fantasma(jugador=jugador, x0=game.center().x()-1 + n*3, y0=game.center().y()+65, vel_x0=30, hayFriccion=false)
+//		 	game.onTick(1, "aceleracion radial", {
+//		 		const aceleracionRadial = registry.get("centro") - fantasma.position()
+//		 		fantasma.accelerate(aceleracionRadial) // acelerar hacia el centro. Aceleracion radial.
+//		 	})
+//		 	// el fantasma necesita velocidad inicial suficiente para ponerse en orbita y seguir un MOA.
+//		 }
+	}
 }
 
 
@@ -46,15 +80,18 @@ class Circulo {
 	const property position = registry.get("centro") - vector.at(800/2/20,800/2/20)
 	method image() = "assets/circulo150.png"
 	
-	method initialize() {
-		super()
-		game.addVisual(self)
-	}
+	
 }
 
+class Proyectil inherits VerletObject{
+	override method image() = "assets/PROYECTILES/fireball.png"
+}
 
-
-
+class Pelota inherits VerletObject {
+	
+	const property radio = self.width()/2
+	override method image() = "assets/PACMAN/cerrado.png"
+}
 
 
 

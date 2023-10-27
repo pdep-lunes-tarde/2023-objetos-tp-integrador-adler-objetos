@@ -4,10 +4,7 @@ import tp.*
 /* Acá vamos a diseñar el menu de entrada para el juego */
 
 object menu {
-	method mostrarMenu() {
-		game.start()
-	}
-	method iniciarMenu(width, height, pixeles){
+	method iniciar(width, height, pixeles){
 	  	game.addVisual(titulo)
 	  	const txt = new Texto(
 	  		text="Presiona q para comenzar el juego",

@@ -5,23 +5,19 @@ import vectores.*
 import colisiones.*
 
 // valores iniciales (por si queremos definirlos al momento de crear una instancia de la clase)
-// x0, y0, vel_x0, vel_y0, collidable, frameDeColision (deberia hacerlo automatico)
+// x0, y0, doCollision 
 class GameObject {
-	
 	const property x0 = registry.get("centro").x() - self.width()/5
 	const property y0 = registry.get("centro").y() - self.height()/5
-	const vel_x0 = 0
-	const vel_y0 = 0
+	var property x = x0 	// posicion actual (para hacer cálculos)
+	var property y = y0
 	
 	var property doCollision = true
 
 	// "position" es lo que le importa a wollok game,
 	// por ende usamos "position" nomás para efectuar el cambio de posición. 
 	// Utilizamos un vector mutable que entiende mensajes "x()" e "y()".
-	var property position = new Vector(x=x0, y=y0) 				// posicion actual (para wollok)
-	
-	const property frameDeColision = new List() 				// lista de puntos de colision. Variable constante, pero lista mutable. 
-																//Con poder acceder a esta ya podemos modificarla a gusto.
+	var property position = new Vector(x=x0, y=y0) 				// posicion actual (para efectuar cambios)
 	
 	method height() = 45/registry.get("casillas_pixeles")		// tamaño en pixeles de la imagen utilizada divido por el tamaño de pixel de una casilla
 	method width() = 45/registry.get("casillas_pixeles")		// se puede observar la dimensión de la imágen en el .png
@@ -36,8 +32,9 @@ class GameObject {
 	}
 
 	method eliminar() {
-		game.removeVisual(self)
-		colisiones.conjuntoObjetos().remove(self)
+		updater.remove(self)									// dejamos de actualizarlo
+		game.removeVisual(self)									// dejamos de mostrarlo en el juego
+		colisiones.conjuntoObjetos().remove(self)				// dejamos de checkear sus colisiones
 	}
 	
 	method doCollision(_state) { 
@@ -63,7 +60,7 @@ class UpdatableObject inherits GameObject {
 	method update() 
 }
 
-// valor inicial: en
+// valor inicial: x0, y0
 class Sangre inherits GameObject {
 	override method image() = "assets/PACMAN/sangre3.png" 
 	
@@ -73,6 +70,7 @@ class Sangre inherits GameObject {
 	}
 }
 
+// se deben dar valores a vel_x0, vel_y0.
 class VerletObject inherits UpdatableObject {	
 	/* Basado en: https://www.youtube.com/watch?v=lS_qeBy3aQI
 	 * 			  https://www.youtube.com/watch?v=-GWTDhOQU6M 
@@ -82,8 +80,9 @@ class VerletObject inherits UpdatableObject {
 	 * más rápido que los Vectores (ya lo probé, rip performance), 
 	 * ¿¿¿¿con otros tipos de pares ordenados funcionará???? 
 	 * */
-	var property x = x0 					// posicion actual (para hacer cálculos)
-	var property y = y0
+	const vel_x0 = 0
+	const vel_y0 = 0
+	 
 	var property old_x = x0 - vel_x0 		// posicion anterior
 	var property old_y = y0 - vel_y0
 
@@ -122,7 +121,7 @@ class VerletObject inherits UpdatableObject {
 	method morir() {
 		console.println("Rip.")
 		const s = new Sangre(x0=x, y0=y, doCollision=false)
-		//self.eliminar()
+//		self.eliminar()
 	}
 	
 	method accelerate(_acc_x, _acc_y) {
@@ -263,17 +262,25 @@ class VerletObject inherits UpdatableObject {
 		}
 	}
 
-	method resolverColisionCon(objeto)
+	method resolverColisionCon(objeto, vectorCorreccion) {
+		game.say(self, "Choque con "+objeto.toString())
+//		const vel_x = x - old_x 
+//		const vel_y = y - old_y
+		x += vectorCorreccion.x()
+		y += vectorCorreccion.y()	
+//		old_x = x + vel_x	
+//		old_y = y + vel_y		
+	}
 }
 
-object jugador inherits VerletObject {
-	const property fuerza = 20
+class Pacman inherits VerletObject {
+	const property fuerza = 10
 
 	var orientacion = "der"
 	var animacionEstado = "cerrado"
 	var aux = "cerrado"+"-"+orientacion
 
-	const radio = self.width()/2
+	const property radio = self.width()/2
 	
 	override method image() = "assets/PACMAN/"+aux+".png"
 	method animacion() {
@@ -293,7 +300,9 @@ object jugador inherits VerletObject {
 	
 	override method initialize() {
 		super()		
+		self.iniciar_config_teclado()
 		game.onTick(80, "animacion-pacman", { self.animacion() })
+		registry.put("jugador", self)
 	}
 
 	// crean el efecto de que alguien los tira hacia el sentido indicado
@@ -314,15 +323,50 @@ object jugador inherits VerletObject {
 		orientacion = "izq"							
 	}
 
-	override method resolverColisionCon(objeto) {
-		game.say(self, "Choque con "+objeto.toString())
-		self.morir()
-	}		
+//	override method resolverColisionCon(objeto) {
+//		game.say(self, "Choque con "+objeto.toString())
+//		//self.morir()
+//	}		
+//	
+	method iniciar_config_teclado() {
+		keyboard.w().onPressDo { 
+			self.arriba()
+		}
+		keyboard.a().onPressDo { 
+			self.izquierda()
+		}
+		keyboard.s().onPressDo { 
+			self.abajo()
+		}
+		keyboard.d().onPressDo { 
+			self.derecha()
+		}
+		keyboard.q().onPressDo {
+			game.stop()
+		}
+		keyboard.t().onPressDo {
+			console.println(self.toString()+": rapidez = "+self.rapidez())
+			self.tp(self.x0(), self.y0())
+		}
+		keyboard.r().onPressDo { // reiniciar su posicion, con velocidad 0
+			self.reiniciar()	
+		}
+		keyboard.k().onPressDo { // matar al jugador
+			self.morir()
+		}
+		keyboard.x().onPressDo { // deletear al jugador
+			self.eliminar() // EXISTE MANERA DE BORRAR EL OBJETO DEL PROGRAMA Y NO SOLO DEL MAPA? 
+		}
+	}
 }
 
 
 class Fantasma inherits VerletObject {
+	
+	const jugador // se debe definir al crear una instancia
+	
 	override method image() = "assets/FANTASMA/rojo_arriba1.png"
+//	override method image() = "assets/PACMAN/cerrado.png"
 	override method initialize() {
 		super()
 	}
@@ -344,14 +388,17 @@ class Fantasma inherits VerletObject {
 		
 		self.accelerate(hacia.x(), hacia.y())
 	}
+	
 	override method update() {
 		//self.applyGravity()
 //		self.followPlayer() 
 		super()
 	}
 	
-	override method resolverColisionCon(objeto) {
-		game.say(self, "Choque con "+objeto.toString())
+	override method resolverColisionCon(objeto, vectorCorreccion) {
+		super(objeto, vectorCorreccion)
 		self.morir()
 	}	
 }
+
+

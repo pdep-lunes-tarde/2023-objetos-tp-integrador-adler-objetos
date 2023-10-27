@@ -10,6 +10,10 @@ program juego {
 // 											ancho en grillas = 80
 
 
+// bola de fuego 45x25 
+// circulo de su hitbox 15x15
+
+
 // NOTÉ QUE EL JUEGO CON EL TIEMPO SE VUELVE CADA VEZ MÁS LENTO, PREGUNTAR A QUÉ PODRÍA DEBERSE.
 
 
