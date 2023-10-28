@@ -42,6 +42,7 @@ object colisiones {
 		// Sweep & Prune 
 
 //		game.say(objetoPrincipal, "Chequeando colisiones...")
+		console.println(conjuntoObjetos.toString())
 
 		 conjuntoObjetos.forEach({obj =>
 		 	if (obj != objetoPrincipal) {
@@ -50,12 +51,13 @@ object colisiones {
 		 	
 		 		// si se solapan en el eje x, entonces puede haber colision
 		 		if (obj_x0 < p_x1 and p_x0 < obj_x1) {
-		 			const eje_colision = obj.position()+vector.at(obj_radio, obj_radio) - p_centro
+		 			const obj_centro = obj.position()+vector.at(obj_radio, obj_radio)
+		 			const eje_colision = obj_centro - p_centro
 		 			const dist = eje_colision.magnitud()
 		 			
 		 			if (dist < p_radio+obj_radio) { // CONFIRMADO HAY COLISION
-		 				const diff = dist - (p_radio+obj_radio)
-		 			 	const moverHacia = eje_colision.versor() * diff
+		 				const diff = (p_radio+obj_radio) - dist
+		 			 	const moverHacia = eje_colision.versor() * (-diff/2) 
 		 			 	
 		 				objetoPrincipal.resolverColisionCon(obj, moverHacia)
 		 				obj.resolverColisionCon(objetoPrincipal, -moverHacia)	// se mueve a la direccion contraria

@@ -21,7 +21,7 @@ object tpIntegrador {
 	  	registry.put("grid_width", width/pixeles) // ancho (numero de celdas) de la grilla 
 	  	registry.put("grid_height", height/pixeles)
 	  	registry.put("casillas_pixeles", pixeles)
-	  	registry.put("centro", vector.at(width/pixeles/2, height/pixeles/2))
+	  	registry.put("centro", vector.at(((width/pixeles))/2, ((height/pixeles))/2))
 	  	
 	  	
 	  	

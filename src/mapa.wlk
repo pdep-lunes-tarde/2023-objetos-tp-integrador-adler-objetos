@@ -56,12 +56,13 @@ object mapa {
 	  	
 	  	
 //	  	const bolaDeFuego = new Proyectil(x0=game.center().x(), y0=game.center().y())
-//	  	const pelota = new Pelota()
+	  	const a = new VerletObject()
+	  	const proyectil = new Proyectil()
 	  	
 		// fantasmas normales 
-		2.times { n =>
-			const fantasma = new Fantasma(jugador=jugador, x0=game.center().x()+n, y0=game.center().y())
-		}
+//		2.times { n =>
+//			const fantasma = new Fantasma(jugador=jugador, x0=game.center().x()+n, y0=game.center().y())
+//		}
 		
 		 // fantasmas haciendo MOA
 //		 3.times { n =>
@@ -88,8 +89,6 @@ class Proyectil inherits VerletObject{
 }
 
 class Pelota inherits VerletObject {
-	
-	const property radio = self.width()/2
 	override method image() = "assets/PACMAN/cerrado.png"
 }
 

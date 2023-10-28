@@ -6,8 +6,14 @@ program juego {
 	tpIntegrador.jugar()
 }
 
-// iniciar(1200, 900, "PAC-MAN 2", 15) ---> altura en grillas = 60
-// 											ancho en grillas = 80
+// iniciar(ANCHO, ALTURA, "PAC-MAN 2", PIXELES_CELDA) 
+// NECESITAMOS QUE:
+// (ANCHO / PIXELES_CELDA) y (ALTURA / PIXELES_CELDA) sean PARES, 
+// para que exista un centro de una sola celda
+// (ANCHO / PIXELES_CELDA) y (ALTURA / PIXELES_CELDA) 
+// divididos por 2 deben dar un numero par tambien
+// Esto se debe a que se comienza a contar desde el 0, 
+// por lo que las celdas con coordenadas pares son realmente celdas impares.  
 
 
 // bola de fuego 45x25 

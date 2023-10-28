@@ -7,8 +7,9 @@ import colisiones.*
 // valores iniciales (por si queremos definirlos al momento de crear una instancia de la clase)
 // x0, y0, doCollision 
 class GameObject {
-	const property x0 = registry.get("centro").x() - self.width()/5
-	const property y0 = registry.get("centro").y() - self.height()/5
+	
+	const property x0 = registry.get("centro").x() - self.width()/2
+	const property y0 = registry.get("centro").y() - self.height()/2
 	var property x = x0 	// posicion actual (para hacer cálculos)
 	var property y = y0
 	
@@ -19,8 +20,9 @@ class GameObject {
 	// Utilizamos un vector mutable que entiende mensajes "x()" e "y()".
 	var property position = new Vector(x=x0, y=y0) 				// posicion actual (para efectuar cambios)
 	
-	method height() = 45/registry.get("casillas_pixeles")		// tamaño en pixeles de la imagen utilizada divido por el tamaño de pixel de una casilla
-	method width() = 45/registry.get("casillas_pixeles")		// se puede observar la dimensión de la imágen en el .png
+	method height() = 40/registry.get("casillas_pixeles")		// tamaño en pixeles de la imagen utilizada divido por el tamaño de pixel de una casilla
+	method width() = 40/registry.get("casillas_pixeles")		// se puede observar la dimensión de la imágen en el .png
+	method centro() = self.position() + vector.at(self.width()/2, self.height()/2)
 	method image() = "assets/null.png"
 	
 	override method initialize() {
@@ -48,6 +50,16 @@ class GameObject {
 	}
 	method toggleCollision() { // permite togglear las colisiones del gameObject
 		self.doCollision(not doCollision)
+	}
+	
+	method resolverColisionCon(objeto, vectorCorreccion) {
+		game.say(self, "Choque con "+objeto.toString())
+//		const vel_x = x - old_x 
+//		const vel_y = y - old_y
+		x += vectorCorreccion.x()
+		y += vectorCorreccion.y()	
+//		old_x = x + vel_x	
+//		old_y = y + vel_y		
 	}
 }
 
@@ -187,9 +199,8 @@ class VerletObject inherits UpdatableObject {
 		position.xy(x, y)
 	}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
 	
-	method applyCircleConstraint(posicion, radio) { // trampa circular invisible
-		const circulo_centro = posicion
-		const ejeDeChoque = circulo_centro - vector.at(x, y)
+	method applyCircleConstraint(coord_centro, radio) { // trampa circular invisible
+		const ejeDeChoque = coord_centro - (vector.at(x, y) + vector.at(4.5,4.5))
 		const dist = ejeDeChoque.magnitud()
 		
 		const coef_perdida_energia = 0.05
@@ -198,9 +209,9 @@ class VerletObject inherits UpdatableObject {
 			const diff = dist - radio
 			const moverHacia = ejeDeChoque.versor() * diff
 		
-			if (self.estaEnRapidezLetal(ejeDeChoque)) {
-				self.morir()
-			}
+//			if (self.estaEnRapidezLetal(ejeDeChoque)) {
+//				self.morir()
+//			}
 			/* A GRANDES VELOCIDADES, SE BUGGEA, SOLUCIONES:
 			 * - Limitar las velocidades
 			 * - Hacer substeps.
@@ -255,26 +266,16 @@ class VerletObject inherits UpdatableObject {
 		const substep = 2 // hacemos substeps para mejores físicas. poner en 1 para deshabilitarlo
 		const sub_dt = dt / substep
 		substep.times { i =>
-			self.applyGravity()
+//			self.applyGravity()
 			self.applyWallConstraint()
 			self.applyCircleConstraint(registry.get("centro"), 65)
 			self.updatePosition(sub_dt) 
 		}
 	}
-
-	method resolverColisionCon(objeto, vectorCorreccion) {
-		game.say(self, "Choque con "+objeto.toString())
-//		const vel_x = x - old_x 
-//		const vel_y = y - old_y
-		x += vectorCorreccion.x()
-		y += vectorCorreccion.y()	
-//		old_x = x + vel_x	
-//		old_y = y + vel_y		
-	}
 }
 
 class Pacman inherits VerletObject {
-	const property fuerza = 10
+	const property fuerza = 5
 
 	var orientacion = "der"
 	var animacionEstado = "cerrado"
