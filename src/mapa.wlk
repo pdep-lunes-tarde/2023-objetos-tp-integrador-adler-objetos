@@ -13,8 +13,6 @@ object mapa {
 	 *  '9' -> fantasma
 	 *  '2' -> comida
 	 *  
-	 * 
-	 * 
 	 */
 	// cada elemento de esta lista representa un espacio de 45x45 (px) del juego
 	// dado que la ventana es de 1125x900 px^2, la lista debe ser de 25x20 elementos
@@ -42,8 +40,7 @@ object mapa {
 	]	
 	
 	method iniciar() { // acá agregamos los objetos del juego
-		
-		const jugador = new Pacman() 
+		const jugador = new Pacman() 		
 		
 		// Aproximacion del Seno con un polinomio de mclaurin de orden 10
 	  	const seno_Pol_mclaur_O10 = { x => 
@@ -91,7 +88,6 @@ class Proyectil inherits VerletObject{
 class Pelota inherits VerletObject {
 	override method image() = "assets/PACMAN/cerrado.png"
 }
-
 
 
 

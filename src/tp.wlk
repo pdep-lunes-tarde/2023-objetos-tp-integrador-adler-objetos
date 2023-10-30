@@ -26,6 +26,7 @@ object tpIntegrador {
 	  	
 	  	
 	  	mapa.iniciar()
+	  	
 
 
 		// empezar el actualizador global
