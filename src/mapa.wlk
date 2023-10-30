@@ -53,7 +53,7 @@ object mapa {
 	  	
 //	  	const bolaDeFuego = new Proyectil(x0=game.center().x(), y0=game.center().y())
 //	  	const a = new VerletObject()
-	  	const proyectil = new Proyectil()
+//	  	const proyectil = new Proyectil()
 	  	
 		// fantasmas normales 
 		2.times { n =>
@@ -83,6 +83,9 @@ class Circulo {
 
 
 class Pelota inherits VerletObject {
+	override method initialize() {
+		super()
+	}
 	override method image() = "assets/PACMAN/cerrado.png"
 }
 

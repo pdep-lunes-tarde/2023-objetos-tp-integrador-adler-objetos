@@ -266,7 +266,7 @@ class VerletObject inherits UpdatableObject {
 		const substep = 2 // hacemos substeps para mejores físicas. poner en 1 para deshabilitarlo
 		const sub_dt = dt / substep
 		substep.times { i =>
-//			self.applyGravity()
+			self.applyGravity()
 //			self.applyWallConstraint()
 			self.applyCircleConstraint(registry.get("centro"), 65)
 			self.updatePosition(sub_dt) 
@@ -284,8 +284,19 @@ class Pacman inherits VerletObject {
 
 	const property radio = self.width()/2
 	
+	
+//	["a", "b", "c"].actual() -> "a"
+//	["a", "b", "c"].avanza()
+//	["a", "b", "c"].actual() -> "b"
+//	["a", "b", "c"].avanza()
+//	["a", "b", "c"].actual() -> "c"
+//	["a", "b", "c"].avanza()
+//	["a", "b", "c"].actual() -> "b"
+//	["a", "b", "c"].avanza()
+//	["a", "b", "c"].actual() -> "a"
+//	
 	override method image() = "assets/PACMAN/"+aux+".png"
-	method animacion() {
+	method animacion() { // cambiar nombnre a Cmabiar Frame
 		if(animacionEstado == "abierto") {
 			animacionEstado = "medio"
 			aux = animacionEstado+"-"+orientacion
@@ -298,6 +309,7 @@ class Pacman inherits VerletObject {
 			animacionEstado = "abierto"
 			aux = animacionEstado+"-"+orientacion
 		}
+		
 	}
 	
 	override method initialize() {
@@ -404,7 +416,8 @@ class Fantasma inherits VerletObject {
 }
 
 class Proyectil inherits VerletObject{
+	override method initialize() {
+		super()
+	}
 	override method image() = "assets/PROYECTIL/fireball.png"
-	
-	
 }

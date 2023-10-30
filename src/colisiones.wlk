@@ -37,9 +37,9 @@ object colisiones {
 		// Sweep & Prune 
 
 //		game.say(objetoPrincipal, "Chequeando colisiones...")
-		console.println(conjuntoObjetos.toString())
+//		console.println(conjuntoObjetos.toString())
 
-		 conjuntoObjetos.forEach({obj =>
+		 conjuntoObjetos.forEach {obj =>
 		 	if (obj != objetoPrincipal) {
 		 		const obj_x0 = obj.x()
 		 		const obj_x1 = obj_x0 + obj.width()
@@ -55,11 +55,11 @@ object colisiones {
 		 			 	const moverHacia = eje_colision.versor() * (-diff/2) 
 		 			 	
 		 				objetoPrincipal.resolverColisionCon(obj, moverHacia)
-		 				obj.resolverColisionCon(objetoPrincipal, -moverHacia)	// se mueve a la direccion contraria
+		 				obj.resolverColisionCon(objetoPrincipal, vector.at(0,0) - moverHacia)	// se mueve a la direccion contraria
 		 			}
 		 		}
 		 	} 
-		 })
+		 }
 	}	
 }
 

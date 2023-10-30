@@ -28,7 +28,7 @@ program juego {
 // NOTA: el numero de pixeles de celda debe ser divisor de los pixeles del personaje, sino se ven mal las colisiones
 
 // 20 pixels de celda, y 40 pixeles de personaje
-// 25 pixels de celda, y 50 pixeles rde personaje
+// 25 pixels de celda, y 50 pixeles de personaje
 // 20 pixels de celda, y 40 pixeles de personaje
 
 
