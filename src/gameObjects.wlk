@@ -183,8 +183,8 @@ class VerletObject inherits UpdatableObject {
 			
 		// calculamos la nueva posicion con Integración de Verlet (agregue 0.95 para simular friccion)
 		if (hayFriccion) {
-			x += vel_x * 0.95 + acc_x *dt*dt 
-			y += vel_y * 0.95 + acc_y *dt*dt
+			x += vel_x * 0.9 + acc_x *dt*dt 
+			y += vel_y * 0.9 + acc_y *dt*dt
 		} 
 		else {
 			x += vel_x + acc_x *dt*dt 
@@ -267,9 +267,10 @@ class VerletObject inherits UpdatableObject {
 		const sub_dt = dt / substep
 		substep.times { i =>
 //			self.applyGravity()
-			self.applyWallConstraint()
+//			self.applyWallConstraint()
 			self.applyCircleConstraint(registry.get("centro"), 65)
 			self.updatePosition(sub_dt) 
+			
 		}
 	}
 }
@@ -391,7 +392,7 @@ class Fantasma inherits VerletObject {
 	}
 	
 	override method update() {
-		//self.applyGravity()
+//		self.applyGravity()
 //		self.followPlayer() 
 		super()
 	}
@@ -402,4 +403,8 @@ class Fantasma inherits VerletObject {
 	}	
 }
 
-
+class Proyectil inherits VerletObject{
+	override method image() = "assets/PROYECTIL/fireball.png"
+	
+	
+}

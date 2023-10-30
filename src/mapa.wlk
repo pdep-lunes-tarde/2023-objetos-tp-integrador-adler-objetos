@@ -51,21 +51,20 @@ object mapa {
 	  		return seno_Pol_mclaur_O10.apply(a)
 	  	}
 	  	
-	  	
 //	  	const bolaDeFuego = new Proyectil(x0=game.center().x(), y0=game.center().y())
-	  	const a = new VerletObject()
+//	  	const a = new VerletObject()
 	  	const proyectil = new Proyectil()
 	  	
 		// fantasmas normales 
-//		2.times { n =>
-//			const fantasma = new Fantasma(jugador=jugador, x0=game.center().x()+n, y0=game.center().y())
-//		}
+		2.times { n =>
+			const fantasma = new Fantasma(jugador=jugador)
+		}
 		
 		 // fantasmas haciendo MOA
 //		 3.times { n =>
-//		 	const fantasma = new Fantasma(jugador=jugador, x0=game.center().x()-1 + n*3, y0=game.center().y()+65, vel_x0=30, hayFriccion=false)
+//		 	const fantasma = new Fantasma(jugador=jugador, x0=game.center().x()-1 + n*3, y0=game.center().y()+65, vel_x0=5, hayFriccion=false)
 //		 	game.onTick(1, "aceleracion radial", {
-//		 		const aceleracionRadial = registry.get("centro") - fantasma.position()
+//		 		const aceleracionRadial = (registry.get("centro") - fantasma.position()) / 10
 //		 		fantasma.accelerate(aceleracionRadial) // acelerar hacia el centro. Aceleracion radial.
 //		 	})
 //		 	// el fantasma necesita velocidad inicial suficiente para ponerse en orbita y seguir un MOA.
@@ -81,9 +80,7 @@ class Circulo {
 	
 }
 
-class Proyectil inherits VerletObject{
-	override method image() = "assets/PROYECTILES/fireball.png"
-}
+
 
 class Pelota inherits VerletObject {
 	override method image() = "assets/PACMAN/cerrado.png"
