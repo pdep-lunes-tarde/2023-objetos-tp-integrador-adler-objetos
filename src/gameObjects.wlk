@@ -275,66 +275,82 @@ class VerletObject inherits UpdatableObject {
 	}
 }
 
+//orientaciones
+object derecha {
+	override method toString() = "der"
+}
+object izquierda {
+	override method toString() = "izq"
+}
+object arriba {
+	override method toString() = "arriba"
+}
+object abajo {
+	override method toString() = "abajo"
+}
+//estados
+object cerrado {
+	override method toString() = "cerrado"
+}
+object medio {
+	override method toString() = "medio"
+}
+object abierto {
+	override method toString() = "abierto"
+	
+}
+
+
+// 
+
+object pacmanFrames {
+	const secuenciaEstados = [cerrado, medio, abierto, medio]
+	var property orientacion = derecha
+	
+	var i = 0
+	
+	method actual() {
+		const estadoActual = secuenciaEstados.get(i)
+		return "assets/PACMAN/"+estadoActual+"-"+orientacion+".png"
+	}
+	method avanzar() {
+		i++
+		if (i==4) {i=0}
+	}
+	method orientacion(_orientacion) {
+		orientacion = _orientacion
+	}
+}
+
 class Pacman inherits VerletObject {
 	const property fuerza = 5
-
-	var orientacion = "der"
-	var animacionEstado = "cerrado"
-	var aux = "cerrado"+"-"+orientacion
-
 	const property radio = self.width()/2
 	
-	
-//	["a", "b", "c"].actual() -> "a"
-//	["a", "b", "c"].avanza()
-//	["a", "b", "c"].actual() -> "b"
-//	["a", "b", "c"].avanza()
-//	["a", "b", "c"].actual() -> "c"
-//	["a", "b", "c"].avanza()
-//	["a", "b", "c"].actual() -> "b"
-//	["a", "b", "c"].avanza()
-//	["a", "b", "c"].actual() -> "a"
-//	
-	override method image() = "assets/PACMAN/"+aux+".png"
-	method animacion() { // cambiar nombnre a Cmabiar Frame
-		if(animacionEstado == "abierto") {
-			animacionEstado = "medio"
-			aux = animacionEstado+"-"+orientacion
-		} 
-		else if(animacionEstado == "medio") {
-			animacionEstado = "cerrado"
-			aux = animacionEstado 
-		} 
-		else {
-			animacionEstado = "abierto"
-			aux = animacionEstado+"-"+orientacion
-		}
-		
-	}
+	override method image() = pacmanFrames.actual()
 	
 	override method initialize() {
 		super()		
 		self.iniciar_config_teclado()
-		game.onTick(80, "animacion-pacman", { self.animacion() })
+		game.onTick(80, "animacion-pacman", { pacmanFrames.avanzar() })
 		registry.put("jugador", self)
 	}
 
 	// crean el efecto de que alguien los tira hacia el sentido indicado
 	method arriba() {
 		self.accelerate(0, fuerza * masa)							
-		orientacion = "arriba"
+		pacmanFrames.orientacion(arriba)
 	}
 	method abajo() {
 		self.accelerate(0, -fuerza * masa)		
-		orientacion = "abajo"						
+		pacmanFrames.orientacion(abajo)					
 	}
 	method derecha() {
 		self.accelerate(fuerza * masa, 0)		
-		orientacion = "der"						
+		pacmanFrames.orientacion(derecha)					
 	}
 	method izquierda() {
 		self.accelerate(-fuerza * masa, 0)
-		orientacion = "izq"							
+		pacmanFrames.orientacion(izquierda)					
 	}
 
 //	override method resolverColisionCon(objeto) {
@@ -416,6 +432,8 @@ class Fantasma inherits VerletObject {
 }
 
 class Proyectil inherits VerletObject{
+	override method height() = 25
+	override method width() = 25
 	override method initialize() {
 		super()
 	}

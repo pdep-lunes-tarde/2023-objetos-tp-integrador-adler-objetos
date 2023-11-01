@@ -53,12 +53,12 @@ object mapa {
 	  	
 //	  	const bolaDeFuego = new Proyectil(x0=game.center().x(), y0=game.center().y())
 //	  	const a = new VerletObject()
-//	  	const proyectil = new Proyectil()
+	  	const proyectil = new Proyectil()
 	  	
 		// fantasmas normales 
-		2.times { n =>
-			const fantasma = new Fantasma(jugador=jugador)
-		}
+//		2.times { n =>
+//			const fantasma = new Fantasma(jugador=jugador)
+//		}
 		
 		 // fantasmas haciendo MOA
 //		 3.times { n =>
