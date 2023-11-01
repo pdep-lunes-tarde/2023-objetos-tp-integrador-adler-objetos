@@ -1,36 +1,69 @@
 import wollok.game.*
 import tp.*
+import global.*
+import vectores.*
+import gameObjects.*
 
 /* Acá vamos a diseñar el menu de entrada para el juego */
 
 object menu {
-	method iniciar(width, height, pixeles){
+	method jugar() {
+		const musica = game.sound("assets/musica.mp3")
+		musica.shouldLoop(true)
+		game.schedule(500, { musica.play()} )
+		
+		game.start()
+	}
+	method iniciar(width, height, title, pixeles){
+		
+		// iniciar ventana
+		game.width(width/pixeles) // nro de celdas
+	  	game.height(height/pixeles) 
+	  	game.cellSize(pixeles) // fijado a 1 píxel
+	  	game.title(title)
+	  	game.ground("assets/background.png")
+	  	
+	  	// guardo valores globales
+	  	registry.put("grid_width", width/pixeles) // ancho (numero de celdas) de la grilla 
+	  	registry.put("grid_height", height/pixeles)
+	  	registry.put("casillas_pixeles", pixeles)
+	  	registry.put("centro", vector.at(((width/pixeles))/2, ((height/pixeles))/2))
+	  	
+	  	//Agrego fondo y titulo del menu	  	
+		game.addVisual(fondoNegro)
 	  	game.addVisual(titulo)
 	  	const txt = new Texto(
-	  		text="Presiona q para comenzar el juego",
+	  		text="Presiona m para comenzar el juego",
 	  		x=width/pixeles/2,
 	  		y=height/pixeles/2,
-	  		textColor="#F3FF00"
+	  		textColor="#FFFFFF"
 	  	)
 	  	game.addVisual(txt)
 	  	
-	  	// PRESIONAR Q PARA EMPEZAR EL JUEGO
-	  	keyboard.q().onPressDo {
+	  	// PRESIONAR M PARA EMPEZAR EL JUEGO
+	  	keyboard.m().onPressDo {
 	  		game.removeVisual(titulo)
 	  		game.removeVisual(txt)
-	  		tpIntegrador.iniciar(1200, 900, "PAC-MAN 2: ", 5)
-			tpIntegrador.jugar()	
+	  		game.removeVisual(fondoNegro)
+	  		tpIntegrador.iniciar()	
 		}
 	}
 	
 }
 
 object titulo {
-	var property position = game.center()	
+	var property position = game.at(70,100)	
 
-	method image() = "assets/cereza.png"
+	method image() = "assets/tituloPacman.png"
 
 }
+
+object fondoNegro {
+    var property position = game.origin()
+    
+    method image() = "assets/fondonegro.png"
+}
+
 
 class Texto {
 	const x 
