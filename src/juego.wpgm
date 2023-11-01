@@ -1,9 +1,8 @@
 import tp.*
-import menu.*
 
 program juego {
-	menu.iniciar(1200, 900, "PAC-MAN 2", 5) // altura y ancho (en pixeles) de la ventana, nombre de ventana, pixeles por celda
-	menu.jugar()
+	tp.iniciar(1200, 900, "PAC-MAN 2", 5) // altura y ancho (en pixeles) de la ventana, nombre de ventana, pixeles por celda
+	tp.mostrarMenu()
 }
 
 // iniciar(ANCHO, ALTURA, "PAC-MAN 2", PIXELES_CELDA) 
@@ -34,13 +33,3 @@ program juego {
 
 // CAMBIAR DIMENSIONES DE LOS OBJETOS DE 50 A 60 
 // DEJAR PIXELES DE CELDAS EN 20, ASI CADA OBJETO TIENE 3 PTOS DE COLISIONES POR CARA.
-
-// FLAG DE COLISIONES
-
-
-
-/* [frame1, frame2, frame3]
- * 
- * frame1 y frame2 tienen ptos de colision en comun => frame1 colisona con frame2 
- * 
- * */

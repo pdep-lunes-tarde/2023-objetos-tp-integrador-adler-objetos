@@ -47,28 +47,29 @@ object colisiones {
 		 		// si se solapan en el eje x, entonces puede haber colision
 		 		const seSolapanEnElEjeX = obj_x0 < p_x1 and p_x0 < obj_x1
 		 		if (seSolapanEnElEjeX) {
-		 			const obj_y0 = obj.y()
-		 			const obj_y1 = obj_y0 + obj.height()
-		 			const p_y1 = p_y0 + objetoPrincipal.height()
-		 			
-		 			console.println("X")
-		 			
-		 			const seSolapanEnElEjeY = obj_y0 < p_y1 and p_y0 < obj_y1
-		 			if (seSolapanEnElEjeY) { // CONFIRMADO COLISION
-		 				console.println("Y")
-		 			}
+//		 			// VERSION HITBOX RECTANGULAR
+//		 			const obj_y0 = obj.y()
+//		 			const obj_y1 = obj_y0 + obj.height()
+//		 			const p_y1 = p_y0 + objetoPrincipal.height()
+//		 			
+//		 			console.println("X")
+//		 			
+//		 			const seSolapanEnElEjeY = obj_y0 < p_y1 and p_y0 < obj_y1
+//		 			if (seSolapanEnElEjeY) { // CONFIRMADO COLISION
+//		 				console.println("Y")
+//		 			}
 		 			
 		 			// VERSION HITBOX CIRCULAR
-//		 			const obj_centro = obj.position()+vector.at(obj_radio, obj_radio)
-//		 			const eje_colision = obj_centro - p_centro
-//		 			const dist = eje_colision.magnitud()
-//		 			if (dist < p_radio+obj_radio) { // CONFIRMADO HAY COLISION
-//		 				const diff = (p_radio+obj_radio) - dist
-//		 			 	const moverHacia = eje_colision.versor() * (-diff/2) 
-//		 			 	
-//		 				objetoPrincipal.resolverColisionCon(obj, moverHacia)
-//		 				obj.resolverColisionCon(objetoPrincipal, moverHacia * (-1))	// se mueve a la direccion contraria
-//		 			}
+		 			const obj_centro = obj.position()+vector.at(obj_radio, obj_radio)
+		 			const eje_colision = obj_centro - p_centro
+		 			const dist = eje_colision.magnitud()
+		 			if (dist < p_radio+obj_radio) { // CONFIRMADO HAY COLISION
+		 				const diff = (p_radio+obj_radio) - dist
+		 			 	const moverHacia = eje_colision.versor() * (-diff/2) 
+		 			 	
+		 				objetoPrincipal.resolverColisionCon(obj, moverHacia)
+		 				obj.resolverColisionCon(objetoPrincipal, moverHacia * (-1))	// se mueve a la direccion contraria
+		 			}
 		 		}
 		 	} 
 		 }

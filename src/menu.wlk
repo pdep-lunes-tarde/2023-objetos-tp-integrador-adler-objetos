@@ -2,16 +2,16 @@ import wollok.game.*
 import tp.*
 import global.*
 import vectores.*
+import mapa.*
 import gameObjects.*
 
 /* Acá vamos a diseñar el menu de entrada para el juego */
 
-object menu {
-	method jugar() {
+object men {
+	method mostrarMenu() {
 		const musica = game.sound("assets/musica.mp3")
 		musica.shouldLoop(true)
 		game.schedule(500, { musica.play()} )
-		
 		game.start()
 	}
 	method iniciar(width, height, title, pixeles){
@@ -45,8 +45,15 @@ object menu {
 	  		game.removeVisual(titulo)
 	  		game.removeVisual(txt)
 	  		game.removeVisual(fondoNegro)
-	  		tpIntegrador.iniciar()	
+	  		self.jugar()
 		}
+		
+		
+	}
+	method jugar() { // empezar a jugar
+		mapa.iniciar()
+		// empezar el actualizador global
+		updater.start()
 	}
 	
 }

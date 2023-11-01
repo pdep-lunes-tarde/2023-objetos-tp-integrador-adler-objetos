@@ -84,7 +84,7 @@ class Sangre inherits GameObject {
 
 // se deben dar valores a vel_x0, vel_y0.
 class VerletObject inherits UpdatableObject {	
-	/* Basado en: https://www.youtube.com/watch?v=lS_qeBy3aQI
+	/* Basado en: https://www.youtube.com/watch?v=lS_qeBy3aQI 
 	 * 			  https://www.youtube.com/watch?v=-GWTDhOQU6M 
 	 * */  
 	
