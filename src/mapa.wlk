@@ -2,6 +2,7 @@ import global.*
 import vectores.*
 import gameObjects.*
 import wollok.game.*
+import menu.*
 
 object mapa {
 	/*
@@ -41,6 +42,8 @@ object mapa {
 	
 	method iniciar() { // acá agregamos los objetos del juego
 		const jugador = new Pacman() 		
+		const bolita = new Bolita(x0=100, y0= 100)
+		const puntaje = new TextoPuntaje(x0=200, y0= 200)
 		
 		// Aproximacion del Seno con un polinomio de mclaurin de orden 10
 	  	const seno_Pol_mclaur_O10 = { x => 
@@ -72,15 +75,42 @@ object mapa {
 	}
 }
 
+class Bolita inherits GameObject {
+	
+	override method initialize() {
+    	super()
+    }
+    override method resolverColisionCon(objeto, vectorColision){
+    	super(objeto, vectorColision)
+    	if(objeto == self){
+			objeto.eliminar()  
+    	}
+    }
+	override method image() = "assets/bolita.png"
+}
+
+class TextoPuntaje inherits GameObject{
+	const text = "Puntaje: "
+	const textColor = "#FFFFF"
+	method position() = game.at(x,y)
+	
+	override method initialize() {
+    	super()
+    }
+}
+
+class Proyectil inherits VerletObject{
+	override method initialize() {
+		super()
+	}
+	override method image() = "assets/PROYECTIL/fireball.png"
+}
 
 class Circulo {
 	const property position = registry.get("centro") - vector.at(800/2/20,800/2/20)
 	method image() = "assets/circulo150.png"
 	
-	
 }
-
-
 
 class Pelota inherits VerletObject {
 	override method initialize() {
@@ -88,7 +118,6 @@ class Pelota inherits VerletObject {
 	}
 	override method image() = "assets/PACMAN/cerrado.png"
 }
-
 
 
 

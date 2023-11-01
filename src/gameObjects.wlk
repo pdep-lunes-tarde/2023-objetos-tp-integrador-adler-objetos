@@ -266,7 +266,7 @@ class VerletObject inherits UpdatableObject {
 		const substep = 2 // hacemos substeps para mejores físicas. poner en 1 para deshabilitarlo
 		const sub_dt = dt / substep
 		substep.times { i =>
-			self.applyGravity()
+//			self.applyGravity()
 //			self.applyWallConstraint()
 			self.applyCircleConstraint(registry.get("centro"), 65)
 			self.updatePosition(sub_dt) 
@@ -413,11 +413,4 @@ class Fantasma inherits VerletObject {
 		super(objeto, vectorCorreccion)
 		self.morir()
 	}	
-}
-
-class Proyectil inherits VerletObject{
-	override method initialize() {
-		super()
-	}
-	override method image() = "assets/PROYECTIL/fireball.png"
 }

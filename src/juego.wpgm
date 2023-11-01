@@ -2,8 +2,8 @@ import tp.*
 import menu.*
 
 program juego {
-	tpIntegrador.iniciar(1200, 900, "PAC-MAN 2", 5) // altura y ancho (en pixeles) de la ventana, nombre de ventana, pixeles por celda
-	tpIntegrador.jugar()
+	menu.iniciar(1200, 900, "PAC-MAN 2", 5) // altura y ancho (en pixeles) de la ventana, nombre de ventana, pixeles por celda
+	menu.jugar()
 }
 
 // iniciar(ANCHO, ALTURA, "PAC-MAN 2", PIXELES_CELDA) 
