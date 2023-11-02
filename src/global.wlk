@@ -28,7 +28,7 @@ object updater {
 	method update() {
 		// envia el mensaje "update" a cada objeto guardado en la lista update_list
 		update_list.forEach({updatableObject => updatableObject.update()}) 
-		colisiones.checkCollisionsOf(registry.get("jugador"))
+		colisiones.checkearColisiones()
 	}
 	
 	method start() {

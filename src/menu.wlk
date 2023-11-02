@@ -22,13 +22,11 @@ object menu {
 	  	const musica = game.sound("assets/musica.mp3")
 		musica.shouldLoop(true)
 		game.schedule(500, { musica.play()} )
-	  	
+
 	  	// PRESIONAR M PARA EMPEZAR EL JUEGO
 	  	keyboard.m().onPressDo {
-	  		game.removeVisual(titulo)
-	  		game.removeVisual(txt)
-	  		game.removeVisual(fondoNegro)
-	  		tp.jugar()
+	  		game.clear() // limpia todo
+	  		tp.jugar()   // empieza el juego en sí
 		}
 	}
 	method mostrar() {

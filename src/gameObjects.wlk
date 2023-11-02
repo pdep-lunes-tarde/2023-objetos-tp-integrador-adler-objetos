@@ -53,13 +53,16 @@ class GameObject {
 	}
 	
 	method resolverColisionCon(objeto, vectorCorreccion) {
-		game.say(self, "Choque con "+objeto.toString())
+		game.say(self, "Choque con "+objeto)
 //		const vel_x = x - old_x 
 //		const vel_y = y - old_y
 		x += vectorCorreccion.x()
 		y += vectorCorreccion.y()	
 //		old_x = x + vel_x	
 //		old_y = y + vel_y		
+	}
+	method resolverColisionCon(objeto) {
+		console.println("Colision con "+objeto)
 	}
 }
 
@@ -131,9 +134,9 @@ class VerletObject inherits UpdatableObject {
 	}
 	
 	method morir() {
-		console.println("Rip.")
+		console.println("Rip, "+self+" :(")
 		const s = new Sangre(x0=x, y0=y, doCollision=false)
-//		self.eliminar()
+		
 	}
 	
 	method accelerate(_acc_x, _acc_y) {
@@ -151,23 +154,23 @@ class VerletObject inherits UpdatableObject {
 		return (vel_x*vel_x+vel_y*vel_y).squareRoot()
 	}
 	
-	method estaEnRapidezLetal(ejeDeChoque) { // si la magnitud de su velocidad es letal en caso de encontrarse con una pared
-		const vel_x = x - old_x
-		const vel_y = y - old_y
-		
-		// NO SÉ SI TIENE SIQUIERA SENTIDO ESTO QUE PLANTEO PERO SUENA PIOLA 
-		
-		// rapidez_efectiva es la magnitud de la velocidad perpendicular al plano de choque, 
-		// osea que es la componente de la velocidad que es paralela al eje de choque,
-		// rapidez_efectiva es la rapidez que realmente nos importa para calcular la energia del choque.
-		const rapidez_efectiva = vector.at(vel_x, vel_y).escalarProyeccionSobre(ejeDeChoque) 
-//		const rapidez_efectiva = vector.at(vel_x, vel_y).modulo()
-		const energiaChoque = (masa * rapidez_efectiva*rapidez_efectiva)/2
-		if (energiaChoque > 20) {
-			console.println(self.toString()+": Energia = "+ energiaChoque.toString())
-		}	
-		return energiaChoque > 60
-	}
+//	method estaEnRapidezLetal(ejeDeChoque) { // si la magnitud de su velocidad es letal en caso de encontrarse con una pared
+//		const vel_x = x - old_x
+//		const vel_y = y - old_y
+//		
+//		// NO SÉ SI TIENE SIQUIERA SENTIDO ESTO QUE PLANTEO PERO SUENA PIOLA 
+//		
+//		// rapidez_efectiva es la magnitud de la velocidad perpendicular al plano de choque, 
+//		// osea que es la componente de la velocidad que es paralela al eje de choque,
+//		// rapidez_efectiva es la rapidez que realmente nos importa para calcular la energia del choque.
+//		const rapidez_efectiva = vector.at(vel_x, vel_y).escalarProyeccionSobre(ejeDeChoque) 
+////		const rapidez_efectiva = vector.at(vel_x, vel_y).modulo()
+//		const energiaChoque = (masa * rapidez_efectiva*rapidez_efectiva)/2
+//		if (energiaChoque > 20) {
+//			console.println(self.toString()+": Energia = "+ energiaChoque.toString())
+//		}	
+//		return energiaChoque > 60
+//	}
 	
 	method updatePosition(dt) {
 		// el valor corresponde al numero de ticks definido en el game.onTick()
@@ -181,7 +184,7 @@ class VerletObject inherits UpdatableObject {
 		old_x = x
 		old_y = y
 			
-		// calculamos la nueva posicion con Integración de Verlet (agregue 0.95 para simular friccion)
+		// calculamos la nueva posicion con Integración de Verlet (agregue 0.9 para simular friccion)
 		if (hayFriccion) {
 			x += vel_x * 0.9 + acc_x *dt*dt 
 			y += vel_y * 0.9 + acc_y *dt*dt
@@ -197,9 +200,9 @@ class VerletObject inherits UpdatableObject {
 		
 		// aplicamos cambios en wollok game
 		position.xy(x, y)
-	}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+	}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
 	
-	method applyCircleConstraint(coord_centro, radio) { // trampa circular invisible
+	method applyCircleConstraint(coord_centro, radio) { // restriccion circular invisible
 		const ejeDeChoque = coord_centro - (vector.at(x, y) + vector.at(4.5,4.5))
 		const dist = ejeDeChoque.magnitud()
 		
@@ -219,7 +222,7 @@ class VerletObject inherits UpdatableObject {
 			 * - Hacer que rebote, reduce las ocurrencias de bug, aunque a veces sigue pasando. 
 			 * */
 			
-			x += moverHacia.x()
+			x += moverHacia.x()  
 			y += moverHacia.y()  
 //			const vel_x = x - old_x 
 //			const vel_y = y - old_y
@@ -275,158 +278,6 @@ class VerletObject inherits UpdatableObject {
 	}
 }
 
-//orientaciones
-object derecha {
-	override method toString() = "der"
-}
-object izquierda {
-	override method toString() = "izq"
-}
-object arriba {
-	override method toString() = "arriba"
-}
-object abajo {
-	override method toString() = "abajo"
-}
-//estados
-object cerrado {
-	override method toString() = "cerrado"
-}
-object medio {
-	override method toString() = "medio"
-}
-object abierto {
-	override method toString() = "abierto"
-	
-}
 
 
-// 
 
-object pacmanFrames {
-	const secuenciaEstados = [cerrado, medio, abierto, medio]
-	var property orientacion = derecha
-	
-	var i = 0
-	
-	method actual() {
-		const estadoActual = secuenciaEstados.get(i)
-		return "assets/PACMAN/"+estadoActual+"-"+orientacion+".png"
-	}
-	method avanzar() {
-		i++
-		if (i==4) {i=0}
-	}
-	method orientacion(_orientacion) {
-		orientacion = _orientacion
-	}
-}
-
-class Pacman inherits VerletObject {
-	const property fuerza = 5
-	const property radio = self.width()/2
-	
-	override method image() = pacmanFrames.actual()
-	
-	override method initialize() {
-		super()		
-		self.iniciar_config_teclado()
-		game.onTick(80, "animacion-pacman", { pacmanFrames.avanzar() })
-		registry.put("jugador", self)
-	}
-
-	// crean el efecto de que alguien los tira hacia el sentido indicado
-	method arriba() {
-		self.accelerate(0, fuerza * masa)							
-		pacmanFrames.orientacion(arriba)
-	}
-	method abajo() {
-		self.accelerate(0, -fuerza * masa)		
-		pacmanFrames.orientacion(abajo)					
-	}
-	method derecha() {
-		self.accelerate(fuerza * masa, 0)		
-		pacmanFrames.orientacion(derecha)					
-	}
-	method izquierda() {
-		self.accelerate(-fuerza * masa, 0)
-		pacmanFrames.orientacion(izquierda)					
-	}
-
-//	override method resolverColisionCon(objeto) {
-//		game.say(self, "Choque con "+objeto.toString())
-//		//self.morir()
-//	}		
-//	
-	method iniciar_config_teclado() {
-		keyboard.w().onPressDo { 
-			self.arriba()
-		}
-		keyboard.a().onPressDo { 
-			self.izquierda()
-		}
-		keyboard.s().onPressDo { 
-			self.abajo()
-		}
-		keyboard.d().onPressDo { 
-			self.derecha()
-		}
-		keyboard.q().onPressDo {
-			game.stop()
-		}
-		keyboard.t().onPressDo {
-			console.println(self.toString()+": rapidez = "+self.rapidez())
-			self.tp(self.x0(), self.y0())
-		}
-		keyboard.r().onPressDo { // reiniciar su posicion, con velocidad 0
-			self.reiniciar()	
-		}
-		keyboard.k().onPressDo { // matar al jugador
-			self.morir()
-		}
-		keyboard.x().onPressDo { // deletear al jugador
-			self.eliminar() // EXISTE MANERA DE BORRAR EL OBJETO DEL PROGRAMA Y NO SOLO DEL MAPA? 
-		}
-	}
-}
-
-
-class Fantasma inherits VerletObject {
-	
-	const jugador // se debe definir al crear una instancia
-	
-	override method image() = "assets/FANTASMA/rojo_arriba1.png"
-//	override method image() = "assets/PACMAN/cerrado.png"
-	override method initialize() {
-		super()
-	}
-	
-	method applyGravity() {
-		self.accelerate(0, -g)
-	}
-	
-	method followPlayer() {
-		const jugador_pos = jugador.position()
-		const a_x = jugador.acc_x()
-		const a_y = jugador.acc_y()
-	
-		// SOLUCIONAR PROBLEMA DE QUE SE PONEN A ORBITAR AL JUGADOR, NUNCA LO ALCANZA
-		
-		const jugador_vel = jugador_pos - vector.at(jugador.x(),jugador.y()) 
-		const diff = jugador_pos - self.position()
-		const hacia = (diff + jugador_vel).versor()
-		
-		self.accelerate(hacia.x(), hacia.y())
-	}
-	
-	override method update() {
-//		self.applyGravity()
-//		self.followPlayer() 
-		super()
-	}
-	
-	override method resolverColisionCon(objeto, vectorCorreccion) {
-		super(objeto, vectorCorreccion)
-		self.morir()
-	}	
-}

@@ -5,12 +5,34 @@ import vectores.*
 import global.*
 
 
+class CollisionFrame { // representa un rectangulo 
+	// valores iniciales
+	const x
+	const y
+	const offset_x
+	const offset_y 
+	const length
+	const width
+	
+	
+	
+	// los 4 puntos del rectangulo 
+	const property x0 = 1
+	const property x1 = 1
+	const property y0 = 1
+	const property y1 = 1
+}
+
 // objeto para checkear colisiones
 object colisiones {
-	const property conjuntoObjetos = new Set() // es conjunto así no se repiten los mismo objetos
+	const property conjuntoObjetos = new Set() // es conjunto así no se repiten los mismos objetos
 	
 	method initialize() {
 		super()
+	}
+	
+	method checkearColisiones() { // poner acá las colisiones que queremos checkear 
+		self.checkCollisionsOf(registry.get("jugador"))
 	}
 
 	method checkCollisionsOf(objetoPrincipal) {
@@ -34,8 +56,8 @@ object colisiones {
  		const p_centro = vector.at(p_x0+p_radio, p_y0+p_radio) 
 		const obj_radio = p_radio // suponemos q son un poco mas grandes
 		
-		// Sweep & Prune 
-
+		// Sweep & Prune
+		
 //		game.say(objetoPrincipal, "Chequeando colisiones...")
 //		console.println(conjuntoObjetos.toString())
 
@@ -64,11 +86,12 @@ object colisiones {
 		 			const eje_colision = obj_centro - p_centro
 		 			const dist = eje_colision.magnitud()
 		 			if (dist < p_radio+obj_radio) { // CONFIRMADO HAY COLISION
-		 				const diff = (p_radio+obj_radio) - dist
-		 			 	const moverHacia = eje_colision.versor() * (-diff/2) 
-		 			 	
-		 				objetoPrincipal.resolverColisionCon(obj, moverHacia)
-		 				obj.resolverColisionCon(objetoPrincipal, moverHacia * (-1))	// se mueve a la direccion contraria
+//		 				const diff = (p_radio+obj_radio) - dist
+//		 			 	const moverHacia = eje_colision.versor() * (-diff/2) 
+//		 				objetoPrincipal.resolverColisionCon(obj, moverHacia)
+//		 				obj.resolverColisionCon(objetoPrincipal, moverHacia * (-1))	// se mueve a la direccion contraria
+						objetoPrincipal.resolverColisionCon(obj)
+		 				obj.resolverColisionCon(objetoPrincipal)
 		 			}
 		 		}
 		 	} 
