@@ -3,7 +3,7 @@ import gameObjects.*
 import global.*
 import vectores.*
 
-class Fantasma inherits VerletObject {
+class Fantasma inherits EntesVivos {
 	
 	const jugador = registry.get("jugador") // si no funciona, se debe definir al crear una instancia
 	

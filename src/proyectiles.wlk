@@ -1,10 +1,12 @@
 import gameObjects.*
 import global.*
+import wollok.game.*
 
 
 class Proyectil inherits VerletObject{
 	override method initialize() {
 		super()
+		game.schedule(3000, {self.eliminar()}) 
 	}
 	override method height() = 30/registry.get("casillas_pixeles") 
 	override method width() = 30/registry.get("casillas_pixeles")

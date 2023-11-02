@@ -31,38 +31,38 @@ class Vector {
 		return (self % otroVector) / (otroVector.modulo())
 	}
 	
-	method apuntaHacia() {
-		if (x==0) {
-			if (y==0) {
-				return null // no apunta a nada
-			} 
-			if (y>0) {
-				return norte 
-			}
-			if (y<0) {
-				return sur
-			} 
-		}
-		if (x>0) {
-			if (x==y) {
-				return noreste
-			}
-			if (x==-y) {
-				return sureste
-			}
-			return este
-		}
-		else if (x<0) {
-			if (x==y) {
-				return suroeste
-			}
-			if (x==-y) {
-				return noroeste
-			}
-			return oeste
-		}
-		return null
-	}
+//	method apuntaHacia() {
+//		if (x==0) {
+//			if (y==0) {
+//				return null // no apunta a nada
+//			} 
+//			if (y>0) {
+//				return norte 
+//			}
+//			if (y<0) {
+//				return sur
+//			} 
+//		}
+//		if (x>0) {
+//			if (x==y) {
+//				return noreste
+//			}
+//			if (x==-y) {
+//				return sureste
+//			}
+//			return este
+//		}
+//		else if (x<0) {
+//			if (x==y) {
+//				return suroeste
+//			}
+//			if (x==-y) {
+//				return noroeste
+//			}
+//			return oeste
+//		}
+//		return null
+//	}
 	
 	// como vector inmutable -> es horrible para la performance D:
 	method +(otroVector) {

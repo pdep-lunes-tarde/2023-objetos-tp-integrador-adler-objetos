@@ -32,7 +32,7 @@ object colisiones {
 	}
 	
 	method checkearColisiones() { // poner acá las colisiones que queremos checkear 
-		self.checkCollisionsOf(registry.get("jugador"))
+		//self.checkCollisionsOf(registry.get("jugador"))
 	}
 
 	method checkCollisionsOf(objetoPrincipal) {

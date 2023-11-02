@@ -81,7 +81,7 @@ class Sangre inherits GameObject {
 	
 	override method initialize() {
 		super()
-		game.schedule(3000, {game.removeVisual(self)}) 	// se elimina dsp de un rato
+		game.schedule(3000, {self.eliminar()}) 	// se elimina dsp de un rato
 	}
 }
 
@@ -105,7 +105,6 @@ class VerletObject inherits UpdatableObject {
 	var property acc_y = 0
 	
 	const hayFriccion = true
-	const masa = 1
 	
 	const g = 0.98
 	
@@ -131,12 +130,6 @@ class VerletObject inherits UpdatableObject {
 		y = _x
 		old_x = x - vel_x
 		old_y = y - vel_y
-	}
-	
-	method morir() {
-		console.println("Rip, "+self+" :(")
-		const s = new Sangre(x0=x, y0=y, doCollision=false)
-		
 	}
 	
 	method accelerate(_acc_x, _acc_y) {
@@ -165,7 +158,7 @@ class VerletObject inherits UpdatableObject {
 //		// rapidez_efectiva es la rapidez que realmente nos importa para calcular la energia del choque.
 //		const rapidez_efectiva = vector.at(vel_x, vel_y).escalarProyeccionSobre(ejeDeChoque) 
 ////		const rapidez_efectiva = vector.at(vel_x, vel_y).modulo()
-//		const energiaChoque = (masa * rapidez_efectiva*rapidez_efectiva)/2
+//		const energiaChoque = (rapidez_efectiva*rapidez_efectiva)/2
 //		if (energiaChoque > 20) {
 //			console.println(self.toString()+": Energia = "+ energiaChoque.toString())
 //		}	
@@ -195,12 +188,16 @@ class VerletObject inherits UpdatableObject {
 		}
 		
 		// reiniciamos el valor de la aceleracion
-		acc_x = 0
+		acc_x = 0 
 		acc_y = 0 
 		
 		// aplicamos cambios en wollok game
 		position.xy(x, y)
-	}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+	}
+	
+	method applyGravity() {
+		self.accelerate(0,-g)
+	}
 	
 	method applyCircleConstraint(coord_centro, radio) { // restriccion circular invisible
 		const ejeDeChoque = coord_centro - (vector.at(x, y) + vector.at(4.5,4.5))
@@ -230,7 +227,6 @@ class VerletObject inherits UpdatableObject {
 //			old_y = y + vel_y * (1-coef_perdida_energia) 
 		}
 	}
-	
 	method applyWallConstraint() {
 		const piso = 0
 		const techo = registry.get("grid_height") - self.height() // hay q tener en cuenta el tamaño del sprite,
@@ -259,22 +255,20 @@ class VerletObject inherits UpdatableObject {
 			old_x = x + vel_x
 		}
 		
-	}
-	method applyGravity() {
-		self.accelerate(0,-g)
-	}
-
+	}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+	
 	method update() {
-		const dt = 1
-		const substep = 2 // hacemos substeps para mejores físicas. poner en 1 para deshabilitarlo
-		const sub_dt = dt / substep
-		substep.times { i =>
-//			self.applyGravity()
-//			self.applyWallConstraint()
-			self.applyCircleConstraint(registry.get("centro"), 65)
-			self.updatePosition(sub_dt) 
-			
-		}
+//		self.applyGravity()
+		self.applyWallConstraint()
+		self.applyCircleConstraint(registry.get("centro"), 65)
+		self.updatePosition(1) 
+	}
+}
+
+class EntesVivos inherits VerletObject {
+	method morir() {
+		console.println("Rip, "+self+" :(")
+		const s = new Sangre(x0=x, y0=y, doCollision=false)
 	}
 }
 

@@ -5,6 +5,7 @@ import vectores.*
 import mapa.*
 import gameObjects.*
 import teclas.*
+import ui.*
 
 /* Acá vamos a diseñar el menu de entrada para el juego */
 
@@ -32,6 +33,7 @@ object tp {
 	}
 	method jugar() { // empezar a jugar
 		mapa.iniciar()
+		game_ui.iniciar()
 		teclas.iniciar()
 		// empezar el actualizador global
 		updater.start()

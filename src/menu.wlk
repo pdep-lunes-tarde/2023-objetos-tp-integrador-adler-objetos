@@ -4,6 +4,7 @@ import global.*
 import vectores.*
 import mapa.*
 import gameObjects.*
+import ui.*
 
 object menu {
 	method iniciar() {
@@ -11,20 +12,19 @@ object menu {
 		game.addVisual(fondoNegro)
 	  	game.addVisual(titulo)
 	  	const centro = registry.get("centro")
-	  	const txt = new Texto(
+	  	game.addVisual( new Texto(
 	  		text="Presiona m para comenzar el juego",
 	  		x=centro.x(),
 	  		y=centro.y(),
 	  		textColor="#FFFFFF"
-	  	)
-	  	game.addVisual(txt)
+	  	))
 	  	
 	  	const musica = game.sound("assets/musica.mp3")
 		musica.shouldLoop(true)
 		game.schedule(500, { musica.play()} )
 
-	  	// PRESIONAR M PARA EMPEZAR EL JUEGO
-	  	keyboard.m().onPressDo {
+	  	// PRESIONAR E PARA EMPEZAR EL JUEGO
+	  	keyboard.e().onPressDo {
 	  		game.clear() // limpia todo
 	  		tp.jugar()   // empieza el juego en sí
 		}
@@ -48,10 +48,4 @@ object fondoNegro {
 }
 
 
-class Texto {
-	const x 
-	const y 
-	const property text
-	const property textColor
-	method position() = game.at(x,y)
-}
+

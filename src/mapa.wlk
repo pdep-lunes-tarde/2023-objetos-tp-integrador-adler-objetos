@@ -3,7 +3,7 @@ import vectores.*
 import gameObjects.*
 import wollok.game.*
 import menu.*
-import pacman.*
+import pacman.Pacman
 import enemigos.*
 import proyectiles.*
 
@@ -11,7 +11,7 @@ object mapa {
 	method iniciar() { // acá agregamos los objetos del juego
 		const jugador = new Pacman() 		
 //		const bolita = new Bolita(x0=100, y0= 100)
-		const puntaje = new TextoPuntaje(x0=200, y0= 200)
+//		const puntaje = new TextoPuntaje(x0=200, y0= 200)
 		
 		// Aproximacion del Seno con un polinomio de mclaurin de orden 10
 	  	const seno_Pol_mclaur_O10 = { x => 
@@ -22,34 +22,22 @@ object mapa {
 	  		return seno_Pol_mclaur_O10.apply(a)
 	  	}
 	  	
-//	  	const bolaDeFuego = new Proyectil(x0=game.center().x(), y0=game.center().y())
-//	  	const a = new VerletObject()
-	  	const proyectilJugador = new ProyectilJugador()
-	  	const proyectilEnemigo = new ProyectilEnemigo()
+//	  	const proyectilJugador = new ProyectilJugador()
+//	  	const proyectilEnemigo = new ProyectilEnemigo()
 	  	
 		// fantasmas normales 
 //		2.times { n =>
 //			const fantasma = new Fantasma()
 //		}
-		
-		 // fantasmas haciendo MOA
-		 1.times { n =>
-		 	const fantasma = new Fantasma(x0=game.center().x()-1 + n*3, y0=game.center().y()+65, vel_x0=50, hayFriccion=false)
-		 	game.onTick(1, "aceleracion radial", {
-		 		const aceleracionRadial = (registry.get("centro") - fantasma.position()) / 10
-		 		fantasma.accelerate(aceleracionRadial) // acelerar hacia el centro. Aceleracion radial.
-		 	})
-		 	// el fantasma necesita velocidad inicial suficiente para ponerse en orbita y seguir un MOA.
-		 }
 	}
 }
 
 
 
-class TextoPuntaje inherits GameObject{
+class TextoPuntaje{
 	const text = "Puntaje: "
 	const textColor = "#FFFFF"
-	method position() = game.at(x,y)
+	method position() = game.at(0,0)
 	
 	override method initialize() {
     	super()
