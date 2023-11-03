@@ -6,6 +6,7 @@ import menu.*
 import pacman.Pacman
 import enemigos.*
 import proyectiles.*
+import comestibles.*
 
 object mapa {	
 	method iniciar() { // acá agregamos los objetos del juego
@@ -21,13 +22,12 @@ object mapa {
 	  		return seno_Pol_mclaur_O10.apply(a)
 	  	}
 	  	
-//	  	const proyectilJugador = new ProyectilJugador()
-//	  	const proyectilEnemigo = new ProyectilEnemigo()
-	  	
-		// fantasmas normales 
-//		2.times { n =>
-//			const fantasma = new Fantasma()
-//		}
+	  	2.times { n =>
+		 	const fantasma = new Fantasma(x0=game.center().x()-1 + n*3, y0=game.center().y()+65, hayFriccion=true)
+	 	}
+	 	
+	 	const cafe = new Coffee()
+
 	}
 }
 

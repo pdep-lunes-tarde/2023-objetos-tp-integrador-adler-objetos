@@ -14,21 +14,21 @@ class Fantasma inherits EntesVivos {
 	override method initialize() {
 		super()
 		gameObjects.enemigos().add(self)
-		game.onTick(1000, "dispararAlPacman", { self.dispararAlJugador() })
+		game.onTick(3000, "dispararAlPacman", { self.dispararAlJugador() })
 	}
 	
 	method dispararAlJugador() {
 		const vel_x = x - old_x 
 		const vel_y = y - old_y 
 		self.mirarAlJugador() // actualiza "mirandoHacia"
-		const aceleracionInstantaneaDisparo = 5
+		const aceleracionInstantaneaDisparo = 2
 		const vectorDisparo = mirandoHacia * aceleracionInstantaneaDisparo 
 		
 		const proyectil = new ProyectilEnemigo(
 			hayFriccion=false,
 			x0=x, y0=y,
-			vel_x0=0, 
-			vel_y0=0
+			vel_x0=vel_x, 
+			vel_y0=vel_y
 		)		
 		proyectil.accelerate(vectorDisparo)
 	}
@@ -55,8 +55,15 @@ class Fantasma inherits EntesVivos {
 		mirandoHacia.xy(hacia_x, hacia_y) // actualizamos la mirada del fantasma 
 	}
 	
+	method applyMovement() {
+		var randomX = (-1..1).anyOne()
+	  	var randomY = (-1..1).anyOne()
+	  	self.accelerate(randomX, randomY)
+	}
+	
 	override method update() {
 //		self.applyGravity()
+		self.applyMovement()
 		self.applyCirclePathConstraint(registry.get("centro"), 75)
 		self.updatePosition(1) 
 	}

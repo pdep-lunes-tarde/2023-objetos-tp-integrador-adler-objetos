@@ -19,11 +19,11 @@ object teclas {
 		keyboard.f().onPressDo { // spawnear más fantasmas giratorios
 			1.times { n =>
 				const vel = 1.randomUpTo(5)
-			 	const fantasma = new Fantasma(x0=game.center().x()-1 + n*3, y0=game.center().y()+65, vel_x0=10, hayFriccion=false)
-			 	game.onTick(1, "aceleracion radial", {
-			 		const aceleracionRadial = (registry.get("centro") - fantasma.position()).versor()*0.1
-			 		fantasma.accelerate(aceleracionRadial)
-			 	})
+			 	const fantasma = new Fantasma(x0=game.center().x()-1 + n*3, y0=game.center().y()+65, hayFriccion=true)
+//			 	game.onTick(1, "aceleracion radial", {
+//			 		const aceleracionRadial = (registry.get("centro") - fantasma.position()).versor()*0.1
+//			 		fantasma.accelerate(aceleracionRadial)
+//			 	})
 		 	}
 		}
 	}

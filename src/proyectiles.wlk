@@ -4,6 +4,7 @@ import wollok.game.*
 
 
 class Proyectil inherits VerletObject{
+	method tipo()
 	override method initialize() {
 		super()
 		game.schedule(5000, {self.eliminar()}) 
@@ -11,49 +12,36 @@ class Proyectil inherits VerletObject{
 	override method height() = 30/registry.get("casillas_pixeles") 
 	override method width() = 30/registry.get("casillas_pixeles")
 	
+	override method image() = self.tipo().image()
+	
 	override method update() {
-		
 		self.updatePosition(1) 
 	}
 }
 class ProyectilJugador inherits Proyectil {
-	method tipo
-	
+	override method tipo() = elastico
 	override method initialize() {
 		super()
-		
 	}
-	override method image() = "assets/PROYECTIL/magmaball.png"
 }
 class ProyectilEnemigo inherits Proyectil {
+	override method tipo() = fuego
 	override method initialize() {
 		super()
 	}
-	override method image() = "assets/PROYECTIL/fireball.png"
 }
 
-// tipos de proyectiles que puede tener el jugador
-object comun {
-	
+// tipos de proyectiles
+object magma {
+	method image() = "assets/PROYECTIL/magmaball.png"
 }
 object elastico {
-	
+	method image() = "assets/PROYECTIL/slimeball.png"
 }
-object 
-
-
-
-
-class Bolita inherits GameObject {
-	
-	override method initialize() {
-    	super()
-    }
-    override method resolverColisionCon(objeto, vectorColision){
-    	super(objeto, vectorColision)
-    	if(objeto == self){
-			objeto.eliminar()  
-    	}
-    }
-	override method image() = "assets/bolita.png"
+object criogenico {
+	method image() = "assets/PROYECTIL/snowball.png"
 }
+object fuego {
+	method image() = "assets/PROYECTIL/fireball.png"
+}
+

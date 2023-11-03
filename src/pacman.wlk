@@ -43,8 +43,8 @@ class Pacman inherits EntesVivos {
 		const proyectil = new ProyectilJugador(
 			hayFriccion=false, 
 			x0=x, y0=y, 
-			vel_x0=vel_x, 
-			vel_y0=vel_y
+			vel_x0=0, 
+			vel_y0=0
 		)
 		const sentidoDelDisparo = self.orientacion().versor()
 		const aceleracionInstantaneaDisparo = 10
@@ -56,6 +56,11 @@ class Pacman inherits EntesVivos {
 //		game.say(self, "Choque con "+objeto.toString())
 //		//self.morir()
 //	}
+	
+	method consumir(comestible) { // consumir un Comestible
+		comestible.efecto(self)
+	}
+
 
 	override method update() {
 		self.applyCircleConstraint(registry.get("centro"), 65)
