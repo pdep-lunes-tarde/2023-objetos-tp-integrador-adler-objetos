@@ -15,10 +15,6 @@ object mapa {
 		2.times { n =>
 		 	const fantasma = new Fantasma(x0=game.center().x()-1 + n*3, y0=game.center().y()+65, hayFriccion=true)
 	 	}
-	 	
-	 	const cafe = new Coffee()
-
-
 
 		// Aproximacion del Seno con un polinomio de mclaurin de orden 10
 	  	const seno_Pol_mclaur_O10 = { x => 
@@ -29,21 +25,21 @@ object mapa {
 	  		return seno_Pol_mclaur_O10.apply(a)
 	  	}
 	  	
-
-
-//	  	const maximoBolitas = 20
-//	  	var cantidadBolitas = 0
-//	  	
-//    	game.onTick(2000, "crearBolitas", {
-//    		if(cantidadBolitas < maximoBolitas){
-//    			1.times { n =>
-//            		const randomX = (60..200).anyOne()
-//            		const randomY = (30..100).anyOne()
-//            		const bolita = new Bolita(x0 = randomX, y0 = randomY)
-//            		cantidadBolitas++
-//        		}	
-//    		}
-//    	})
+    	game.onTick(12000, "crearCafes", {
+    		1.times { n =>
+            	const randomX = (60..180).anyOne()
+            	const randomY = (30..100).anyOne()
+            	const cafe = new Coffee(x0 = randomX, y0 = randomY)
+        	}	
+    	})
+    	
+    	game.onTick(25000, "crearLavaBuckets", {
+    		1.times { n =>
+            	const randomX = (60..180).anyOne()
+            	const randomY = (30..100).anyOne()
+            	const lavaBucket = new LavaBucket(x0 = randomX, y0 = randomY)
+        	}	
+    	})
 //    	
 //    	const maximofantasmas = 2
 //	  	var cantidadfantasmas = 0
@@ -65,16 +61,6 @@ object mapa {
 	}
 }
 
-
-class TextoPuntaje{
-	const text = "Puntaje: "
-	const textColor = "#FFFFF"
-	method position() = game.at(0,0)
-	
-	override method initialize() {
-    	super()
-    }
-}
 
 class Circulo {
 	const property position = registry.get("centro") - vector.at(800/2/20,800/2/20)

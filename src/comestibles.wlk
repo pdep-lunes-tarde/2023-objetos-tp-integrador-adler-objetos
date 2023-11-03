@@ -17,6 +17,8 @@ class Comestible inherits GameObject {
 	method efecto(jugador)
 }
 
+
+
 class SlimeBucket inherits Comestible {
 	override method initialize() {
 		super()  
@@ -31,7 +33,6 @@ class LavaBucket inherits Comestible {
 	}
 	override method image() = "assets/COMESTIBLES/lavabucket.png"
 	override method efecto(jugador) {
-		
 	}
 }
 class SnowBucket inherits Comestible {
@@ -49,4 +50,26 @@ class Coffee inherits Comestible {
 	override method efecto(jugador) {
 		
 	}
+}
+
+
+
+class CartelPoderes inherits GameObject {
+	override method initialize() {
+		super()
+		game.schedule(10000, {self.eliminar()}) 
+	}
+}
+
+class Speed inherits CartelPoderes {
+	override method initialize() {
+		super()  
+	}
+	override method image() = "assets/cartelesPoderes/speed.png"
+}
+class Regeneration inherits CartelPoderes {
+	override method initialize() {
+		super()  
+	}
+	override method image() = "assets/cartelesPoderes/regeneration.png"
 }
