@@ -19,7 +19,7 @@ class Proyectil inherits VerletObject{
 	}
 }
 class ProyectilJugador inherits Proyectil {
-	override method tipo() = elastico
+	override method tipo() = criogenico
 	override method initialize() {
 		super()
 	}

@@ -21,7 +21,9 @@ object menu {
 	  	
 	  	const musica = game.sound("assets/musica.mp3")
 		musica.shouldLoop(true)
+		musica.volume(0.1)
 		game.schedule(500, { musica.play()} )
+		
 
 	  	// PRESIONAR E PARA EMPEZAR EL JUEGO
 	  	keyboard.e().onPressDo {

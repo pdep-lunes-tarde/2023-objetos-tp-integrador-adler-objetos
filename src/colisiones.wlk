@@ -5,22 +5,32 @@ import vectores.*
 import global.*
 
 
-class CollisionFrame { // representa un rectangulo 
-	// valores iniciales
-	const x
-	const y
-	const offset_x
-	const offset_y 
-	const length
-	const width
+class Hitbox { // representa un rectangulo 
+	// valores iniciales que podemos inicializar 
+	const objetoAsociado // este es obligatorio
+	const objetoAsociado_pos = objetoAsociado.position()
+	var height = objetoAsociado.height() // Por default, la altura y ancho de la hitbox 
+	var width = objetoAsociado.width()   // es la misma que la del objeto asociado.
+	var offset_x = 0
+	var offset_y = 0
 	
+	// los 4 puntos de la hitbox
+	method x0() = objetoAsociado_pos.x() + offset_x
+	method x1() = self.x0() + width + offset_x
+	method y0() = objetoAsociado_pos.y() + offset_y
+	method y1() = self.y0() + height + offset_y
 	
-	
-	// los 4 puntos del rectangulo 
-	const property x0 = 1
-	const property x1 = 1
-	const property y0 = 1
-	const property y1 = 1
+	method centrarHitbox() {
+		const diff_x = objetoAsociado.width() - width 
+		const diff_y = objetoAsociado.height() - height
+		offset_x = diff_x/2
+		offset_y = diff_y/2
+	}
+	method inscribirHitboxEnCirculo(radio) {
+		 const length = 1.414 * radio
+		 height = length
+		 width = length
+	}
 }
 
 // objeto para checkear colisiones
@@ -65,29 +75,31 @@ object colisiones {
 		 		const seSolapanEnElEjeX = obj_x0 < p_x1 and p_x0 < obj_x1
 		 		if (seSolapanEnElEjeX) {
 //		 			// VERSION HITBOX RECTANGULAR
-//		 			const obj_y0 = obj.y()
-//		 			const obj_y1 = obj_y0 + obj.height()
-//		 			const p_y1 = p_y0 + objetoPrincipal.height()
-//		 			
-//		 			console.println("X")
-//		 			
-//		 			const seSolapanEnElEjeY = obj_y0 < p_y1 and p_y0 < obj_y1
-//		 			if (seSolapanEnElEjeY) { // CONFIRMADO COLISION
-//		 				console.println("Y")
-//		 			}
+		 			const obj_y0 = obj.y()
+		 			const obj_y1 = obj_y0 + obj.height()
+		 			const p_y1 = p_y0 + objetoPrincipal.height()
 		 			
-		 			// VERSION HITBOX CIRCULAR
-		 			const obj_centro = obj.position()+vector.at(obj_radio, obj_radio)
-		 			const eje_colision = obj_centro - p_centro
-		 			const dist = eje_colision.magnitud()
-		 			if (dist < p_radio+obj_radio) { // CONFIRMADO HAY COLISION
-//		 				const diff = (p_radio+obj_radio) - dist
-//		 			 	const moverHacia = eje_colision.versor() * (-diff/2) 
-//		 				objetoPrincipal.resolverColisionCon(obj, moverHacia)
-//		 				obj.resolverColisionCon(objetoPrincipal, moverHacia * (-1))	// se mueve a la direccion contraria
-						objetoPrincipal.resolverColisionCon(obj)
+		 			console.println("X")
+		 			
+		 			const seSolapanEnElEjeY = obj_y0 < p_y1 and p_y0 < obj_y1
+		 			if (seSolapanEnElEjeY) { // CONFIRMADO COLISION
+		 				console.println("Y")
+		 				objetoPrincipal.resolverColisionCon(obj)
 		 				obj.resolverColisionCon(objetoPrincipal)
 		 			}
+		 			
+		 			// VERSION HITBOX CIRCULAR
+//		 			const obj_centro = obj.position()+vector.at(obj_radio, obj_radio)
+//		 			const eje_colision = obj_centro - p_centro
+//		 			const dist = eje_colision.magnitud()
+//		 			if (dist < p_radio+obj_radio) { // CONFIRMADO HAY COLISION
+////		 				const diff = (p_radio+obj_radio) - dist
+////		 			 	const moverHacia = eje_colision.versor() * (-diff/2) 
+////		 				objetoPrincipal.resolverColisionCon(obj, moverHacia)
+////		 				obj.resolverColisionCon(objetoPrincipal, moverHacia * (-1))	// se mueve a la direccion contraria
+//						objetoPrincipal.resolverColisionCon(obj)
+//		 				obj.resolverColisionCon(objetoPrincipal)
+//		 			}
 		 		}
 		 	} 
 		 }

@@ -25,6 +25,8 @@ class GameObject {
 	const property y0 = registry.get("centro").y() - self.height()/2
 	var property x = x0 	// posicion actual (para hacer cálculos)
 	var property y = y0
+	
+	const hitbox = new Hitbox(objetoAsociado=self)
 
 	// "position" es lo que le importa a wollok game,
 	// por ende usamos "position" nomás para efectuar el cambio de posición. 
@@ -269,7 +271,6 @@ class VerletObject inherits UpdatableObject {
 	method update() {
 //		self.applyGravity()
 //		self.applyWallConstraint()
-//		self.applyCircleConstraint(registry.get("centro"), 65)
 		self.updatePosition(1)
 	}
 }

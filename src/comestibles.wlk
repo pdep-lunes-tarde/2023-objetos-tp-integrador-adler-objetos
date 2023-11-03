@@ -4,6 +4,7 @@ import global.*
 import vectores.*
 import proyectiles.*
 
+
 class Comestible inherits GameObject {
 	override method initialize() {
 		super()

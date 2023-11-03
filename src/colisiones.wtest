@@ -1,0 +1,19 @@
+import gameObjects.*
+
+describe "COLISIONES" {
+	
+	const obj = new VerletObject()
+	
+	test "La hitbox sigue al gameObject" {
+		obj.accelerate(1,0) // lo movemos
+		
+		assert.that(obj.hitbox().x0() == obj.x())
+		assert.that(obj.hitbox().y0() == obj.y())
+
+	}
+	test "gameObject con hitbox más chica y centrada" {
+		
+		assert.that(true)
+
+	}
+}

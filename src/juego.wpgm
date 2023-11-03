@@ -19,9 +19,6 @@ program juego {
 // circulo de su hitbox 15x15
 
 
-// NOTÉ QUE EL JUEGO CON EL TIEMPO SE VUELVE CADA VEZ MÁS LENTO, PREGUNTAR A QUÉ PODRÍA DEBERSE.
-
-
 // NOTA : las imágenes se importan con el tamaño original.
 
 // NOTA: el numero de pixeles de celda debe ser divisor de los pixeles del personaje, sino se ven mal las colisiones
@@ -29,7 +26,3 @@ program juego {
 // 20 pixels de celda, y 40 pixeles de personaje
 // 25 pixels de celda, y 50 pixeles de personaje
 // 20 pixels de celda, y 40 pixeles de personaje
-
-
-// CAMBIAR DIMENSIONES DE LOS OBJETOS DE 50 A 60 
-// DEJAR PIXELES DE CELDAS EN 20, ASI CADA OBJETO TIENE 3 PTOS DE COLISIONES POR CARA.
