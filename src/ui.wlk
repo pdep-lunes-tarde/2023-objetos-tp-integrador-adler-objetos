@@ -4,7 +4,7 @@ import proyectiles.*
 
 object game_ui {
 	var puntaje = 0
-	var vidas = 10
+	var vidas = 3
 	
 	//method puntaje() = puntaje
 	
@@ -25,6 +25,43 @@ object game_ui {
 	  		y=height-20,
 	  		textColor="#FFFFFF"
 	  	))
+	  	const corazon1 = new Corazon(
+	  		x=10,
+	  		image="assets/corazon.png"
+	  	)
+	  	const corazon2 = new Corazon(
+	  		x=20,
+	  		image="assets/corazon.png"
+	  	)
+	  	const corazon3 = new Corazon(
+	  		x=30,
+	  		image="assets/corazon.png"
+	  	)
+	  	game.addVisual(corazon1)
+	  	game.addVisual(corazon2)
+	  	game.addVisual(corazon3)
+	  	if(vidas == 2){
+	  		game.removeVisual(corazon3)
+	  		game.addVisual (new Corazon(
+	  		x=30,
+	  		image="assets/corazonVacio.png"
+	  		))
+	  	}
+	  	else if(vidas == 1){
+	  		game.removeVisual(corazon2)
+	  		game.addVisual (new Corazon(
+	  		x=20,
+	  		image="assets/corazonVacio.png"
+	  		))
+	  	}
+	  	else if(vidas == 0){
+	  		game.removeVisual(corazon1)
+	  		game.addVisual (new Corazon(
+	  		x=10,
+	  		image="assets/corazonVacio.png"
+	  		))
+	  		self.gameOver()
+	  	}
 	}
 	
 	method sumarPuntajeBolita() {
@@ -46,9 +83,6 @@ object game_ui {
 		//Si el pacman choca con una bola de fuego o con un fantasma se le resta una vida
 		//muestra sangre jugador.morir()
 		vidas--
-		if(vidas == 0){
-			self.gameOver()
-		}
 	}
 	method frenarTodo(){
 		//matar al jugador jugador.eliminar
@@ -65,6 +99,12 @@ object game_ui {
 	
 }
 
+class Corazon {
+	const x 
+	const y = registry.get("grid_height")-20
+	var property image
+	method position() = game.at(x,y)
+}
 
 class Texto {
 	const x 
