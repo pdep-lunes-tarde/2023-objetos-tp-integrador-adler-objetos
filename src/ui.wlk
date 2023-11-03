@@ -1,6 +1,7 @@
 import global.*
 import wollok.game.*
 import proyectiles.*
+import gameObjects.*
 
 object game_ui {
 	var puntaje = 0
@@ -51,8 +52,11 @@ object game_ui {
 		}
 	}
 	method frenarTodo(){
-		//matar al jugador jugador.eliminar
-		//eliminar a los fantasmas fantasma.eliminar()
+		gameObjects.objetos().forEach { obj =>
+			obj.eliminar()
+		}
+		game.clear()
+		// parar la musica, game.clear() no lo hace
 	}
 	method gameOver(){
 		self.frenarTodo()
