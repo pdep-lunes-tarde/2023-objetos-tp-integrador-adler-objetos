@@ -2,12 +2,12 @@ import wollok.game.*
 import global.*
 import enemigos.*
 import gameObjects.*
+import proyectiles.*
 
 
 object teclas {
 	method iniciar() {
 		self.teclasGlobales()
-		self.teclasFantasmas()
 		self.teclasJugador()
 	}
 	method teclasGlobales() {

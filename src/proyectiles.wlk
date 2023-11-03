@@ -43,5 +43,23 @@ object criogenico {
 }
 object fuego {
 	method image() = "assets/PROYECTIL/fireball.png"
+	
+}
+
+
+
+
+class Bolita inherits GameObject {
+	
+	override method initialize() {
+    	super()
+    }
+    /*override method resolverColisionCon(objeto, vectorColision){
+    	super(objeto, vectorColision)
+    	if(objeto == self){
+			objeto.eliminar()  
+    	}
+    }*/
+	override method image() = "assets/bolita.png"
 }
 

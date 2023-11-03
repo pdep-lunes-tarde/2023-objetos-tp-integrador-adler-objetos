@@ -10,9 +10,16 @@ import comestibles.*
 
 object mapa {	
 	method iniciar() { // acá agregamos los objetos del juego
-		const jugador = new Pacman() 		
-//		const puntaje = new TextoPuntaje(x0=200, y0= 200)
-		
+		const jugador = new Pacman() 
+
+		2.times { n =>
+		 	const fantasma = new Fantasma(x0=game.center().x()-1 + n*3, y0=game.center().y()+65, hayFriccion=true)
+	 	}
+	 	
+	 	const cafe = new Coffee()
+
+
+
 		// Aproximacion del Seno con un polinomio de mclaurin de orden 10
 	  	const seno_Pol_mclaur_O10 = { x => 
 	  		return x-((x**3)/6)+((x**5)/120)-((x**7)/5040)+((x**9)/362880)
@@ -22,15 +29,41 @@ object mapa {
 	  		return seno_Pol_mclaur_O10.apply(a)
 	  	}
 	  	
-	  	2.times { n =>
-		 	const fantasma = new Fantasma(x0=game.center().x()-1 + n*3, y0=game.center().y()+65, hayFriccion=true)
-	 	}
-	 	
-	 	const cafe = new Coffee()
 
+
+	  	const maximoBolitas = 20
+	  	var cantidadBolitas = 0
+	  	
+    	game.onTick(2000, "crearBolitas", {
+    		if(cantidadBolitas < maximoBolitas){
+    			1.times { n =>
+            		const randomX = (60..200).anyOne()
+            		const randomY = (30..100).anyOne()
+            		const bolita = new Bolita(x0 = randomX, y0 = randomY)
+            		cantidadBolitas++
+        		}	
+    		}
+    	})
+    	
+    	const maximofantasmas = 2
+	  	var cantidadfantasmas = 0
+	  	
+    	game.onTick(1000, "crearFantasmnas", {
+				if(cantidadfantasmas < maximofantasmas){
+					1.times { n =>
+						const vel = 1.randomUpTo(5)
+						const fantasma = new Fantasma(x0=game.center().x()-1 + n*3, y0=game.center().y()+65, vel_x0=1, hayFriccion=false)
+							game.onTick(1, "aceleracion radial", {
+								const aceleracionRadial = (registry.get("centro") - fantasma.position()).versor()*0.1
+								fantasma.accelerate(aceleracionRadial)
+							})
+						cantidadfantasmas++
+					}
+				}
+			}		
+		)
 	}
 }
-
 
 
 class TextoPuntaje{
