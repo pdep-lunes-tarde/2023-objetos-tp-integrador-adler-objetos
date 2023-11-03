@@ -8,29 +8,43 @@ import global.*
 class Hitbox { // representa un rectangulo 
 	// valores iniciales que podemos inicializar 
 	const objetoAsociado // este es obligatorio
-	const objetoAsociado_pos = objetoAsociado.position()
 	var height = objetoAsociado.height() // Por default, la altura y ancho de la hitbox 
 	var width = objetoAsociado.width()   // es la misma que la del objeto asociado.
 	var offset_x = 0
 	var offset_y = 0
 	
+	override method initialize() {
+		super()
+		
+	}
+	
+	method obj_pos() = objetoAsociado.position()
+	
 	// los 4 puntos de la hitbox
-	method x0() = objetoAsociado_pos.x() + offset_x
+	method x0() = self.obj_pos().x() + offset_x
 	method x1() = self.x0() + width + offset_x
-	method y0() = objetoAsociado_pos.y() + offset_y
+	method y0() = self.obj_pos().y() + offset_y
 	method y1() = self.y0() + height + offset_y
 	
-	method centrarHitbox() {
+	method centrar() {
 		const diff_x = objetoAsociado.width() - width 
 		const diff_y = objetoAsociado.height() - height
 		offset_x = diff_x/2
 		offset_y = diff_y/2
 	}
-	method inscribirHitboxEnCirculo(radio) {
+	method inscribirEnCirculo(radio) {
 		 const length = 1.414 * radio
 		 height = length
 		 width = length
+		 self.centrar()
 	}
+	method height(_height) {
+		height = _height
+	}
+	method width(_width) {
+		width = _width
+	}
+	
 }
 
 // objeto para checkear colisiones
@@ -40,69 +54,42 @@ object colisiones {
 	}
 	
 	method checkearColisiones() { // poner acá las colisiones que queremos checkear 
-		//self.checkCollisionsOf(registry.get("jugador"))
+		self.checkCollisionsBetween([gameObjects.jugador()], gameObjects.proyectilesEnemigos())
+		self.checkCollisionsBetween(gameObjects.enemigos(), gameObjects.proyectilesJugador()) 
 	}
 
-	method checkCollisionsBetween(objetoPrincipal, conjuntoObjetos) {	
+	method checkCollisionsBetween(objs1, objs2) {	
 		/* https://www.youtube.com/watch?v=eED4bSkYCB8
 		 * - Checkear cada par -> HORRIBLE
 		 * - Sweep & Prune -> método de los intervalos -> muuuuuuuuuchisimo mejor q el anterior
 		 * - Space partitioning -> Uniform grids / K-D Trees /  
 		 */
+		objs1.forEach {obj1 => 
+			const obj1_x0 = obj1.hitbox().x0()
+	 		const obj1_x1 = obj1.hitbox().x1()
+	      
+			objs2.forEach {obj2 =>
+			 	if (obj2 != obj1) {
+			 		const obj2_x0 = obj2.hitbox().x0()
+			 		const obj2_x1 = obj2.hitbox().x1()
+			 	
+			 		// se solapan en el eje x ?
+			 		if (obj2_x0 < obj1_x1 and obj1_x0 < obj2_x1) {
+			 			const obj2_y0 = obj2.hitbox().y0()
+			 			const obj2_y1 = obj2.hitbox().y1()
+			 			const obj1_y0 = obj1.hitbox().y0()
+			 			const obj1_y1 = obj1.hitbox().y1()
+			 			
+			 			// se solapan en el eje y ?
+			 			if (obj2_y0 < obj1_y1 and obj1_y0 < obj2_y1) { // CONFIRMADO COLISION
+//			 				obj1.resolverColisionCon(obj2)
+			 				obj2.resolverColisionCon(obj1)
+			 			}
+			 		}
+			 	} 
+			}
+		} 
 		
-		// sprite del pacman es de 45 pixeles de largo
-		// el largo de una celda es de 5 pixeles 
-		// sprite del pacman es de 9 celdas de largo
-		// el radio del pacman seria de 4.5 celdas
-		const p_radio = objetoPrincipal.radio()
-		const p_x0 = objetoPrincipal.x()
- 		const p_y0 = objetoPrincipal.y()
- 		const p_x1 = p_x0 + objetoPrincipal.width()
- 		const p_centro = vector.at(p_x0+p_radio, p_y0+p_radio) 
-		const obj_radio = p_radio // suponemos q son un poco mas grandes
-		
-		// Sweep & Prune
-		
-//		game.say(objetoPrincipal, "Chequeando colisiones...")
-//		console.println(conjuntoObjetos.toString())
-
-		 conjuntoObjetos.forEach {obj =>
-		 	if (obj != objetoPrincipal) {
-		 		const obj_x0 = obj.x()
-		 		const obj_x1 = obj_x0 + obj.width()
-		 	
-		 		// si se solapan en el eje x, entonces puede haber colision
-		 		const seSolapanEnElEjeX = obj_x0 < p_x1 and p_x0 < obj_x1
-		 		if (seSolapanEnElEjeX) {
-//		 			// VERSION HITBOX RECTANGULAR
-		 			const obj_y0 = obj.y()
-		 			const obj_y1 = obj_y0 + obj.height()
-		 			const p_y1 = p_y0 + objetoPrincipal.height()
-		 			
-		 			console.println("X")
-		 			
-		 			const seSolapanEnElEjeY = obj_y0 < p_y1 and p_y0 < obj_y1
-		 			if (seSolapanEnElEjeY) { // CONFIRMADO COLISION
-		 				console.println("Y")
-		 				objetoPrincipal.resolverColisionCon(obj)
-		 				obj.resolverColisionCon(objetoPrincipal)
-		 			}
-		 			
-		 			// VERSION HITBOX CIRCULAR
-//		 			const obj_centro = obj.position()+vector.at(obj_radio, obj_radio)
-//		 			const eje_colision = obj_centro - p_centro
-//		 			const dist = eje_colision.magnitud()
-//		 			if (dist < p_radio+obj_radio) { // CONFIRMADO HAY COLISION
-////		 				const diff = (p_radio+obj_radio) - dist
-////		 			 	const moverHacia = eje_colision.versor() * (-diff/2) 
-////		 				objetoPrincipal.resolverColisionCon(obj, moverHacia)
-////		 				obj.resolverColisionCon(objetoPrincipal, moverHacia * (-1))	// se mueve a la direccion contraria
-//						objetoPrincipal.resolverColisionCon(obj)
-//		 				obj.resolverColisionCon(objetoPrincipal)
-//		 			}
-		 		}
-		 	} 
-		 }
 	}	
 }
 

@@ -25,16 +25,16 @@ object updater {
 		update_list.remove(updatableObject)
 	}
 	
-	method update() {
+	method update(dt) {
 		// envia el mensaje "update" a cada objeto guardado en la lista update_list
-		update_list.forEach({updatableObject => updatableObject.update()}) 
-		colisiones.checkearColisiones()
+		update_list.forEach({updatableObject => updatableObject.update(dt)})
+		colisiones.checkearColisiones() 
 	}
 	
 	method start() {
 		const dt = 1 // tiempo (en ms) que pasa entre cada actualizacion
 
-		game.onTick(dt, "actualizar", { self.update() })
+		game.onTick(dt, "actualizar", { self.update(dt) })
 
 //		var i=0
 //		update_list.forEach({updatableObject => 

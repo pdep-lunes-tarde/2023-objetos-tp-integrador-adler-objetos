@@ -8,7 +8,8 @@ import colisiones.*
 object gameObjects {
 	const property objetos = new Set()
 	const property enemigos = new Set()
-//	const property proyectiles = new Set()
+	const property proyectilesEnemigos = new Set()
+	const property proyectilesJugador = new Set()
 	var property jugador = null
 	
 	method jugador(_jugador) {
@@ -20,13 +21,13 @@ object gameObjects {
 // valores iniciales (por si queremos definirlos al momento de crear una instancia de la clase)
 // x0, y0, doCollision 
 class GameObject {
-	
 	const property x0 = registry.get("centro").x() - self.width()/2
 	const property y0 = registry.get("centro").y() - self.height()/2
 	var property x = x0 	// posicion actual (para hacer cálculos)
 	var property y = y0
 	
-	const hitbox = new Hitbox(objetoAsociado=self)
+	var property inhabilitado = false // se activa cuando lo chocan
+	var property hitbox // se genera durante el initialize()
 
 	// "position" es lo que le importa a wollok game,
 	// por ende usamos "position" nomás para efectuar el cambio de posición. 
@@ -42,12 +43,13 @@ class GameObject {
 		super()
 		game.addVisual(self) 									// se muestra automáticamente en pantalla al crearse una instancia de la clase
 		gameObjects.objetos().add(self)
+		hitbox = new Hitbox(objetoAsociado=self)
 	}
 	
 	method eliminar() {
-		updater.remove(self)									// dejamos de actualizarlo
-		game.removeVisual(self)									// dejamos de mostrarlo en el juego
 		gameObjects.objetos().remove(self)						// los sacamos de la lista global
+		game.removeVisual(self)									// dejamos de mostrarlo en el juego
+		inhabilitado = true // es para que los schedules no levanten un error por llamar un objeto que se eliminó
 	}
 	
 	method resolverColisionCon(objeto, vectorCorreccion) {
@@ -60,7 +62,7 @@ class GameObject {
 //		old_y = y + vel_y		
 	}
 	method resolverColisionCon(objeto) {
-		console.println("Colision con "+objeto)
+		console.println(self.toString()+": Colision con "+objeto)
 	}
 }
 
@@ -70,7 +72,11 @@ class UpdatableObject inherits GameObject {
 		super()
 		updater.add(self) 	// se agrega al updater al crearse una instancia de la clase
 	}
-	method update() 
+	override method eliminar() {
+		updater.remove(self)									// dejamos de actualizarlo
+		super()
+	}
+	method update(dt) 
 }
 
 // valor inicial: x0, y0
@@ -268,16 +274,17 @@ class VerletObject inherits UpdatableObject {
 		
 	}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
 	
-	method update() {
+	method update(dt) {
 //		self.applyGravity()
 //		self.applyWallConstraint()
-		self.updatePosition(1)
+		self.updatePosition(dt)
 	}
 }
 
 class EntesVivos inherits VerletObject {
 	override method initialize() {
 		super()
+		hitbox.inscribirEnCirculo(4.5)
 	}
 	method morir() {
 		console.println("Rip, "+self+" :(")
