@@ -6,7 +6,7 @@ import vectores.*
 
 
 class Pacman inherits EntesVivos {
-	const property fuerza = 5
+	const property fuerza = 2
 	const property radio = self.width()/2
 	var property orientacion = derecha 
 	
@@ -15,7 +15,7 @@ class Pacman inherits EntesVivos {
 	override method initialize() {
 		super()
 		game.onTick(80, "animacion-pacman", { pacmanFrames.avanzar() })
-		registry.put("jugador", self)
+		gameObjects.jugador(self)
 	}
 	
 	method orientacion(_orientacion) {
@@ -40,7 +40,9 @@ class Pacman inherits EntesVivos {
 	method disparar() {
 		const vel_x = x - old_x
 		const vel_y = y - old_y // la velocidad relativa del proyectil se debe sumar a la del jugador para obtener su velocidad absoluta.
-		const proyectil = new ProyectilJugador(x0=x,y0=y, 
+		const proyectil = new ProyectilJugador(
+			hayFriccion=false, 
+			x0=x, y0=y, 
 			vel_x0=vel_x, 
 			vel_y0=vel_y
 		)
@@ -53,7 +55,12 @@ class Pacman inherits EntesVivos {
 //	override method resolverColisionCon(objeto) {
 //		game.say(self, "Choque con "+objeto.toString())
 //		//self.morir()
-//	}		
+//	}
+
+	override method update() {
+		self.applyCircleConstraint(registry.get("centro"), 65)
+		self.updatePosition(1)
+	}
 
 }
 

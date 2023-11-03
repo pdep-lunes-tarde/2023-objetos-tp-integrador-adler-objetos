@@ -35,10 +35,7 @@ object colisiones {
 		//self.checkCollisionsOf(registry.get("jugador"))
 	}
 
-	method checkCollisionsOf(objetoPrincipal) {
-		
-		//objetoPrincipal.checkCollisionsWith(conjuntoObjetos)
-		
+	method checkCollisionsOf(objetoPrincipal) {	
 		/* https://www.youtube.com/watch?v=eED4bSkYCB8
 		 * - Checkear cada par -> HORRIBLE
 		 * - Sweep & Prune -> método de los intervalos -> muuuuuuuuuchisimo mejor q el anterior

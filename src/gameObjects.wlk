@@ -4,6 +4,18 @@ import global.*
 import vectores.*
 import colisiones.*
 
+// guarda datos globales relacionados a todos los gameObjects
+object gameObjects {
+	const property objetos = new Set()
+	const property enemigos = new Set()
+	var property jugador = null
+	
+	method jugador(_jugador) {
+		jugador = _jugador
+	}
+}
+
+
 // valores iniciales (por si queremos definirlos al momento de crear una instancia de la clase)
 // x0, y0, doCollision 
 class GameObject {
@@ -12,8 +24,6 @@ class GameObject {
 	const property y0 = registry.get("centro").y() - self.height()/2
 	var property x = x0 	// posicion actual (para hacer cálculos)
 	var property y = y0
-	
-	var property doCollision = true
 
 	// "position" es lo que le importa a wollok game,
 	// por ende usamos "position" nomás para efectuar el cambio de posición. 
@@ -28,28 +38,13 @@ class GameObject {
 	override method initialize() {
 		super()
 		game.addVisual(self) 									// se muestra automáticamente en pantalla al crearse una instancia de la clase
-		if (doCollision) {
-			colisiones.conjuntoObjetos().add(self)
-		}
+		gameObjects.objetos().add(self)
 	}
-
+	
 	method eliminar() {
 		updater.remove(self)									// dejamos de actualizarlo
 		game.removeVisual(self)									// dejamos de mostrarlo en el juego
-		colisiones.conjuntoObjetos().remove(self)				// dejamos de checkear sus colisiones
-	}
-	
-	method doCollision(_state) { 
-		doCollision = _state
-		if (_state) {
-			colisiones.conjuntoObjetos().add(self)
-		}
-		else {
-			colisiones.conjuntoObjetos().remove(self)
-		}
-	}
-	method toggleCollision() { // permite togglear las colisiones del gameObject
-		self.doCollision(not doCollision)
+		gameObjects.objetos().remove(self)						// los sacamos de la lista global
 	}
 	
 	method resolverColisionCon(objeto, vectorCorreccion) {
@@ -110,7 +105,6 @@ class VerletObject inherits UpdatableObject {
 	
 	override method initialize() {
 		super()
-
 	}
 	
 	method reiniciar() {
@@ -255,20 +249,27 @@ class VerletObject inherits UpdatableObject {
 			old_x = x + vel_x
 		}
 		
-	}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+	}       
+	
+	method applyCirclePerimeterConstraint() {
+		
+	}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
 	
 	method update() {
 //		self.applyGravity()
-		self.applyWallConstraint()
-		self.applyCircleConstraint(registry.get("centro"), 65)
-		self.updatePosition(1) 
+//		self.applyWallConstraint()
+//		self.applyCircleConstraint(registry.get("centro"), 65)
+		self.updatePosition(1)
 	}
 }
 
 class EntesVivos inherits VerletObject {
+	override method initialize() {
+		super()
+	}
 	method morir() {
 		console.println("Rip, "+self+" :(")
-		const s = new Sangre(x0=x, y0=y, doCollision=false)
+		const s = new Sangre(x0=x, y0=y)
 	}
 }
 

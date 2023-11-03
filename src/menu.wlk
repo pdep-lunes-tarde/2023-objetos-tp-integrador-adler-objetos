@@ -13,8 +13,8 @@ object menu {
 	  	game.addVisual(titulo)
 	  	const centro = registry.get("centro")
 	  	game.addVisual( new Texto(
-	  		text="Presiona m para comenzar el juego",
-	  		x=centro.x(),
+	  		text="Presiona E para comenzar el juego",
+	  		x=centro.x()-6,
 	  		y=centro.y(),
 	  		textColor="#FFFFFF"
 	  	))
