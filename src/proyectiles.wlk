@@ -17,8 +17,11 @@ class Proyectil inherits VerletObject{
 	}
 }
 class ProyectilJugador inherits Proyectil {
+	method tipo
+	
 	override method initialize() {
 		super()
+		
 	}
 	override method image() = "assets/PROYECTIL/magmaball.png"
 }
@@ -28,6 +31,18 @@ class ProyectilEnemigo inherits Proyectil {
 	}
 	override method image() = "assets/PROYECTIL/fireball.png"
 }
+
+// tipos de proyectiles que puede tener el jugador
+object comun {
+	
+}
+object elastico {
+	
+}
+object 
+
+
+
 
 class Bolita inherits GameObject {
 	
