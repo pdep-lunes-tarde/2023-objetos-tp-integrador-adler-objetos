@@ -25,8 +25,6 @@ class CollisionFrame { // representa un rectangulo
 
 // objeto para checkear colisiones
 object colisiones {
-	const property conjuntoObjetos = new Set() // es conjunto así no se repiten los mismos objetos
-	
 	method initialize() {
 		super()
 	}
@@ -35,7 +33,7 @@ object colisiones {
 		//self.checkCollisionsOf(registry.get("jugador"))
 	}
 
-	method checkCollisionsOf(objetoPrincipal) {	
+	method checkCollisionsBetween(objetoPrincipal, conjuntoObjetos) {	
 		/* https://www.youtube.com/watch?v=eED4bSkYCB8
 		 * - Checkear cada par -> HORRIBLE
 		 * - Sweep & Prune -> método de los intervalos -> muuuuuuuuuchisimo mejor q el anterior

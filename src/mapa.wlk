@@ -9,7 +9,12 @@ import proyectiles.*
 
 object mapa {	
 	method iniciar() { // acá agregamos los objetos del juego
+<<<<<<< HEAD
 		const jugador = new Pacman() 
+=======
+		const jugador = new Pacman() 		
+//		const puntaje = new TextoPuntaje(x0=200, y0= 200)
+>>>>>>> 57712965e67fe22bac5ae20821d329a19329b367
 		
 		// Aproximacion del Seno con un polinomio de mclaurin de orden 10
 	  	const seno_Pol_mclaur_O10 = { x => 

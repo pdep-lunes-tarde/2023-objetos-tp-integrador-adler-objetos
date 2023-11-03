@@ -8,6 +8,7 @@ import colisiones.*
 object gameObjects {
 	const property objetos = new Set()
 	const property enemigos = new Set()
+//	const property proyectiles = new Set()
 	var property jugador = null
 	
 	method jugador(_jugador) {
@@ -173,8 +174,8 @@ class VerletObject inherits UpdatableObject {
 			
 		// calculamos la nueva posicion con Integración de Verlet (agregue 0.9 para simular friccion)
 		if (hayFriccion) {
-			x += vel_x * 0.9 + acc_x *dt*dt 
-			y += vel_y * 0.9 + acc_y *dt*dt
+			x += vel_x * 0.95 + acc_x *dt*dt 
+			y += vel_y * 0.95 + acc_y *dt*dt
 		} 
 		else {
 			x += vel_x + acc_x *dt*dt 
@@ -197,7 +198,7 @@ class VerletObject inherits UpdatableObject {
 		const ejeDeChoque = coord_centro - (vector.at(x, y) + vector.at(4.5,4.5))
 		const dist = ejeDeChoque.magnitud()
 		
-		const coef_perdida_energia = 0.05
+//		const coef_perdida_energia = 0.05
 		
 		if (dist > radio) {  // si se sale del circulo, entonces...
 			const diff = dist - radio
@@ -251,7 +252,17 @@ class VerletObject inherits UpdatableObject {
 		
 	}       
 	
-	method applyCirclePerimeterConstraint() {
+	method applyCirclePathConstraint(coord_centro, radio) {
+		const ejeDeChoque = coord_centro - (vector.at(x, y) + vector.at(4.5,4.5))
+		const dist = ejeDeChoque.magnitud()
+		
+		if (dist != radio) {  // si se sale de la linea del perimetro del circulo...
+			const diff = dist - radio
+			const moverHacia = ejeDeChoque.versor() * diff	
+			x += moverHacia.x()
+			y += moverHacia.y()
+		}
+		
 		
 	}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
 	

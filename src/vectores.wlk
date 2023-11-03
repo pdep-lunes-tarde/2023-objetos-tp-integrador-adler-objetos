@@ -97,7 +97,6 @@ class Vector {
 	method xy(_vector) {
 		self.xy(_vector.x(), _vector.y())
 	}
-	
 	method sumarle(otroVector) {
 		x += otroVector.x()
 		y += otroVector.y()
@@ -152,25 +151,24 @@ object oeste {
 		return new Vector(x=-1,y=0)
 	}
 }
-
 object noreste {
 	method versor() {
-		return (new Vector(x=1,y=1)).versor()
+		return (new Vector(x=0.707,y=0.707)) // aproximadamente de magnitud 1, no necesitamos precision completa
 	}
 }
 object noroeste {
 	method versor() {
-		return (new Vector(x=-1,y=1)).versor()
+		return (new Vector(x=-0.707,y=0.707))
 	}
 }
 object sureste {
 	method versor() {
-		return (new Vector(x=1,y=-1)).versor()
+		return (new Vector(x=0.707,y=-0.707)) 
 	}
 }
 object suroeste {
 	method versor() {
-		return (new Vector(x=-1,y=-1)).versor()
+		return (new Vector(x=-0.707,y=-0.707))
 	}
 }
 
