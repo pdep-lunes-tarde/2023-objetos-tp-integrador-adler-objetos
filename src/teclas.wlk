@@ -15,9 +15,6 @@ object teclas {
 			game.stop()
 		}
 	}
-<<<<<<< HEAD
-
-=======
 	method teclasFantasmas() {
 		keyboard.f().onPressDo { // spawnear más fantasmas giratorios
 			1.times { n =>
@@ -30,7 +27,6 @@ object teclas {
 		 	}
 		}
 	}
->>>>>>> 57712965e67fe22bac5ae20821d329a19329b367
 	method teclasJugador() {
 		const jugador = gameObjects.jugador()
 		keyboard.w().onPressDo { 
