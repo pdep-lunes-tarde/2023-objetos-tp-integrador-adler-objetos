@@ -7,7 +7,8 @@ import gameObjects.*
 import ui.*
 
 object menu {
-	const musica = game.sound("assets/musica.mp3")
+	const property musica = game.sound("assets/musica.mp3")
+	
 	method iniciar() {
 		//Agrego fondo y titulo del menu	  	
 		game.addVisual(fondoNegro)
@@ -34,7 +35,6 @@ object menu {
 	method mostrar() {
 		game.start()
 	}
-	method musica() = musica
 }
 
 object titulo {

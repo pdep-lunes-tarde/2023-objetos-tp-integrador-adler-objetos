@@ -10,6 +10,7 @@ object gameObjects {
 	const property enemigos = new Set()
 	const property proyectilesEnemigos = new Set()
 	const property proyectilesJugador = new Set()
+	const property comestibles = new Set()
 	var property jugador = null
 	
 	method jugador(_jugador) {
@@ -27,7 +28,7 @@ class GameObject {
 	var property y = y0
 	
 	var property inhabilitado = false // se activa cuando lo chocan
-	var property hitbox // se genera durante el initialize()
+	var property hitbox = null // se genera durante el initialize()
 
 	// "position" es lo que le importa a wollok game,
 	// por ende usamos "position" nomás para efectuar el cambio de posición. 

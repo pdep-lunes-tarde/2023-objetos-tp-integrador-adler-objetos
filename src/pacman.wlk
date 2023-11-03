@@ -64,7 +64,7 @@ class Pacman inherits EntesVivos {
 
 	override method update(dt) {
 		self.applyCircleConstraint(registry.get("centro"), 60)
-		self.updatePosition(dt)
+		super(dt)
 	}
 
 }
