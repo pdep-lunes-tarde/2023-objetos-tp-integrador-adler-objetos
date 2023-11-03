@@ -59,3 +59,25 @@ class Coffee inherits Comestible {
 		super()
 	}
 }
+
+
+
+class CartelPoderes inherits GameObject {
+	override method initialize() {
+		super()
+		game.schedule(10000, {self.eliminar()}) 
+	}
+}
+
+class Speed inherits CartelPoderes {
+	override method initialize() {
+		super()  
+	}
+	override method image() = "assets/cartelesPoderes/speed.png"
+}
+class Regeneration inherits CartelPoderes {
+	override method initialize() {
+		super()  
+	}
+	override method image() = "assets/cartelesPoderes/regeneration.png"
+}

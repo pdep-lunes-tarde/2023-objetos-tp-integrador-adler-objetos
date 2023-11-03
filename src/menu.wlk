@@ -10,24 +10,22 @@ object menu {
 	const property musica = game.sound("assets/musica.mp3")
 	
 	method iniciar() {
+		const fondoNegro = new ObjetosMenu(position= game.origin(), image="assets/fondonegro.png")
+		const titulo = new ObjetosMenu(position= game.at(70,100), image="assets/tituloPacman.png")
+		const explicaciones = new ObjetosMenu(position= game.at(20,20), image="assets/explicaciones.png")
+		
 		//Agrego fondo y titulo del menu	  	
 		game.addVisual(fondoNegro)
 	  	game.addVisual(titulo)
-	  	const centro = registry.get("centro")
-	  	game.addVisual( new Texto(
-	  		text="Presiona E para comenzar el juego",
-	  		x=centro.x()-6,
-	  		y=centro.y(),
-	  		textColor="#FFFFFF"
-	  	))
+	  	game.addVisual(explicaciones)
 	  	
 		musica.shouldLoop(true)
 		musica.volume(0.1)
 		game.schedule(500, { musica.play()} )
 		
 
-	  	// PRESIONAR E PARA EMPEZAR EL JUEGO
-	  	keyboard.e().onPressDo {
+	  	// PRESIONAR ENTER PARA EMPEZAR EL JUEGO
+	  	keyboard.enter().onPressDo {
 	  		game.clear() // limpia todo
 	  		tp.jugar()   // empieza el juego en sí
 		}
@@ -37,18 +35,9 @@ object menu {
 	}
 }
 
-object titulo {
-	var property position = game.at(70,100)	
-
-	method image() = "assets/tituloPacman.png"
-
+class ObjetosMenu {
+	var property image
+	var property position
 }
-
-object fondoNegro {
-    var property position = game.origin()
-    
-    method image() = "assets/fondonegro.png"
-}
-
 
 
