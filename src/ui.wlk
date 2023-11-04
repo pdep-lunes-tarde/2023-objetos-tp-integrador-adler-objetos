@@ -67,7 +67,7 @@ object game_ui {
 		vidas--
 	}
 	method frenarTodo(){
-		gameObjects.objetos().forEach { obj =>
+		gameEngine.objetos().forEach { obj =>
 			obj.eliminar()
 		}
 		game.clear()

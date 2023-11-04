@@ -1,6 +1,7 @@
 import wollok.game.*
 import colisiones.*
 
+
 // para guardar datos importantes y que sean accesibles por cualqueir objeto del programa
 object registry {
 	const registry = new Dictionary()
@@ -31,6 +32,7 @@ object updater {
 		// envia el mensaje "update" a cada objeto guardado en la lista update_list
 		update_list.forEach({updatableObject => updatableObject.update(dt)})
 		colisiones.checkearColisiones() 
+		console.println("Current dt is:"+ dt_global)
 	}
 	
 	// dt es el tiempo (en ms) que pasa por cada tick
@@ -59,6 +61,7 @@ object updater {
 			self.stop()
 			dt_global /= 10
 			self.start(dt_global)
+			gameEngine.restartAllOnTickEvents()
 			console.println("Camara lenta desactivada")
 		}
 	}
@@ -72,27 +75,69 @@ object updater {
 	}
 }
 
+class OnTickEvent {
+	const property time
+	const property name
+	const property block
+}
+
 object gameEngine {
 	const property allOnTicksEvents = new Set()
+	const property objetosVisibles = new Set()
 	
-	method schedule(time, block) {
+	const property objetos = new Set()
+	const property enemigos = new Set()
+	const property proyectilesEnemigos = new Set()
+	const property proyectilesJugador = new Set()
+	const property comestibles = new Set()
+	var property jugador = null
+	
+	method jugador(_jugador) {
+		jugador = _jugador
+	}
+	
+	method schedule(time, block) { // falta hacer que la camara lenta lo afecte
 		game.schedule(time*updater.dt_global(), block)
 	}
 	method onTick(time, name, block) {
-		allOnTicksEvents.add([time, name, block])
+		allOnTicksEvents.add(new OnTickEvent(time=time, name=name, block=block))
 		game.onTick(time*updater.dt_global(), name, block)
 	}
 	method restartAllOnTickEvents() {
 		allOnTicksEvents.forEach { onTickEvent =>
-			const time = onTickEvent.get(0)
-			const name = onTickEvent.get(1)
-			const block = onTickEvent.get(2)
+			const time = onTickEvent.time()
+			const name = onTickEvent.name()
+			const block = onTickEvent.block()
 			self.removeTickEvent(name)
 			self.onTick(time, name, block) 
 		}
 	}
 	method removeTickEvent(name) {
-		allOnTicksEvents.remove(name)
-		game.removeTickEvent(name)
+		console.println("BUSCANDO: "+name)
+		
+		try {
+			const onTickEvent = allOnTicksEvents.find({ onTickEvent => onTickEvent.name() == name })
+			game.removeTickEvent(name)
+			allOnTicksEvents.remove(onTickEvent)
+			
+		} catch e : ElementNotFoundException {
+			console.println("El OnTickEvent \""+name+"\" no existe actualmente.")
+		}
+		
+		
+	}
+	method removeVisual(gameObject) {
+		if (objetosVisibles.contains(gameObject)) {
+			game.removeVisual(gameObject)
+			objetosVisibles.remove(gameObject)
+		} 
+		else {
+			console.println("El visual \""+gameObject+gameObject.identity()+"\" no existe actualmente.")
+		}
+		
+	}
+	method addVisual(gameObject) {
+		game.addVisual(gameObject)
+		objetosVisibles.add(gameObject)
 	}
 }

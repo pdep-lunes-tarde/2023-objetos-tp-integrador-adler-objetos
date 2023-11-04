@@ -12,7 +12,7 @@ class Proyectil inherits VerletObject{
 	
 	override method initialize() {
 		super()
-		gameEngine.schedule(self.tiempoDeVida(), {if(not self.inhabilitado()) {self.eliminar()}})
+		gameEngine.schedule(self.tiempoDeVida(), {self.eliminar()})
 	}
 	override method height() = 30/registry.get("casillas_pixeles") 
 	override method width() = 30/registry.get("casillas_pixeles")
@@ -32,22 +32,22 @@ class Proyectil inherits VerletObject{
 class ProyectilJugador inherits Proyectil {
 	override method initialize() {
 		super()
-		gameObjects.proyectilesJugador().add(self)
+		gameEngine.proyectilesJugador().add(self)
 	}
 	override method eliminar() {
 		super()
-		gameObjects.proyectilesJugador().remove(self)
+		gameEngine.proyectilesJugador().remove(self)
 	}
 	
 }
 class ProyectilEnemigo inherits Proyectil {
 	override method initialize() {
 		super()
-		gameObjects.proyectilesEnemigos().add(self)
+		gameEngine.proyectilesEnemigos().add(self)
 	}
 	override method eliminar() {
 		super()
-		gameObjects.proyectilesEnemigos().remove(self)
+		gameEngine.proyectilesEnemigos().remove(self)
 	}
 
 }
