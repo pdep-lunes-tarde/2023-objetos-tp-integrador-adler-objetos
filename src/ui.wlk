@@ -6,7 +6,7 @@ import menu.*
 
 object game_ui {
 	var puntaje = 0
-	var vidas = 3
+	//var vidas = 3
 	const corazon1 = new Corazon(x=10, image="assets/corazon.png")
 	const corazon2 = new Corazon(x=20, image="assets/corazon.png")
 	const corazon3 = new Corazon(x=30, image="assets/corazon.png")
@@ -25,18 +25,18 @@ object game_ui {
 	  	game.addVisual(corazon1)
 	  	game.addVisual(corazon2)
 	  	game.addVisual(corazon3)
-	  	self.agregarCorazonesVacios()
+	  	//self.agregarCorazonesVacios(vidas)
 	}
 	
-	method agregarCorazonesVacios() {
+	method agregarCorazonesVacios(vidas) {
 	  	if(vidas == 2){
 			self.quitar1Vida()
 	  	}
-	  	else if(vidas == 1){
+	  	if(vidas == 1){
 			self.quitar1Vida()
 			self.quitar2Vidas()
 	  	}
-	  	else if(vidas == 0){
+	  	if(vidas == 0){
 			self.quitar1Vida()
 			self.quitar2Vidas()
 	  		game.removeVisual(corazon1)
@@ -59,12 +59,6 @@ object game_ui {
 		if(puntaje == 10){
 			self.ganar()
 		}
-	}
-	
-	method restarVidas() {
-		//Si el pacman choca con una bola de fuego o con un fantasma se le resta una vida
-		//muestra sangre jugador.morir()
-		vidas--
 	}
 	method frenarTodo(){
 		gameObjects.objetos().forEach { obj =>

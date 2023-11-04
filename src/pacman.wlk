@@ -4,7 +4,6 @@ import gameEngine.*
 import proyectiles.*
 import vectores.*
 
-
 class Pacman inherits EntesVivos {
 	const property fuerza = 2
 	const property radio = self.width()/2
@@ -15,7 +14,7 @@ class Pacman inherits EntesVivos {
 	method activarTipoProyectil(_tipo) {
 		tipoProyectilActivo = _tipo
 	} 
-	override method vidaMaxima() = 10
+	override method vidaMaxima() = 3
 	
 	override method image() = pacmanFrames.actual(self)
 	

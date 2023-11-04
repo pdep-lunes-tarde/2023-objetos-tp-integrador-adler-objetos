@@ -11,8 +11,8 @@ object menu {
 	
 	method iniciar() {
 		const fondoNegro = new ObjetosMenu(position= game.origin(), image="assets/fondonegro.png")
-		const titulo = new ObjetosMenu(position= game.at(70,100), image="assets/tituloPacman.png")
-		const explicaciones = new ObjetosMenu(position= game.at(20,20), image="assets/explicaciones.png")
+		const titulo = new ObjetosMenu(position= game.at(70,120), image="assets/tituloPacman.png")
+		const explicaciones = new ObjetosMenu(position= game.at(20,30), image="assets/explicaciones.png")
 	  	
 		musica.shouldLoop(true)
 		musica.volume(0.1)

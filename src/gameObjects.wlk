@@ -3,6 +3,7 @@ import wollok.game.*
 import gameEngine.*
 import vectores.*
 import colisiones.*
+import ui.*
 
 // guarda datos globales relacionados a todos los gameObjects
 object gameObjects {
@@ -303,9 +304,10 @@ class EntesVivos inherits VerletObject {
 	method restarVida(_vida) {
 		vida -= _vida
 		const s = new Sangre(x0=x, y0=y)
-		if (vida <= 0) {
-			self.morir()
-		}
+		//game_ui.agregarCorazonesVacios(vida) ARREGLAR ESTO
+//		if (vida <= 0) {
+//			self.morir()
+//		}
 	}
 }
 

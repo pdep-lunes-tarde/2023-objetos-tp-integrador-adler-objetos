@@ -1,4 +1,4 @@
-import global.*
+import gameEngine.*
 import vectores.*
 import gameObjects.*
 import wollok.game.*
@@ -38,6 +38,22 @@ object mapa {
             	const randomX = (60..180).anyOne()
             	const randomY = (30..100).anyOne()
             	const lavaBucket = new LavaBucket(x0 = randomX, y0 = randomY)
+        	}	
+    	})
+    	
+    	game.onTick(30000, "crearSlimeBuckets", {
+    		1.times { n =>
+            	const randomX = (60..180).anyOne()
+            	const randomY = (30..100).anyOne()
+            	const slimeBucket = new SlimeBucket(x0 = randomX, y0 = randomY)
+        	}	
+    	})
+    	
+    	game.onTick(53000, "crearSnowBuckets", {
+    		1.times { n =>
+            	const randomX = (60..180).anyOne()
+            	const randomY = (30..100).anyOne()
+            	const snowBucket = new SnowBucket(x0 = randomX, y0 = randomY)
         	}	
     	})
 //    	
