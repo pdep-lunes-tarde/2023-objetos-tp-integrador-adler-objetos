@@ -5,20 +5,6 @@ import vectores.*
 import colisiones.*
 import ui.*
 
-// guarda datos globales relacionados a todos los gameObjects
-object gameObjects {
-	const property objetos = new Set()
-	const property enemigos = new Set()
-	const property proyectilesEnemigos = new Set()
-	const property proyectilesJugador = new Set()
-	const property comestibles = new Set()
-	var property jugador = null
-	
-	method jugador(_jugador) {
-		jugador = _jugador
-	}
-}
-
 
 // valores iniciales (por si queremos definirlos al momento de crear una instancia de la clase)
 // x0, y0, doCollision 
@@ -28,7 +14,6 @@ class GameObject {
 	var property x = x0 	// posicion actual (para hacer cálculos)
 	var property y = y0
 	
-	var property inhabilitado = false // se activa cuando lo chocan
 	var property hitbox = null // se genera durante el initialize()
 
 	// "position" es lo que le importa a wollok game,
@@ -43,20 +28,21 @@ class GameObject {
 	
 	override method initialize() {
 		super()
-		game.addVisual(self) 									// se muestra automáticamente en pantalla al crearse una instancia de la clase
-		gameObjects.objetos().add(self)
+		self.mostrar()				
+		gameEngine.objetos().add(self)
 		hitbox = new Hitbox(objetoAsociado=self)
 	}
 	
+	method mostrar() {
+		gameEngine.addVisual(self) 	
+	}
+	method ocultar() {
+		gameEngine.removeVisual(self)
+	}
+	
 	method eliminar() {
-		gameObjects.objetos().remove(self)						// los sacamos de la lista global
-		try {
-			game.removeVisual(self)								// dejamos de mostrarlo en el juego
-			
-		} catch e : Exception {
-			console.println(e)
-		}
-		inhabilitado = true // es para que los schedules no levanten un error por llamar un objeto que se eliminó
+		gameEngine.objetos().remove(self)						// los sacamos de la lista global
+		self.ocultar()											// dejamos de mostrarlo en el juego
 	}
 	
 	method resolverColisionCon(objeto, vectorCorreccion) {

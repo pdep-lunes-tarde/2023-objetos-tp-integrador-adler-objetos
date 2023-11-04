@@ -61,7 +61,7 @@ object game_ui {
 		}
 	}
 	method frenarTodo(){
-		gameObjects.objetos().forEach { obj =>
+		gameEngine.objetos().forEach { obj =>
 			obj.eliminar()
 		}
 		game.clear()

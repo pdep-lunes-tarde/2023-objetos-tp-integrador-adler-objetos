@@ -32,7 +32,7 @@ object teclas {
 		}
 	}
 	method teclasJugador() {
-		const jugador = gameObjects.jugador()
+		const jugador = gameEngine.jugador()
 		keyboard.w().onPressDo { 
 			jugador.arriba()
 		}

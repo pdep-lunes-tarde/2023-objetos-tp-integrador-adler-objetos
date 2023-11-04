@@ -21,7 +21,7 @@ class Pacman inherits EntesVivos {
 	override method initialize() {
 		super()
 		gameEngine.onTick(80, "animacion-pacman", { pacmanFrames.avanzar() })
-		gameObjects.jugador(self)
+		gameEngine.jugador(self)
 	}
 	
 	method orientacion(_orientacion) {
@@ -60,7 +60,10 @@ class Pacman inherits EntesVivos {
 	}
 	
 	method activarHiperactividad() {
-		console.println("za warudo")
+		const tiempoDeCamaraLenta = 5000
+		console.println("Hiperactividad por "+tiempoDeCamaraLenta+" segundos")
+		updater.activarCamaraLenta()
+		game.schedule(tiempoDeCamaraLenta, {updater.desactivarCamaraLenta()})
 	}
 	
 	override method update(dt) {

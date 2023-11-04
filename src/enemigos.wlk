@@ -6,7 +6,7 @@ import proyectiles.*
 
 class Fantasma inherits EntesVivos {
 	
-	const jugador = gameObjects.jugador() // si no funciona, se debe definir al crear una instancia
+	const jugador = gameEngine.jugador() // si no funciona, se debe definir al crear una instancia
 	const mirandoHacia = norte.versor()
 	
 	var coolDownDisparos = 3500 // en no se que unidad de tiempo
@@ -16,19 +16,15 @@ class Fantasma inherits EntesVivos {
 		self.reiniciarCoolDownDisparos()
 	}
 	method dejarDeDisparar() {
-		try {
-			gameEngine.removeTickEvent("disparar")	
-		} catch e : Exception {
-			console.println(e)
-			// lo ignoramos
-		}
+		gameEngine.removeTickEvent("disparar"+self.identity())	
 	}
 	method iniciarDisparos() {
-		gameEngine.onTick(coolDownDisparos, "disparar", {self.dispararAlJugador()})
+		// le ponemos un identificador unico para que no se confunda con el onTickEvent de los demas fantasmas
+		gameEngine.onTick(coolDownDisparos, "disparar"+self.identity(), {self.dispararAlJugador()})
 	}
 	method reiniciarCoolDownDisparos() {
 		self.dejarDeDisparar()
-		
+		self.iniciarDisparos()
 	}
 	
 	override method vidaMaxima() = 3
@@ -37,7 +33,7 @@ class Fantasma inherits EntesVivos {
 //	override method image() = "assets/PACMAN/cerrado.png"
 	override method initialize() {
 		super()
-		gameObjects.enemigos().add(self)
+		gameEngine.enemigos().add(self)
 		self.iniciarDisparos()
 	}
 	
@@ -94,7 +90,7 @@ class Fantasma inherits EntesVivos {
 	}
 	
 	override method eliminar() {
-		gameObjects.enemigos().remove(self) // lo sacamos primero así deja de detectar sus colisiones
+		gameEngine.enemigos().remove(self) // lo sacamos primero así deja de detectar sus colisiones
 		self.dejarDeDisparar()
 		super()
 	}
