@@ -17,6 +17,7 @@ object registry {
 // y se actualizan en cada tick de programa 
 object updater {
 	const update_list = new Set() // lista que almacena updatableObjects
+	var prev_dt
 	var property dt_global
 	var enCamaraLenta = false
 	
@@ -49,8 +50,8 @@ object updater {
 	method activarCamaraLenta() {
 		if (not enCamaraLenta) {
 			self.stop()
-			const prev_dt = dt_global
-			dt_global *= 10
+			prev_dt = dt_global // guardamos su estado actual
+			dt_global *= 10	// cambiamos su valor
 			game.onTick(dt_global, "actualizar", { self.update(prev_dt/2) })
 			gameEngine.restartAllOnTickEvents()
 			console.println("Camara lenta activada")	
@@ -59,8 +60,8 @@ object updater {
 	method desactivarCamaraLenta() {
 		if (enCamaraLenta) {
 			self.stop()
-			dt_global /= 10
-			self.start(dt_global)
+			dt_global = prev_dt // restauramos el valor de dt_global
+			self.start(prev_dt) // volvemos a empezar el updater con los valores viejos
 			gameEngine.restartAllOnTickEvents()
 			console.println("Camara lenta desactivada")
 		}
