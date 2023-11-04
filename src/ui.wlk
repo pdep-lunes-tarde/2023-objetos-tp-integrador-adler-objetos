@@ -1,4 +1,4 @@
-import global.*
+import gameEngine.*
 import wollok.game.*
 import proyectiles.*
 import gameObjects.*

@@ -1,6 +1,6 @@
 import wollok.game.*
 import gameObjects.*
-import global.*
+import gameEngine.*
 import vectores.*
 import proyectiles.*
 
@@ -8,17 +8,26 @@ import proyectiles.*
 class Comestible inherits GameObject {
 	override method initialize() {
 		super()
-		game.schedule(6000, {if(not self.inhabilitado()){self.eliminar()}}) // despues de 10 segundos desaparece
+		gameObjects.comestibles().add(self)
+		gameEngine.schedule(6000, {if(not self.inhabilitado()){self.eliminar()}}) // despues de 10 segundos desaparece
 		// implementar blinking effect cuando esté por desaparecer  
 	}
 	override method height() = 30/registry.get("casillas_pixeles") 
 	override method width() = 30/registry.get("casillas_pixeles")
 	
-	method comer() {
-		self.eliminar()
+	override method eliminar() {
+		gameObjects.comestibles().remove(self)
+		super()
 	}
-	method efecto(jugador) {
-		console.println(jugador.toString()+": ñam ñam")
+	 
+	method efectoSobre(jugador) {
+		game.say(jugador, "ñam ñam")
+		
+	}
+	
+	override method resolverColisionCon(jugador) { // sabemos que solo peude colisionar con jugador
+		self.efectoSobre(jugador)
+		self.eliminar()
 	}
 }
 
@@ -27,8 +36,9 @@ class SlimeBucket inherits Comestible {
 		super()  
 	}
 	override method image() = "assets/COMESTIBLES/slimebucket.png"
-	override method efecto(jugador) {
-		super()
+	override method efectoSobre(jugador) {
+		super(jugador)
+		jugador.activarTipoProyectil(elastico)
 	}
 }
 class LavaBucket inherits Comestible {
@@ -36,8 +46,9 @@ class LavaBucket inherits Comestible {
 		super()  
 	}
 	override method image() = "assets/COMESTIBLES/lavabucket.png"
-	override method efecto(jugador) {
-		super()
+	override method efectoSobre(jugador) {
+		super(jugador)
+		jugador.activarTipoProyectil(magma)
 	}
 }
 class SnowBucket inherits Comestible {
@@ -45,8 +56,9 @@ class SnowBucket inherits Comestible {
 		super()  
 	}
 	override method image() = "assets/COMESTIBLES/snowbucket.png"
-	override method efecto(jugador) {
-		super()
+	override method efectoSobre(jugador) {
+		super(jugador)
+		jugador.activarTipoProyectil(criogenico)
 	}
 	
 }
@@ -55,8 +67,9 @@ class Coffee inherits Comestible {
 		super()  
 	}
 	override method image() = "assets/COMESTIBLES/coffee.png"
-	override method efecto(jugador) {
-		super()
+	override method efectoSobre(jugador) {
+		super(jugador)
+		jugador.activarHiperactividad()
 	}
 }
 
@@ -65,7 +78,7 @@ class Coffee inherits Comestible {
 class CartelPoderes inherits GameObject {
 	override method initialize() {
 		super()
-		game.schedule(10000, {self.eliminar()}) 
+		gameEngine.schedule(10000, {self.eliminar()}) 
 	}
 }
 

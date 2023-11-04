@@ -1,5 +1,5 @@
 import wollok.game.*
-import global.*
+import gameEngine.*
 import enemigos.*
 import gameObjects.*
 import proyectiles.*
@@ -14,6 +14,9 @@ object teclas {
 	method teclasGlobales() {
 		keyboard.q().onPressDo {
 			game.stop()
+		}
+		keyboard.c().onPressDo {
+			updater.toggleCamaraLenta()
 		}
 	}
 	method teclasFantasmas() {

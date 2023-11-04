@@ -2,7 +2,7 @@ import wollok.game.*
 
 import gameObjects.*
 import vectores.*
-import global.*
+import gameEngine.*
 
 
 class Hitbox { // representa un rectangulo 
@@ -54,11 +54,13 @@ object colisiones {
 	}
 	
 	method checkearColisiones() { // poner acá las colisiones que queremos checkear 
-		self.checkCollisionsBetween([gameObjects.jugador()], gameObjects.proyectilesEnemigos())
-		self.checkCollisionsBetween(gameObjects.enemigos(), gameObjects.proyectilesJugador()) 
+		self.checkCollisionsOfXWithY([gameObjects.jugador()], gameObjects.proyectilesEnemigos())
+		self.checkCollisionsOfXWithY([gameObjects.jugador()], gameObjects.comestibles())
+		self.checkCollisionsOfXWithY(gameObjects.enemigos(), gameObjects.proyectilesJugador()) 
 	}
-
-	method checkCollisionsBetween(objs1, objs2) {	
+	
+	// objs2 son los que hacen efecto sobre los objs1. 
+	method checkCollisionsOfXWithY(objs1, objs2) {	
 		/* https://www.youtube.com/watch?v=eED4bSkYCB8
 		 * - Checkear cada par -> HORRIBLE
 		 * - Sweep & Prune -> método de los intervalos -> muuuuuuuuuchisimo mejor q el anterior
@@ -82,8 +84,8 @@ object colisiones {
 			 			
 			 			// se solapan en el eje y ?
 			 			if (obj2_y0 < obj1_y1 and obj1_y0 < obj2_y1) { // CONFIRMADO COLISION
-//			 				obj1.resolverColisionCon(obj2)
 			 				obj2.resolverColisionCon(obj1)
+//			 				obj1.resolverColisionCon(obj2)
 			 			}
 			 		}
 			 	} 

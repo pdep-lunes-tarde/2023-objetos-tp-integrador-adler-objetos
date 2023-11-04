@@ -1,6 +1,6 @@
 import wollok.game.*
 import gameObjects.*
-import global.*
+import gameEngine.*
 import vectores.*
 import proyectiles.*
 
@@ -16,19 +16,29 @@ class Fantasma inherits EntesVivos {
 		self.reiniciarCoolDownDisparos()
 	}
 	method dejarDeDisparar() {
-		game.removeTickEvent("disparar")
+		try {
+			gameEngine.removeTickEvent("disparar")	
+		} catch e : Exception {
+			console.println(e)
+			// lo ignoramos
+		}
+	}
+	method iniciarDisparos() {
+		gameEngine.onTick(coolDownDisparos, "disparar", {self.dispararAlJugador()})
 	}
 	method reiniciarCoolDownDisparos() {
 		self.dejarDeDisparar()
-		game.onTick(coolDownDisparos, "disparar", {self.dispararAlJugador()})
+		
 	}
+	
+	override method vidaMaxima() = 3
 	
 	override method image() = "assets/FANTASMA/rojo_arriba1.png"
 //	override method image() = "assets/PACMAN/cerrado.png"
 	override method initialize() {
 		super()
 		gameObjects.enemigos().add(self)
-		game.onTick(coolDownDisparos, "disparar", {self.dispararAlJugador()})
+		self.iniciarDisparos()
 	}
 	
 	method dispararAlJugador() {
@@ -39,6 +49,7 @@ class Fantasma inherits EntesVivos {
 //		const vel_x = x - old_x 
 //		const vel_y = y - old_y 
 		const proyectil = new ProyectilEnemigo(
+			tipo = fuego,
 			hayFriccion=false,
 			x0=x, y0=y,
 			vel_x0=0, 
@@ -83,13 +94,9 @@ class Fantasma inherits EntesVivos {
 	}
 	
 	override method eliminar() {
+		gameObjects.enemigos().remove(self) // lo sacamos primero así deja de detectar sus colisiones
 		self.dejarDeDisparar()
-		gameObjects.enemigos().remove(self)
 		super()
-	}
-	override method morir() {
-		super()
-		self.eliminar()
 	}
 	
 	override method resolverColisionCon(objeto) {

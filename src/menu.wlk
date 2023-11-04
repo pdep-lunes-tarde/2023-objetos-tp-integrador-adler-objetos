@@ -1,6 +1,6 @@
 import wollok.game.*
 import tp.*
-import global.*
+import gameEngine.*
 import vectores.*
 import mapa.*
 import gameObjects.*
@@ -13,11 +13,6 @@ object menu {
 		const fondoNegro = new ObjetosMenu(position= game.origin(), image="assets/fondonegro.png")
 		const titulo = new ObjetosMenu(position= game.at(70,100), image="assets/tituloPacman.png")
 		const explicaciones = new ObjetosMenu(position= game.at(20,20), image="assets/explicaciones.png")
-		
-		//Agrego fondo y titulo del menu	  	
-		game.addVisual(fondoNegro)
-	  	game.addVisual(titulo)
-	  	game.addVisual(explicaciones)
 	  	
 		musica.shouldLoop(true)
 		musica.volume(0.1)
@@ -38,6 +33,11 @@ object menu {
 class ObjetosMenu {
 	var property image
 	var property position
+	
+	override method initialize() {
+		super()
+		game.addVisual(self)
+	}
 }
 
 

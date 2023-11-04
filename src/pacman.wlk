@@ -1,6 +1,6 @@
 import wollok.game.*
 import gameObjects.*
-import global.*
+import gameEngine.*
 import proyectiles.*
 import vectores.*
 
@@ -10,11 +10,18 @@ class Pacman inherits EntesVivos {
 	const property radio = self.width()/2
 	var property orientacion = derecha 
 	
+	var property tipoProyectilActivo = piedra
+	
+	method activarTipoProyectil(_tipo) {
+		tipoProyectilActivo = _tipo
+	} 
+	override method vidaMaxima() = 10
+	
 	override method image() = pacmanFrames.actual(self)
 	
 	override method initialize() {
 		super()
-		game.onTick(80, "animacion-pacman", { pacmanFrames.avanzar() })
+		gameEngine.onTick(80, "animacion-pacman", { pacmanFrames.avanzar() })
 		gameObjects.jugador(self)
 	}
 	
@@ -34,34 +41,29 @@ class Pacman inherits EntesVivos {
 		self.orientacion(derecha)					
 	}
 	method izquierda() {
-		self.accelerate(-fuerza, 0)
+		self.accelerate(-fuerza, 0) 
 		self.orientacion(izquierda)					
 	}
 	method disparar() {
 		const vel_x = x - old_x
 		const vel_y = y - old_y // la velocidad relativa del proyectil se debe sumar a la del jugador para obtener su velocidad absoluta.
 		const proyectil = new ProyectilJugador(
+			tipo = self.tipoProyectilActivo(),
 			hayFriccion=false, 
 			x0=x, y0=y, 
 			vel_x0=0, 
 			vel_y0=0
 		)
 		const sentidoDelDisparo = self.orientacion().versor()
-		const aceleracionInstantaneaDisparo = 10
+		const aceleracionInstantaneaDisparo = 6
 		const vectorDisparo = sentidoDelDisparo * aceleracionInstantaneaDisparo 
 		proyectil.accelerate(vectorDisparo)
 	}
-
-//	override method resolverColisionCon(objeto) {
-//		game.say(self, "Choque con "+objeto.toString())
-//		//self.morir()
-//	}
 	
-	method consumir(comestible) { // consumir un Comestible
-		comestible.efecto(self)
+	method activarHiperactividad() {
+		console.println("za warudo")
 	}
-
-
+	
 	override method update(dt) {
 		self.applyCircleConstraint(registry.get("centro"), 60)
 		super(dt)

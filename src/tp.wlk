@@ -1,6 +1,6 @@
 import wollok.game.*
 import menu.*
-import global.*
+import gameEngine.*
 import vectores.*
 import mapa.*
 import gameObjects.*
@@ -32,11 +32,10 @@ object tp {
 	  	menu.mostrar()
 	}
 	method jugar() { // empezar a jugar
+		updater.start(1) // 1 ms
 		mapa.iniciar()
 		game_ui.iniciar()
-		teclas.iniciar()
-		// empezar el actualizador global
-		updater.start()
+		teclas.iniciar()		
 	}
 }
 

@@ -1,6 +1,6 @@
 import wollok.game.*
 
-import global.*
+import gameEngine.*
 import vectores.*
 import colisiones.*
 
@@ -49,7 +49,12 @@ class GameObject {
 	
 	method eliminar() {
 		gameObjects.objetos().remove(self)						// los sacamos de la lista global
-		game.removeVisual(self)									// dejamos de mostrarlo en el juego
+		try {
+			game.removeVisual(self)								// dejamos de mostrarlo en el juego
+			
+		} catch e : Exception {
+			console.println(e)
+		}
 		inhabilitado = true // es para que los schedules no levanten un error por llamar un objeto que se eliminó
 	}
 	
@@ -86,7 +91,7 @@ class Sangre inherits GameObject {
 	
 	override method initialize() {
 		super()
-		game.schedule(3000, {self.eliminar()}) 	// se elimina dsp de un rato
+		gameEngine.schedule(3000, {self.eliminar()}) 	// se elimina dsp de un rato
 	}
 }
 
@@ -283,13 +288,24 @@ class VerletObject inherits UpdatableObject {
 }
 
 class EntesVivos inherits VerletObject {
+	var property vida = self.vidaMaxima()
+	method vidaMaxima()
+	
 	override method initialize() {
 		super()
 		hitbox.inscribirEnCirculo(4.5)
 	}
+	
 	method morir() {
 		console.println("Rip, "+self+" :(")
+		self.eliminar()
+	}
+	method restarVida(_vida) {
+		vida -= _vida
 		const s = new Sangre(x0=x, y0=y)
+		if (vida <= 0) {
+			self.morir()
+		}
 	}
 }
 

@@ -15,11 +15,20 @@ program juego {
 // por lo que las celdas con coordenadas pares son realmente celdas impares.  
 
 
-// bola de fuego 45x25 
-// circulo de su hitbox 15x15
 
 
-// NOTA : las imágenes se importan con el tamaño original.
+
+// HAY QUE REINICIAR LOS OnTick y los Schedule CON LOS NUEVOS VALORES CUANDO SE ACTIVA LA CAMARA LENTA
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// A VECES, CUANDO MATO UN FANTASMA, ESTE DESAPARECE PERO SIGUE DISPARANDO, MIENTRAS QUE EL FANTASMA QUE SIGUE VIVO DEJA DE DISPARAR. XQ???????????? //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// OBJETOS YA GENERADOS NO CAMBIAN SU VELOCIDAD A PESAR DE ESTAR LA CAMARA LENTA ACTIVADA. POR EJEMPLO LOS PROYECTILES.
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ALGUNOS OBJETOS LOS ELIMINO PERO SIGUEN COLISIONANDO CON EL PACMAN 
+////////////////////////////////////////////////////////////////////////////////////////
+
+//NOTA : las imágenes se importan con el tamaño original.
 
 // NOTA: el numero de pixeles de celda debe ser divisor de los pixeles del personaje, sino se ven mal las colisiones
 
