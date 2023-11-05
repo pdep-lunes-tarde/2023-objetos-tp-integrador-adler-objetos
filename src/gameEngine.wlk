@@ -163,9 +163,11 @@ object gameEngine {
 	const property enemigos = new Set()
 	const property proyectilesEnemigos = new Set()
 	const property proyectilesJugador = new Set()
-	const property comestibles = new Set()
+	const property consumibles = new Set()
 	var property jugador = null
 	
+	
+
 	method jugador(_jugador) {
 		jugador = _jugador
 	}
@@ -197,8 +199,6 @@ object gameEngine {
 		} catch e : ElementNotFoundException {
 			console.println("El OnTickEvent \""+name+"\" no existe actualmente.")
 		}
-		
-		
 	}
 	method removeVisual(objeto) {
 		const nombre = objeto.toString()+objeto.identity()
@@ -211,7 +211,6 @@ object gameEngine {
 		else {
 			console.println("El visual \""+nombre+"\" no existe actualmente.")
 		}
-		
 	}
 	method addVisual(objeto) {
 		game.addVisual(objeto)

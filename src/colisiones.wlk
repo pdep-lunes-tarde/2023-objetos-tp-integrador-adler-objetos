@@ -55,7 +55,7 @@ object colisiones {
 	
 	method checkearColisiones() { // poner acá las colisiones que queremos checkear 
 		self.checkCollisionsOfXWithY([gameEngine.jugador()], gameEngine.proyectilesEnemigos())
-		self.checkCollisionsOfXWithY([gameEngine.jugador()], gameEngine.comestibles())
+		self.checkCollisionsOfXWithY([gameEngine.jugador()], gameEngine.consumibles())
 		self.checkCollisionsOfXWithY(gameEngine.enemigos(), gameEngine.proyectilesJugador()) 
 	}
 	

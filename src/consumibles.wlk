@@ -8,7 +8,7 @@ import proyectiles.*
 class Consumible inherits GameObject {
 	override method initialize() {
 		super()
-		gameEngine.comestibles().add(self)
+		gameEngine.consumibles().add(self)
 		gameEngine.schedule(6000, { self.eliminar() }) // despues de 6 segundos desaparece
 		// implementar blinking effect cuando esté por desaparecer  
 	}
@@ -16,7 +16,7 @@ class Consumible inherits GameObject {
 	override method width() = 30/registry.get("casillas_pixeles")
 	
 	override method eliminar() {
-		gameEngine.comestibles().remove(self)
+		gameEngine.consumibles().remove(self)
 		super()
 	}
 	

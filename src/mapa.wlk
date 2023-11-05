@@ -6,7 +6,7 @@ import menu.*
 import pacman.Pacman
 import enemigos.*
 import proyectiles.*
-import comestibles.*
+import consumibles.*
 import ui.*
 
 object mapa {	
