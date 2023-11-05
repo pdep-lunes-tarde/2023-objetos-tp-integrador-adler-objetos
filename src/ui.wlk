@@ -6,6 +6,7 @@ import menu.*
 
 object ui {
 	const property displayCorazones = new DisplayCorazones()
+	const property displayPuntajes = new DisplayPuntajes()
 	
 	method iniciar() {
 		const width = registry.get("grid_width")
@@ -32,6 +33,9 @@ object ui {
 		self.frenarTodo()
 		const centro = game.center()
 		const gameOver = new Imagen(x=centro.x(), y=centro.y(), image = "assets/game over.png")
+		sonidos.playSound("assets/SONIDOS/bruh.ogg", 1)
+		sonidos.playSound("assets/SONIDOS/fail.mp3", 1)
+		sonidos.playSound("assets/SONIDOS/risa.mp3", 0.6)
 	}
 	method ganar(){
 		self.frenarTodo()
@@ -46,7 +50,6 @@ class Corazon inherits Imagen {
 		super()
 		self.hacerLleno()
 	} 
-	
 	method hacerVacio() {
 		image = "assets/corazonVacio.png"
 	}

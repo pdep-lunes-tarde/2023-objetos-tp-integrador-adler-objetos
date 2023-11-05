@@ -91,6 +91,12 @@ class Pacman inherits EntesVivos {
 		})
 	}
 	
+	override method morir() {
+		console.println("Rip, "+self+" :(")
+		self.eliminar()
+		ui.gameOver()
+	}
+	
 	override method restarVida(_vida) {
 		super(_vida)
 		ui.displayCorazones().restarCorazones(_vida)

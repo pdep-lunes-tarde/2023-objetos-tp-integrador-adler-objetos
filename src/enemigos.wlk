@@ -101,8 +101,6 @@ class Fantasma inherits EntesVivos {
 	
 	method congelarUnRato() {
 		congelado = true 
-		
-		
 		gameEngine.schedule(3000, {congelado = false})
 	}
 	
