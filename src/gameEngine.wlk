@@ -68,7 +68,6 @@ object updater {
 		// envia el mensaje "update" a cada objeto guardado en la lista update_list
 		update_list.forEach({updatableObject => updatableObject.update(dt)})
 		colisiones.checkearColisiones() 
-		console.println("Current dt is:"+ dt_global)
 	}
 	
 	// dt es el tiempo (en ms) que pasa por cada tick
@@ -114,6 +113,7 @@ object updater {
 		} else {
 			self.activarCamaraLenta()
 		}
+		console.println("dt changed to:"+ dt_global)
 	}
 }
 

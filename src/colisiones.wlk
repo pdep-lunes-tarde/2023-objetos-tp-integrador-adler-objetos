@@ -54,17 +54,14 @@ object colisiones {
 	}
 	
 	method checkearColisiones() { // poner acá las colisiones que queremos checkear 
-		self.checkCollisionsOfXWithY([gameEngine.jugador()], gameEngine.proyectilesEnemigos())
-		self.checkCollisionsOfXWithY([gameEngine.jugador()], gameEngine.consumibles())
-		self.checkCollisionsOfXWithY(gameEngine.enemigos(), gameEngine.proyectilesJugador()) 
+		self.checkCollisionsOfXsWithYs([gameEngine.jugador()], gameEngine.proyectilesEnemigos())
+		self.checkCollisionsOfXsWithYs([gameEngine.jugador()], gameEngine.consumibles())
+		self.checkCollisionsOfXsWithYs(gameEngine.enemigos(), gameEngine.proyectilesJugador()) 
 	}
 	
 	// objs2 son los que hacen efecto sobre los objs1. 
-	method checkCollisionsOfXWithY(objs1, objs2) {	
+	method checkCollisionsOfXsWithYs(objs1, objs2) {	
 		/* https://www.youtube.com/watch?v=eED4bSkYCB8
-		 * - Checkear cada par -> HORRIBLE
-		 * - Sweep & Prune -> método de los intervalos -> muuuuuuuuuchisimo mejor q el anterior
-		 * - Space partitioning -> Uniform grids / K-D Trees /  
 		 */
 		objs1.forEach {obj1 =>
 			const obj1_x0 = obj1.hitbox().x0()
