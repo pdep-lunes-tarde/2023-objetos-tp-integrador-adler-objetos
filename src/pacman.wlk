@@ -3,6 +3,28 @@ import gameObjects.*
 import gameEngine.*
 import proyectiles.*
 import vectores.*
+import ui.*
+
+
+//objeto glandulaGeneradoraDeProyectiles {
+//	const coolDownDisparos = 2000
+//	var contadorDisparosConsecutivos = 0
+//	const numeroDisparosConsecutivos = 3 // consecutivos seria en menos de 1 segundo
+//	
+//	method disparar() {
+//		const proyectil = new ProyectilJugador(
+//			tipo = self.tipoProyectilActivo(),
+//			hayFriccion=false, 
+//			x0=x, y0=y, 
+//			vel_x0=0, 
+//			vel_y0=0
+//		)
+//		const sentidoDelDisparo = self.orientacion().versor()
+//		const aceleracionInstantaneaDisparo = 6
+//		const vectorDisparo = sentidoDelDisparo * aceleracionInstantaneaDisparo 
+//		proyectil.accelerate(vectorDisparo)
+//	}
+//}
 
 class Pacman inherits EntesVivos {
 	const property fuerza = 2
@@ -15,13 +37,13 @@ class Pacman inherits EntesVivos {
 	method activarTipoProyectil(_tipo) {
 		tipoProyectilActivo = _tipo
 	} 
-	override method vidaMaxima() = 3
+	override method vidaMaxima() = 10
 	
 	override method image() = pacmanFrames.actual(self)
 	
 	override method initialize() {
 		super()
-		gameEngine.onTick(80, "animacion-pacman", { pacmanFrames.avanzar() })
+		game.onTick(80, "animacion-pacman", { pacmanFrames.avanzar() }) // usamos game y no gameEngine xq no queremos que la camara lenta lo afecte
 		gameEngine.jugador(self)
 	}
 	
@@ -44,9 +66,8 @@ class Pacman inherits EntesVivos {
 		self.accelerate(-fuerza, 0) 
 		self.orientacion(izquierda)					
 	}
+	
 	method disparar() {
-		const vel_x = x - old_x
-		const vel_y = y - old_y // la velocidad relativa del proyectil se debe sumar a la del jugador para obtener su velocidad absoluta.
 		const proyectil = new ProyectilJugador(
 			tipo = self.tipoProyectilActivo(),
 			hayFriccion=false, 
@@ -61,10 +82,22 @@ class Pacman inherits EntesVivos {
 	}
 	
 	method activarHiperactividad() {
-		const tiempoDeCamaraLenta = 5000
-		console.println("Hiperactividad por "+tiempoDeCamaraLenta+" segundos")
+		const tiempoDeCamaraLenta = 20000
+		console.println("Hiperactividad por "+tiempoDeCamaraLenta+" milisegundos")
 		updater.activarCamaraLenta()
-		game.schedule(tiempoDeCamaraLenta, {updater.desactivarCamaraLenta()})
+		game.schedule(tiempoDeCamaraLenta, {
+			console.println("Desactivado camara lenta")
+			updater.desactivarCamaraLenta()
+		})
+	}
+	
+	override method restarVida(_vida) {
+		super(_vida)
+		ui.displayCorazones().restarCorazones(_vida)
+	}
+	method sumarVida(_vida) {
+		vida += _vida
+		ui.displayCorazones().sumarCorazones(_vida)
 	}
 	
 	override method update(dt) {

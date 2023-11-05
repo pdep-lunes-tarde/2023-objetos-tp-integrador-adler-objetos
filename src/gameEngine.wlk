@@ -92,7 +92,9 @@ object updater {
 			console.println("Camara lenta activada")
 			
 			sonidos.startSlowMotionIn_SFX()
+			 
 		}
+		enCamaraLenta = true
 	}
 	method desactivarCamaraLenta() {
 		if (enCamaraLenta) {
@@ -104,6 +106,7 @@ object updater {
 			
 			sonidos.startSlowMotionOut_SFX()
 		}
+		enCamaraLenta = false
 	}
 	method toggleCamaraLenta() {
 		if (enCamaraLenta) {
@@ -111,7 +114,6 @@ object updater {
 		} else {
 			self.activarCamaraLenta()
 		}
-		enCamaraLenta = not enCamaraLenta
 	}
 }
 
@@ -124,7 +126,11 @@ class OnTickEvent {
 object sonidos {
 	const property musica = game.sound("assets/SONIDOS/musica.mp3")
 	
-	
+	method playSound(path, volume) {
+		const sonido = game.sound(path)
+		sonido.volume(0.1)
+		sonido.play()
+	}
 	
 	method startMusic() {
 		musica.shouldLoop(true)
@@ -194,20 +200,26 @@ object gameEngine {
 		
 		
 	}
-	method removeVisual(gameObject) {
-		console.println("BUSCANDO: "+gameObject+gameObject.identity())
-		if (objetosVisibles.contains(gameObject)) {
-			game.removeVisual(gameObject)
-			objetosVisibles.remove(gameObject)
-			console.println("ELIMINADO: "+gameObject+gameObject.identity())
+	method removeVisual(objeto) {
+		const nombre = objeto.toString()+objeto.identity()
+		console.println("BUSCANDO: "+nombre)
+		if (objetosVisibles.contains(objeto)) {
+			game.removeVisual(objeto)
+			objetosVisibles.remove(objeto)
+			console.println("ELIMINADO: "+nombre)
 		} 
 		else {
-			console.println("El visual \""+gameObject+gameObject.identity()+"\" no existe actualmente.")
+			console.println("El visual \""+nombre+"\" no existe actualmente.")
 		}
 		
 	}
-	method addVisual(gameObject) {
-		game.addVisual(gameObject)
-		objetosVisibles.add(gameObject)
+	method addVisual(objeto) {
+		game.addVisual(objeto)
+		objetosVisibles.add(objeto)
+	}
+	method say(objeto, texto) {
+		if (objetos.contains(objeto)) {
+			game.say(objeto, texto)			
+		}
 	}
 }

@@ -8,6 +8,7 @@ class Fantasma inherits EntesVivos {
 	
 	const jugador = gameEngine.jugador() // si no funciona, se debe definir al crear una instancia
 	const mirandoHacia = norte.versor()
+	var congelado = false
 	
 	var coolDownDisparos = 3500 // en no se que unidad de tiempo
 	
@@ -86,13 +87,23 @@ class Fantasma inherits EntesVivos {
 //		self.applyGravity()
 		self.applyMovement()
 		self.applyCirclePathConstraint(registry.get("centro"), 75)
-		self.updatePosition(dt) 
+		if (not congelado) {
+			self.updatePosition(dt)
+		}
+		 
 	}
 	
 	override method eliminar() {
 		gameEngine.enemigos().remove(self) // lo sacamos primero así deja de detectar sus colisiones
 		self.dejarDeDisparar()
 		super()
+	}
+	
+	method congelarUnRato() {
+		congelado = true 
+		
+		
+		gameEngine.schedule(3000, {congelado = false})
 	}
 	
 	override method resolverColisionCon(objeto) {

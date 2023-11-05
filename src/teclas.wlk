@@ -19,6 +19,9 @@ object teclas {
 		keyboard.c().onPressDo {
 			updater.toggleCamaraLenta()
 		}
+		keyboard.h().onPressDo {
+			gameEngine.jugador().activarHiperactividad()
+		}
 	}
 	method teclasFantasmas() {
 		keyboard.f().onPressDo { // spawnear más fantasmas giratorios

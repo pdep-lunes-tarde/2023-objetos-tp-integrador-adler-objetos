@@ -7,6 +7,7 @@ import pacman.Pacman
 import enemigos.*
 import proyectiles.*
 import comestibles.*
+import ui.*
 
 object mapa {	
 	method iniciar() { // acá agregamos los objetos del juego
@@ -25,7 +26,7 @@ object mapa {
 	  		return seno_Pol_mclaur_O10.apply(a)
 	  	}
 	  	
-    	game.onTick(12000, "crearCafes", {
+    	game.onTick(50000, "crearCafes", {
     		1.times { n =>
             	const randomX = (60..180).anyOne()
             	const randomY = (30..100).anyOne()
@@ -33,7 +34,7 @@ object mapa {
         	}	
     	})
     	
-    	game.onTick(25000, "crearLavaBuckets", {
+    	game.onTick(50000, "crearLavaBuckets", {
     		1.times { n =>
             	const randomX = (60..180).anyOne()
             	const randomY = (30..100).anyOne()
@@ -56,6 +57,16 @@ object mapa {
             	const snowBucket = new SnowBucket(x = randomX, y = randomY)
         	}	
     	})
+    	
+    	game.onTick(50000, "crearCerezas", {
+    		1.times { n =>
+            	const randomX = (60..180).anyOne()
+            	const randomY = (30..100).anyOne()
+            	const cerezas = new Cereza(x = randomX, y = randomY)
+        	}	
+    	})
+    	
+    	const cerezas = new Cereza(x = 100, y = 100)
 //    	
 //    	const maximofantasmas = 2
 //	  	var cantidadfantasmas = 0

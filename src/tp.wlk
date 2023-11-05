@@ -34,7 +34,7 @@ object tp {
 	method jugar() { // empezar a jugar
 		updater.start(1) // 1 ms
 		mapa.iniciar()
-		game_ui.iniciar()
+		ui.iniciar()
 		teclas.iniciar()
 		
 	}

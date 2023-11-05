@@ -66,7 +66,7 @@ object colisiones {
 		 * - Sweep & Prune -> método de los intervalos -> muuuuuuuuuchisimo mejor q el anterior
 		 * - Space partitioning -> Uniform grids / K-D Trees /  
 		 */
-		objs1.forEach {obj1 => 
+		objs1.forEach {obj1 =>
 			const obj1_x0 = obj1.hitbox().x0()
 	 		const obj1_x1 = obj1.hitbox().x1()
 	      

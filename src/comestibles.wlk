@@ -5,11 +5,11 @@ import vectores.*
 import proyectiles.*
 
 
-class Comestible inherits GameObject {
+class Consumible inherits GameObject {
 	override method initialize() {
 		super()
 		gameEngine.comestibles().add(self)
-		gameEngine.schedule(6000, { self.eliminar() }) // despues de 10 segundos desaparece
+		gameEngine.schedule(6000, { self.eliminar() }) // despues de 6 segundos desaparece
 		// implementar blinking effect cuando esté por desaparecer  
 	}
 	override method height() = 30/registry.get("casillas_pixeles") 
@@ -19,19 +19,46 @@ class Comestible inherits GameObject {
 		gameEngine.comestibles().remove(self)
 		super()
 	}
-	 
+	
 	method efectoSobre(jugador) {
-		game.say(jugador, "ñam ñam")
 		
 	}
-	
+
 	override method resolverColisionCon(jugador) { // sabemos que solo peude colisionar con jugador
 		self.efectoSobre(jugador)
 		self.eliminar()
 	}
 }
 
-class SlimeBucket inherits Comestible {
+
+class Bebible inherits Consumible {
+	override method resolverColisionCon(jugador) { // sabemos que solo peude colisionar con jugador
+		super(jugador)
+		sonidos.playSound("assets/SONIDOS/drinking.mp3", 1)
+	}
+}
+
+class Comestible inherits Consumible {
+	override method resolverColisionCon(jugador) { // sabemos que solo peude colisionar con jugador
+		super(jugador)
+		sonidos.playSound("assets/SONIDOS/eating.mp3", 1)
+	}
+}
+
+
+class Cereza inherits Comestible {
+	override method initialize() {
+		super()  
+	}
+	override method image() = "assets/COMESTIBLES/cereza.png"
+	override method efectoSobre(jugador) {
+		super(jugador)
+		jugador.sumarVida(2)
+	}
+}
+
+
+class SlimeBucket inherits Bebible {
 	override method initialize() {
 		super()  
 	}
@@ -41,7 +68,7 @@ class SlimeBucket inherits Comestible {
 		jugador.activarTipoProyectil(elastico)
 	}
 }
-class LavaBucket inherits Comestible {
+class LavaBucket inherits Bebible {
 	override method initialize() {
 		super()  
 	}
@@ -51,7 +78,7 @@ class LavaBucket inherits Comestible {
 		jugador.activarTipoProyectil(magma)
 	}
 }
-class SnowBucket inherits Comestible {
+class SnowBucket inherits Bebible {
 	override method initialize() {
 		super()  
 	}
@@ -60,9 +87,8 @@ class SnowBucket inherits Comestible {
 		super(jugador)
 		jugador.activarTipoProyectil(criogenico)
 	}
-	
 }
-class Coffee inherits Comestible {
+class Coffee inherits Bebible {
 	override method initialize() {
 		super()  
 	}

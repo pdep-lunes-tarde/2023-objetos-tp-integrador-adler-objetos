@@ -19,9 +19,21 @@ class Proyectil inherits VerletObject{
 	
 	override method image() = tipo.image()
 	
+	method siSeSaleDeLasParedesSeElimina() {
+		const piso = 0
+		const techo = registry.get("grid_height") - self.height() // hay q tener en cuenta el tamaño del sprite,
+		const derecha = registry.get("grid_width") - self.width() // ya que el pivot está en la esquina abajo-izquierda del sprite.
+		const izquierda = 0
+		
+		// si se sale de las paredes entonces los borramos, para mejorar la performance
+		if ((y < piso)or(x < izquierda)or(y > techo)or(x > derecha)) {
+			self.eliminar()
+		}
+	}     
+	
 	override method update(dt) {
-		super(dt)
-		self.updatePosition(dt) 
+		self.siSeSaleDeLasParedesSeElimina()
+		self.updatePosition(dt)
 	}
 	override method resolverColisionCon(objeto) {
 		console.println("Proyectil chocó "+objeto.toString())
@@ -30,6 +42,7 @@ class Proyectil inherits VerletObject{
 	}
 }
 class ProyectilJugador inherits Proyectil {
+	method tiempoDeVida() = 10000
 	override method initialize() {
 		super()
 		gameEngine.proyectilesJugador().add(self)
@@ -37,6 +50,14 @@ class ProyectilJugador inherits Proyectil {
 	override method eliminar() {
 		super()
 		gameEngine.proyectilesJugador().remove(self)
+	}
+	override method update(dt) {
+		if (tipo == elastico) { // ya se que es poco objetoso :(
+			self.applyWallConstraint()
+		} else {
+			self.siSeSaleDeLasParedesSeElimina()
+		}
+		self.updatePosition(dt)
 	}
 	
 }
@@ -63,24 +84,24 @@ object piedra inherits TipoDeProyectil {
 	override method image() = "assets/PROYECTIL/flint.png"
 	override method efectosSobre(objeto) {
 		super(objeto)
+		gameEngine.say(objeto, "auch")
 	}
 }
 object magma inherits TipoDeProyectil {
 	override method image() = "assets/PROYECTIL/magmaball.png"
 	override method efectosSobre(objeto) {
-		super(objeto)
+		objeto.restarVida(2)
 	}
 }
 object elastico inherits TipoDeProyectil {
 	override method image() = "assets/PROYECTIL/slimeball.png"
-	override method efectosSobre(objeto) {
-		super(objeto)
-	}
+	// puede rebotar 
 }
 object criogenico inherits TipoDeProyectil {
 	override method image() = "assets/PROYECTIL/snowball.png"
 	override method efectosSobre(objeto) {
 		super(objeto)
+		objeto.congelarUnRato()
 	}
 }
 object fuego inherits TipoDeProyectil {
