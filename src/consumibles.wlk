@@ -27,6 +27,8 @@ class Consumible inherits GameObject {
 	override method resolverColisionCon(jugador) { // sabemos que solo peude colisionar con jugador
 		self.efectoSobre(jugador)
 		self.eliminar()
+//		var puntajeJugador = jugador.puntaje()
+//		puntajeJugador += puntajeJugador
 	}
 }
 
@@ -101,22 +103,22 @@ class Coffee inherits Bebible {
 
 
 
-class CartelPoderes inherits GameObject {
-	override method initialize() {
-		super()
-		gameEngine.schedule(10000, {self.eliminar()}) 
-	}
-}
+//class CartelPoderes inherits GameObject {
+//	override method initialize() {
+//		super()
+//		gameEngine.schedule(10000, {self.eliminar()}) 
+//	}
+//}
 
-class Speed inherits CartelPoderes {
-	override method initialize() {
-		super()  
-	}
-	override method image() = "assets/cartelesPoderes/speed.png"
-}
-class Regeneration inherits CartelPoderes {
-	override method initialize() {
-		super()  
-	}
-	override method image() = "assets/cartelesPoderes/regeneration.png"
-}
+//class Speed inherits CartelPoderes {
+//	override method initialize() {
+//		super()  
+//	}
+//	override method image() = "assets/cartelesPoderes/speed.png"
+//}
+//class Regeneration inherits CartelPoderes {
+//	override method initialize() {
+//		super()  
+//	}
+//	override method image() = "assets/cartelesPoderes/regeneration.png"
+//}

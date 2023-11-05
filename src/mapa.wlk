@@ -66,7 +66,6 @@ object mapa {
         	}	
     	})
     	
-    	const cerezas = new Cereza(x = 100, y = 100)
 //    	
 //    	const maximofantasmas = 2
 //	  	var cantidadfantasmas = 0
@@ -86,13 +85,6 @@ object mapa {
 //			}		
 //		)
 	}
-}
-
-
-class Circulo {
-	const property position = registry.get("centro") - vector.at(800/2/20,800/2/20)
-	method image() = "assets/circulo150.png"
-	
 }
 
 

@@ -37,6 +37,7 @@ class Pacman inherits EntesVivos {
 	method activarTipoProyectil(_tipo) {
 		tipoProyectilActivo = _tipo
 	} 
+	method puntajes() = puntajes
 	override method vidaMaxima() = 10
 	
 	override method image() = pacmanFrames.actual(self)

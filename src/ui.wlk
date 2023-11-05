@@ -68,7 +68,7 @@ class DisplayCorazones {
 		const y = registry.get("grid_height")-20
 		(1..maximoNumeroCorazones).forEach { n =>
 			const x = n*10
-			const corazon = new Corazon(x=x, y=y)
+			const corazon = new Corazon(x=x, y=y, image="assets/corazon.png")
 			listaCorazones.add(corazon)
 		}
 	}
