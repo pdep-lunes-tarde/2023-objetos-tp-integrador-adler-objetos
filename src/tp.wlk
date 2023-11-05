@@ -35,7 +35,8 @@ object tp {
 		updater.start(1) // 1 ms
 		mapa.iniciar()
 		game_ui.iniciar()
-		teclas.iniciar()		
+		teclas.iniciar()
+		
 	}
 }
 

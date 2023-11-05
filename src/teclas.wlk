@@ -3,15 +3,16 @@ import gameEngine.*
 import enemigos.*
 import gameObjects.*
 import proyectiles.*
+import tp.*
 
 
 object teclas {
 	method iniciar() {
-		self.teclasGlobales()
+		self.teclasGenerales()
 		self.teclasFantasmas()
 		self.teclasJugador()
 	}
-	method teclasGlobales() {
+	method teclasGenerales() {
 		keyboard.q().onPressDo {
 			game.stop()
 		}

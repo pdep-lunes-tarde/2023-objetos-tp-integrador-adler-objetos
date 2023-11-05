@@ -5,7 +5,7 @@ import vectores.*
 import colisiones.*
 import ui.*
 
-
+// deberia abstraer cosas de GameObject con Visual
 // valores iniciales (por si queremos definirlos al momento de crear una instancia de la clase)
 // x0, y0, doCollision 
 class GameObject {
@@ -263,8 +263,6 @@ class VerletObject inherits UpdatableObject {
 			x += moverHacia.x()
 			y += moverHacia.y()
 		}
-		
-		
 	}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
 	
 	method update(dt) {
@@ -290,10 +288,9 @@ class EntesVivos inherits VerletObject {
 	method restarVida(_vida) {
 		vida -= _vida
 		const s = new Sangre(x0=x, y0=y)
-		//game_ui.agregarCorazonesVacios(vida) ARREGLAR ESTO
-//		if (vida <= 0) {
-//			self.morir()
-//		}
+		if (vida <= 0) {
+			self.morir()
+		}
 	}
 }
 

@@ -8,6 +8,7 @@ class Pacman inherits EntesVivos {
 	const property fuerza = 2
 	const property radio = self.width()/2
 	var property orientacion = derecha 
+	var property puntajes = 0 
 	
 	var property tipoProyectilActivo = piedra
 	

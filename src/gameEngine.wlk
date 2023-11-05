@@ -1,6 +1,41 @@
 import wollok.game.*
 import colisiones.*
+import vectores.*
 
+class Visual {
+	var property x = game.center().x()
+	var property y = game.center().y()
+	method position() = game.at(x,y) // es lo que wollok game lee para posicionarlo 
+	 
+	override method initialize() {
+		super()
+		self.mostrar()
+	}
+	method mostrar() {
+		gameEngine.addVisual(self)
+	}
+	method ocultar() {
+		gameEngine.removeVisual(self)
+	}
+}
+
+class Texto inherits Visual {
+	var property text
+	const property textColor
+	override method initialize() {
+		super()
+	}
+}
+class Imagen inherits Visual {
+	var image
+	method image() = image
+	method image(_path) {
+		image = _path
+	}
+	override method initialize() {
+		super()
+	}
+}
 
 // para guardar datos importantes y que sean accesibles por cualqueir objeto del programa
 object registry {
@@ -54,7 +89,9 @@ object updater {
 			dt_global *= 10	// cambiamos su valor
 			game.onTick(dt_global, "actualizar", { self.update(prev_dt/2) })
 			gameEngine.restartAllOnTickEvents()
-			console.println("Camara lenta activada")	
+			console.println("Camara lenta activada")
+			
+			sonidos.startSlowMotionIn_SFX()
 		}
 	}
 	method desactivarCamaraLenta() {
@@ -64,11 +101,13 @@ object updater {
 			self.start(prev_dt) // volvemos a empezar el updater con los valores viejos
 			gameEngine.restartAllOnTickEvents()
 			console.println("Camara lenta desactivada")
+			
+			sonidos.startSlowMotionOut_SFX()
 		}
 	}
 	method toggleCamaraLenta() {
 		if (enCamaraLenta) {
-			self.desactivarCamaraLenta()
+			self.desactivarCamaraLenta()	
 		} else {
 			self.activarCamaraLenta()
 		}
@@ -81,6 +120,34 @@ class OnTickEvent {
 	const property name
 	const property block
 }
+
+object sonidos {
+	const property musica = game.sound("assets/SONIDOS/musica.mp3")
+	
+	
+	
+	method startMusic() {
+		musica.shouldLoop(true)
+		musica.volume(0.1)
+		game.schedule(500, { musica.play()} )
+	}
+	
+	method startSlowMotionIn_SFX() {
+		const slowMotionIn = game.sound("assets/SONIDOS/cl-in.mp3")
+		musica.volume(0.05)
+		slowMotionIn.volume(0.5)
+		game.schedule(1000, {musica.pause()})
+//		self.musica().pause()
+		slowMotionIn.play()	
+	}
+	method startSlowMotionOut_SFX() {
+		const slowMotionOut = game.sound("assets/SONIDOS/cl-out.mp3") 
+		game.schedule(2500, {musica.resume()})
+		slowMotionOut.play()
+		musica.volume(0.1)
+	}
+}
+
 
 object gameEngine {
 	const property allOnTicksEvents = new Set()
@@ -115,11 +182,11 @@ object gameEngine {
 	}
 	method removeTickEvent(name) {
 		console.println("BUSCANDO: "+name)
-		
 		try {
 			const onTickEvent = allOnTicksEvents.find({ onTickEvent => onTickEvent.name() == name })
 			game.removeTickEvent(name)
 			allOnTicksEvents.remove(onTickEvent)
+			console.println("ELIMINADO: "+name)
 			
 		} catch e : ElementNotFoundException {
 			console.println("El OnTickEvent \""+name+"\" no existe actualmente.")
@@ -128,9 +195,11 @@ object gameEngine {
 		
 	}
 	method removeVisual(gameObject) {
+		console.println("BUSCANDO: "+gameObject+gameObject.identity())
 		if (objetosVisibles.contains(gameObject)) {
 			game.removeVisual(gameObject)
 			objetosVisibles.remove(gameObject)
+			console.println("ELIMINADO: "+gameObject+gameObject.identity())
 		} 
 		else {
 			console.println("El visual \""+gameObject+gameObject.identity()+"\" no existe actualmente.")

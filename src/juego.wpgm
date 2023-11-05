@@ -15,8 +15,9 @@ program juego {
 // por lo que las celdas con coordenadas pares son realmente celdas impares.  
 
 
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////////
+// CUANDO USO MUCHAS VECES LA CAMARA LENTA, LLEGA UN MOMENTO EN QUE TODO EXPLOTA, LITERALMENTE //
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
 // HAY QUE REINICIAR LOS OnTick y los Schedule CON LOS NUEVOS VALORES CUANDO SE ACTIVA LA CAMARA LENTA
 

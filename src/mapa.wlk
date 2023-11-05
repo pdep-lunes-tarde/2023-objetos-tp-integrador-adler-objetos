@@ -29,7 +29,7 @@ object mapa {
     		1.times { n =>
             	const randomX = (60..180).anyOne()
             	const randomY = (30..100).anyOne()
-            	const cafe = new Coffee(x0 = randomX, y0 = randomY)
+            	const cafe = new Coffee(x = randomX, y = randomY)
         	}	
     	})
     	
@@ -37,7 +37,7 @@ object mapa {
     		1.times { n =>
             	const randomX = (60..180).anyOne()
             	const randomY = (30..100).anyOne()
-            	const lavaBucket = new LavaBucket(x0 = randomX, y0 = randomY)
+            	const lavaBucket = new LavaBucket(x = randomX, y = randomY)
         	}	
     	})
     	
@@ -45,7 +45,7 @@ object mapa {
     		1.times { n =>
             	const randomX = (60..180).anyOne()
             	const randomY = (30..100).anyOne()
-            	const slimeBucket = new SlimeBucket(x0 = randomX, y0 = randomY)
+            	const slimeBucket = new SlimeBucket(x = randomX, y = randomY)
         	}	
     	})
     	
@@ -53,7 +53,7 @@ object mapa {
     		1.times { n =>
             	const randomX = (60..180).anyOne()
             	const randomY = (30..100).anyOne()
-            	const snowBucket = new SnowBucket(x0 = randomX, y0 = randomY)
+            	const snowBucket = new SnowBucket(x = randomX, y = randomY)
         	}	
     	})
 //    	
