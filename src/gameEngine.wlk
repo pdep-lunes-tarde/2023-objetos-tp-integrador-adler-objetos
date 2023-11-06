@@ -85,8 +85,8 @@ object updater {
 		if (not enCamaraLenta) {
 			self.stop()
 			prev_dt = dt_global // guardamos su estado actual
-			dt_global *= 10	// cambiamos su valor
-			game.onTick(dt_global, "actualizar", { self.update(prev_dt/2) })
+			dt_global *= 20	// cambiamos su valor
+			game.onTick(dt_global, "actualizar", { self.update(prev_dt/3) })
 			gameEngine.restartAllOnTickEvents()
 			console.println("Camara lenta activada")
 			

@@ -26,11 +26,11 @@ object mapa {
 	  		return seno_Pol_mclaur_O10.apply(a)
 	  	}
 	  	
-    	game.onTick(50000, "crearCafes", {
+    	game.onTick(35000, "crearCafes", {
     		1.times { n =>
             	const randomX = (60..180).anyOne()
             	const randomY = (30..100).anyOne()
-            	const cafe = new Coffee(x = randomX, y = randomY)
+            	const cafe = new Coffee(x0 = randomX, y0 = randomY)
         	}	
     	})
     	
@@ -38,7 +38,7 @@ object mapa {
     		1.times { n =>
             	const randomX = (60..180).anyOne()
             	const randomY = (30..100).anyOne()
-            	const lavaBucket = new LavaBucket(x = randomX, y = randomY)
+            	const lavaBucket = new LavaBucket(x0 = randomX, y0 = randomY)
         	}	
     	})
     	
@@ -46,23 +46,23 @@ object mapa {
     		1.times { n =>
             	const randomX = (60..180).anyOne()
             	const randomY = (30..100).anyOne()
-            	const slimeBucket = new SlimeBucket(x = randomX, y = randomY)
+            	const slimeBucket = new SlimeBucket(x0 = randomX, y0 = randomY)
         	}	
     	})
     	
-    	game.onTick(53000, "crearSnowBuckets", {
+    	game.onTick(20000, "crearSnowBuckets", {
     		1.times { n =>
             	const randomX = (60..180).anyOne()
             	const randomY = (30..100).anyOne()
-            	const snowBucket = new SnowBucket(x = randomX, y = randomY)
+            	const snowBucket = new SnowBucket(x0 = randomX, y0 = randomY)
         	}	
     	})
     	
-    	game.onTick(50000, "crearCerezas", {
+    	game.onTick(10000, "crearCerezas", {
     		1.times { n =>
             	const randomX = (60..180).anyOne()
             	const randomY = (30..100).anyOne()
-            	const cerezas = new Cereza(x = randomX, y = randomY)
+            	const cerezas = new Cereza(x0 = randomX, y0 = randomY)
         	}	
     	})
     	
