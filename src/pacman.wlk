@@ -30,14 +30,14 @@ class Pacman inherits EntesVivos {
 	const property fuerza = 2
 	const property radio = self.width()/2
 	var property orientacion = derecha 
-	var property puntajes = 0 
+	var property puntaje = 0 
 	
 	var property tipoProyectilActivo = piedra
 	
 	method activarTipoProyectil(_tipo) {
 		tipoProyectilActivo = _tipo
 	} 
-	method puntajes() = puntajes
+	
 	override method vidaMaxima() = 10
 	
 	override method image() = pacmanFrames.actual(self)
@@ -106,6 +106,11 @@ class Pacman inherits EntesVivos {
 	method sumarVida(_vida) {
 		vida += _vida
 		ui.displayCorazones().sumarCorazones(_vida)
+	}
+	
+	method sumarPuntos(puntos) {
+		puntaje += puntos
+		ui.displayPuntajes().sumarPuntaje(puntos)
 	}
 	
 	override method update(dt) {

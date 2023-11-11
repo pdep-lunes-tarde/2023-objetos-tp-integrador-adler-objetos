@@ -63,6 +63,7 @@ object ui {
 		})
 		
 	}
+	
 	method ganar(){
 		self.frenarTodo()
 		const centro = game.center()
@@ -77,15 +78,18 @@ object ui {
 
 
 class Corazon inherits Imagen {
+	var estaVacio = false 
 	override method initialize() {
 		super()
 		self.hacerLleno()
 	} 
 	method hacerVacio() {
 		image = "assets/corazonVacio.png"
+		estaVacio = not estaVacio
 	}
 	method hacerLleno() {
 		image = "assets/corazon.png"
+		estaVacio = not estaVacio
 	}
 }
 
@@ -94,30 +98,49 @@ class DisplayCorazones {
 	var numeroCorazonesActuales = maximoNumeroCorazones
 	const listaCorazones = new List()
 	
+	var flagDeActualizacion = false
+	
 	override method initialize() {
 		super()
-		const y = registry.get("grid_height")-20
+		const y = registry.get("grid_height")-8
 		(1..maximoNumeroCorazones).forEach { n =>
 			const x = n*10
-			const corazon = new Corazon(x=x, y=y, image="assets/corazon.png")
+			const corazon = new Corazon(
+				x=x, y=y, 
+				image="assets/corazon.png", 
+				height = 50, width = 50
+			)
 			listaCorazones.add(corazon)
 		}
 	}
-	method restarCorazones(numeroCorazones) {
-		const desde = numeroCorazonesActuales - 1
-		const hasta = (numeroCorazonesActuales - numeroCorazones).max(0) // no puede superar 0
+	
+	method actualizarDisplay() { // refleja en corazones el valor actual de numeroCorazonesActuales
+		const corazonesLlenos = new List()
 		
-		(desde..hasta).forEach { n =>
-			listaCorazones.get(n).hacerVacio()
+		// así nos aseguramos que no se muestre nada raro
+		const hasta = (numeroCorazonesActuales-1).max(0)
+		(0..hasta).forEach { n =>
+			const corazon = listaCorazones.get(n)
+			corazon.hacerLleno()
+			corazonesLlenos.add(corazon)
+		}
+		const corazonesAVaciar = listaCorazones.asSet().difference(corazonesLlenos)
+		corazonesAVaciar.forEach { n =>
+			n.hacerVacio()
 		}
 	}
+	
+	method restarCorazones(numeroCorazones) {
+		numeroCorazonesActuales = (numeroCorazonesActuales-numeroCorazones).max(0)
+		self.actualizarDisplay()
+	}
 	method sumarCorazones(numeroCorazones) {
-		const desde = numeroCorazonesActuales - 1
-		const hasta = (numeroCorazonesActuales + numeroCorazones).min(maximoNumeroCorazones-1) // no puede superar 0
-		
-		(desde..hasta).forEach { n =>
-			listaCorazones.get(n).hacerLleno()
-		}
+//		const desde = (numeroCorazonesActuales-1).max(0)
+//		const hasta = (numeroCorazonesActuales-numeroCorazones).max(0)
+//		(desde..hasta).forEach { n =>
+//		}
+		numeroCorazonesActuales = (numeroCorazonesActuales+numeroCorazones).min(maximoNumeroCorazones-1)
+		self.actualizarDisplay()
 	}
 	method restaurarCompletamente() {
 		numeroCorazonesActuales = maximoNumeroCorazones
@@ -135,16 +158,27 @@ class DisplayCorazones {
 
 class DisplayPuntajes {
 	var puntajeActual = 0
+	var display
 	
 	override method initialize() {
 		super()
 		const width = registry.get("grid_width")
 		const height = registry.get("grid_height")
-		const testo = new Texto(
+		display = new Texto(
 	  		text="Puntaje: "+puntajeActual,//+jugador.puntaje(),//Agregar aca eo puntaje 
 	  		x=width-20,
 	  		y=height-20,
 	  		textColor="#FFFFFF"
 	  	)
 	}
+	
+	method update() {
+		display.text("Puntaje: "+puntajeActual)
+	}
+	
+	method sumarPuntaje(puntos) {
+		puntajeActual += puntos
+		self.update()
+	}
+	
 }

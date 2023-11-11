@@ -25,6 +25,9 @@ class Texto inherits Visual {
 	override method initialize() {
 		super()
 	}
+	method text(_text) {
+		text = _text
+	}
 }
 class Imagen inherits Visual {
 	const height // en pixeles
@@ -89,6 +92,11 @@ object updater {
 		dt_global = dt	
 	}
 	
+	method restart(dt) {
+		self.stop()
+		self.start(dt)
+	}
+	
 	method stop() {
 		game.removeTickEvent("actualizar")
 	}
@@ -109,9 +117,8 @@ object updater {
 	}
 	method desactivarCamaraLenta() {
 		if (enCamaraLenta) {
-			self.stop()
 			dt_global = prev_dt // restauramos el valor de dt_global
-			self.start(prev_dt) // volvemos a empezar el updater con los valores viejos
+			self.restart(prev_dt) // volvemos a empezar el updater con los valores viejos
 			gameEngine.restartAllOnTickEvents()
 			console.println("Camara lenta desactivada")
 			

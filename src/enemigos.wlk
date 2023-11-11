@@ -4,6 +4,8 @@ import gameEngine.*
 import vectores.*
 import proyectiles.*
 
+
+
 class Fantasma inherits EntesVivos {
 	
 	const jugador = gameEngine.jugador() // si no funciona, se debe definir al crear una instancia
@@ -106,5 +108,11 @@ class Fantasma inherits EntesVivos {
 	
 	override method resolverColisionCon(objeto) {
 		console.println("Colision con "+objeto)
-	}	
+	}
+	
+	override method morir() {
+		console.println("Rip, "+self+" :(")
+		self.eliminar()
+		gameEngine.jugador().sumarPuntos(1000)
+	}
 }

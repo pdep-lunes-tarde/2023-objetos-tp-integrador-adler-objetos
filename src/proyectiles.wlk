@@ -8,8 +8,8 @@ class Proyectil inherits VerletObject{
 	const tipo // debe ser definido
 	
 	var contadorTiempoEnVida = 0
-	method tiempoDeVida() = 5000
-	
+	method tiempoDeVida()
+		
 	override method initialize() {
 		super()
 		gameEngine.schedule(self.tiempoDeVida(), {self.eliminar()})
@@ -42,7 +42,7 @@ class Proyectil inherits VerletObject{
 	}
 }
 class ProyectilJugador inherits Proyectil {
-	method tiempoDeVida() = 10000
+	override method tiempoDeVida() = 10000
 	override method initialize() {
 		super()
 		gameEngine.proyectilesJugador().add(self)
@@ -59,9 +59,9 @@ class ProyectilJugador inherits Proyectil {
 		}
 		self.updatePosition(dt)
 	}
-	
 }
 class ProyectilEnemigo inherits Proyectil {
+	override method tiempoDeVida() = 7000
 	override method initialize() {
 		super()
 		gameEngine.proyectilesEnemigos().add(self)
@@ -95,6 +95,10 @@ object magma inherits TipoDeProyectil {
 }
 object elastico inherits TipoDeProyectil {
 	override method image() = "assets/PROYECTIL/slimeball.png"
+	override method efectosSobre(objeto) {
+		super(objeto)
+		sonidos.playSound("assets/SONIDOS/slime-hit.mp3", 1)
+	}
 	// puede rebotar 
 }
 object criogenico inherits TipoDeProyectil {
@@ -108,5 +112,6 @@ object fuego inherits TipoDeProyectil {
 	override method image() = "assets/PROYECTIL/fireball.png"
 	override method efectosSobre(objeto) {
 		super(objeto)
+		sonidos.playSound("assets/SONIDOS/fireout.mp3", 1)
 	}
 }
