@@ -32,15 +32,46 @@ object ui {
 	method gameOver(){
 		self.frenarTodo()
 		const centro = game.center()
-		const gameOver = new Imagen(x=centro.x(), y=centro.y(), image = "assets/game over.png")
+		const gameOver = new Imagen(
+			x=centro.x(), y=centro.y(), 
+			image = "assets/PERDISTE/game over.png",
+			height=250,
+			width=70
+		)
 		sonidos.playSound("assets/SONIDOS/bruh.ogg", 1)
 		sonidos.playSound("assets/SONIDOS/fail.mp3", 1)
-		sonidos.playSound("assets/SONIDOS/risa.mp3", 0.6)
+		game.schedule(1000, {
+			sonidos.playSound("assets/SONIDOS/risa.mp3", 0.6)
+			(1..36).forEach { n =>
+				game.schedule(n*100, {
+					const rana = new Imagen(
+						x=centro.x(), y=centro.y(), 
+						image= "assets/PERDISTE/rana-saltando/("+n+").jpg",
+						height=675,
+						width=540
+					)
+				})
+			}
+		})
+		game.schedule(5000, {
+			const gato = new Imagen(
+				x=centro.x(), y=centro.y(), 
+				image= "assets/PERDISTE/gatoriendose.jpeg",
+				height=705,
+				width=705
+			)
+		})
+		
 	}
 	method ganar(){
 		self.frenarTodo()
 		const centro = game.center()
-		const ganar = new Imagen(x=centro.x(), y=centro.y() , image = "assets/ready.png")	
+		const ganar = new Imagen(
+			x=centro.x(), y=centro.y(), 
+			image = "assets/ready.png",
+			width=10,
+			height=10
+		)	
 	}
 }
 

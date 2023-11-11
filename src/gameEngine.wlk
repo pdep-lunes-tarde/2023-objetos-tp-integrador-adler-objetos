@@ -27,7 +27,19 @@ class Texto inherits Visual {
 	}
 }
 class Imagen inherits Visual {
+	const height // en pixeles
+	const width
+	
 	var image
+	
+	override method position() {
+		if (height!=null and width!=null) {
+			return game.at(x-(width/registry.get("casillas_pixeles")/2),y-(height/registry.get("casillas_pixeles")/2))
+		} else {
+			return game.at(x,y)
+		}
+	}
+	
 	method image() = image
 	method image(_path) {
 		image = _path

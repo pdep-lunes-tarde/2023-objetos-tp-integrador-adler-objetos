@@ -101,6 +101,7 @@ class Pacman inherits EntesVivos {
 	override method restarVida(_vida) {
 		super(_vida)
 		ui.displayCorazones().restarCorazones(_vida)
+		sonidos.playSound("assets/SONIDOS/damage.mp3", 1)
 	}
 	method sumarVida(_vida) {
 		vida += _vida
