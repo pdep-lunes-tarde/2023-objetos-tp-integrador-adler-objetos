@@ -26,7 +26,7 @@ import ui.*
 //	}
 //}
 
-class Pacman inherits EntesVivos {
+class Pacman inherits ObjetoConVida {
 	const property fuerza = 2
 	const property radio = self.width()/2
 	var property orientacion = derecha 

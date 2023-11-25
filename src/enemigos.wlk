@@ -5,8 +5,7 @@ import vectores.*
 import proyectiles.*
 
 
-
-class Fantasma inherits EntesVivos {
+class Fantasma inherits ObjetoConVida {
 	
 	const jugador = gameEngine.jugador() // si no funciona, se debe definir al crear una instancia
 	const mirandoHacia = norte.versor()

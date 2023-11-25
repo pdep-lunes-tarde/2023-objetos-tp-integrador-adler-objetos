@@ -143,24 +143,6 @@ class VerletObject inherits UpdatableObject {
 		return (vel_x*vel_x+vel_y*vel_y).squareRoot()
 	}
 	
-//	method estaEnRapidezLetal(ejeDeChoque) { // si la magnitud de su velocidad es letal en caso de encontrarse con una pared
-//		const vel_x = x - old_x
-//		const vel_y = y - old_y
-//		
-//		// NO SÉ SI TIENE SIQUIERA SENTIDO ESTO QUE PLANTEO PERO SUENA PIOLA 
-//		
-//		// rapidez_efectiva es la magnitud de la velocidad perpendicular al plano de choque, 
-//		// osea que es la componente de la velocidad que es paralela al eje de choque,
-//		// rapidez_efectiva es la rapidez que realmente nos importa para calcular la energia del choque.
-//		const rapidez_efectiva = vector.at(vel_x, vel_y).escalarProyeccionSobre(ejeDeChoque) 
-////		const rapidez_efectiva = vector.at(vel_x, vel_y).modulo()
-//		const energiaChoque = (rapidez_efectiva*rapidez_efectiva)/2
-//		if (energiaChoque > 20) {
-//			console.println(self.toString()+": Energia = "+ energiaChoque.toString())
-//		}	
-//		return energiaChoque > 60
-//	}
-	
 	method updatePosition(dt) {
 		// el valor corresponde al numero de ticks definido en el game.onTick()
 		// si los ticks del updater son mayores al valor del dt, entocnes se va a ver en cámara lenta
@@ -205,9 +187,6 @@ class VerletObject inherits UpdatableObject {
 			const diff = dist - radio
 			const moverHacia = ejeDeChoque.versor() * diff
 		
-//			if (self.estaEnRapidezLetal(ejeDeChoque)) {
-//				self.morir()
-//			}
 			/* A GRANDES VELOCIDADES, SE BUGGEA, SOLUCIONES:
 			 * - Limitar las velocidades
 			 * - Hacer substeps.
@@ -265,14 +244,14 @@ class VerletObject inherits UpdatableObject {
 		}
 	}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
 	
-	method update(dt) {
+	override method update(dt) {
 //		self.applyGravity()
 //		self.applyWallConstraint()
 		self.updatePosition(dt)
 	}
 }
 
-class EntesVivos inherits VerletObject {
+class ObjetoConVida inherits VerletObject {
 	var property vida = self.vidaMaxima()
 	method vidaMaxima()
 	
