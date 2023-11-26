@@ -43,7 +43,7 @@ class Bebible inherits Consumible {
 class Comestible inherits Consumible {
 	override method resolverColisionCon(jugador) { // sabemos que solo peude colisionar con jugador
 		super(jugador)
-		sonidos.playSound("assets/SONIDOS/eating.mp3", 1)
+		sonidos.playSound("assets/SONIDOS/eating.wav", 1)
 	}
 }
 

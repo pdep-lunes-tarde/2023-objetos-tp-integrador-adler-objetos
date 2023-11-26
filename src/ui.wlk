@@ -3,6 +3,7 @@ import wollok.game.*
 import proyectiles.*
 import gameObjects.*
 import menu.*
+import mapa.*
 
 object ui {
 	const property displayCorazones = new DisplayCorazones()
@@ -72,7 +73,7 @@ object ui {
 			image = "assets/ready.png",
 			width=10,
 			height=10
-		)	
+		)
 	}
 }
 
@@ -142,6 +143,11 @@ class DisplayCorazones {
 		numeroCorazonesActuales = (numeroCorazonesActuales+numeroCorazones).min(maximoNumeroCorazones-1)
 		self.actualizarDisplay()
 	}
+	
+	method asignarCorazones(numeroCorazones) {
+		numeroCorazonesActuales = numeroCorazones
+		self.actualizarDisplay()
+	}
 	method restaurarCompletamente() {
 		numeroCorazonesActuales = maximoNumeroCorazones
 		listaCorazones.forEach {corazon => 
@@ -174,6 +180,7 @@ class DisplayPuntajes {
 	
 	method update() {
 		display.text("Puntaje: "+puntajeActual)
+		mapa.aumentarDificultad()
 	}
 	
 	method sumarPuntaje(puntos) {

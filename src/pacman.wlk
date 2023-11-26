@@ -27,6 +27,9 @@ import ui.*
 //}
 
 class Pacman inherits ObjetoConVida {
+	
+	const limiteBalasEnMapa = 10
+	
 	const property fuerza = 2
 	const property radio = self.width()/2
 	var property orientacion = derecha 
@@ -69,17 +72,19 @@ class Pacman inherits ObjetoConVida {
 	}
 	
 	method disparar() {
-		const proyectil = new ProyectilJugador(
-			tipo = self.tipoProyectilActivo(),
-			hayFriccion=false, 
-			x0=x, y0=y, 
-			vel_x0=0, 
-			vel_y0=0
-		)
-		const sentidoDelDisparo = self.orientacion().versor()
-		const aceleracionInstantaneaDisparo = 6
-		const vectorDisparo = sentidoDelDisparo * aceleracionInstantaneaDisparo 
-		proyectil.accelerate(vectorDisparo)
+		if (not (gameEngine.proyectilesJugador().size() > limiteBalasEnMapa)) {
+			const proyectil = new ProyectilJugador(
+				tipo = self.tipoProyectilActivo(),
+				hayFriccion=false, 
+				x0=x, y0=y, 
+				vel_x0=0, 
+				vel_y0=0
+			)
+			const sentidoDelDisparo = self.orientacion().versor()
+			const aceleracionInstantaneaDisparo = 6
+			const vectorDisparo = sentidoDelDisparo * aceleracionInstantaneaDisparo 
+			proyectil.accelerate(vectorDisparo)
+		}
 	}
 	
 	method activarHiperactividad() {
@@ -99,13 +104,13 @@ class Pacman inherits ObjetoConVida {
 	}
 	
 	override method restarVida(_vida) {
-		super(_vida)
-		ui.displayCorazones().restarCorazones(_vida)
-		sonidos.playSound("assets/SONIDOS/damage.mp3", 1)
+		super(_vida) // acá ya se resta la vida
+		ui.displayCorazones().asignarCorazones(vida) // reflejamos su vida en el display
+		sonidos.playSound("assets/SONIDOS/damage.wav", 1)
 	}
 	method sumarVida(_vida) {
-		vida += _vida
-		ui.displayCorazones().sumarCorazones(_vida)
+		vida = (vida + _vida).min(self.vidaMaxima())
+		ui.displayCorazones().asignarCorazones(vida)
 	}
 	
 	method sumarPuntos(puntos) {

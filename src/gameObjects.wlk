@@ -4,6 +4,7 @@ import gameEngine.*
 import vectores.*
 import colisiones.*
 import ui.*
+import mapa.*
 
 // deberia abstraer cosas de GameObject con Visual
 // valores iniciales (por si queremos definirlos al momento de crear una instancia de la clase)
@@ -87,11 +88,7 @@ class VerletObject inherits UpdatableObject {
 	/* Basado en: https://www.youtube.com/watch?v=lS_qeBy3aQI 
 	 * 			  https://www.youtube.com/watch?v=-GWTDhOQU6M 
 	 * */  
-	
-	/* usamos variable propias x e y, hace los cálculos muchisimo 
-	 * más rápido que los Vectores (ya lo probé, rip performance), 
-	 * ¿¿¿¿con otros tipos de pares ordenados funcionará???? 
-	 * */
+
 	const vel_x0 = 0
 	const vel_y0 = 0
 	 
@@ -178,7 +175,8 @@ class VerletObject inherits UpdatableObject {
 	}
 	
 	method applyCircleConstraint(coord_centro, radio) { // restriccion circular invisible
-		const ejeDeChoque = coord_centro - (vector.at(x, y) + vector.at(4.5,4.5))
+		const radioDelCirculo = mapa.radioDelCirculo()
+		const ejeDeChoque = coord_centro - (vector.at(x, y) + vector.at(radioDelCirculo,radioDelCirculo))
 		const dist = ejeDeChoque.magnitud()
 		
 //		const coef_perdida_energia = 0.05
@@ -233,7 +231,8 @@ class VerletObject inherits UpdatableObject {
 	}       
 	
 	method applyCirclePathConstraint(coord_centro, radio) {
-		const ejeDeChoque = coord_centro - (vector.at(x, y) + vector.at(4.5,4.5))
+		const radioDelCirculo = mapa.radioDelCirculo()
+		const ejeDeChoque = coord_centro - (vector.at(x, y) + vector.at(radioDelCirculo,radioDelCirculo))
 		const dist = ejeDeChoque.magnitud()
 		
 		if (dist != radio) {  // si se sale de la linea del perimetro del circulo...
@@ -265,7 +264,7 @@ class ObjetoConVida inherits VerletObject {
 		self.eliminar()
 	}
 	method restarVida(_vida) {
-		vida -= _vida
+		vida = (vida - _vida).max(0)
 		const s = new Sangre(x0=x, y0=y)
 		if (vida <= 0) {
 			self.morir()
