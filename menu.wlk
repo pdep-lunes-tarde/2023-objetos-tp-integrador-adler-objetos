@@ -11,8 +11,8 @@ object menu {
 		const fondoNegro = new Imagen(x=0,y=0, image="assets/fondonegro.png")
 		const titulo = new Imagen(x=70, y=120, image="assets/tituloPacman.png")
 		const explicaciones = new Imagen(x=20, y=30, image="assets/explicaciones.png")
-	  	
-	  	sonidos.startMusic()
+
+		sonidos.startMusic()
 
 		// PRESIONAR ENTER PARA EMPEZAR EL JUEGO
 	  	keyboard.enter().onPressDo {
