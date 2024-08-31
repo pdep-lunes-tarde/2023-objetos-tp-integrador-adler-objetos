@@ -44,6 +44,7 @@ object mapa {
 
 		self.spawnearFantasmas(2)
 
+	  	
     	game.onTick(35000, "crearCafes", {
     		1.times { n =>
             	const randomX = (60..180).anyOne()
@@ -139,3 +140,11 @@ object mapa {
 		})
 	}
 }
+
+
+
+
+
+
+
+
