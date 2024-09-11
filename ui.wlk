@@ -16,13 +16,13 @@ object ui {
 
 	}
 	
-//	method sumarPuntajeFantasma(){
-//		//Si el pacman mata a un fantasma se le suma 5 puntos
-//		puntaje = puntaje + 5
-//		if(puntaje == 10){
-//			self.ganar()
-//		}
-//	}
+
+
+
+
+
+
+
 	method frenarTodo(){
 		gameEngine.objetos().forEach { obj =>
 			obj.eliminar()
@@ -115,10 +115,10 @@ class DisplayCorazones {
 		}
 	}
 	
-	method actualizarDisplay() { // refleja en corazones el valor actual de numeroCorazonesActuales
+	method actualizarDisplay() { 
 		const corazonesLlenos = new List()
 		
-		// así nos aseguramos que no se muestre nada raro
+		
 		const hasta = (numeroCorazonesActuales-1).max(0)
 		(0..hasta).forEach { n =>
 			const corazon = listaCorazones.get(n)
@@ -136,10 +136,10 @@ class DisplayCorazones {
 		self.actualizarDisplay()
 	}
 	method sumarCorazones(numeroCorazones) {
-//		const desde = (numeroCorazonesActuales-1).max(0)
-//		const hasta = (numeroCorazonesActuales-numeroCorazones).max(0)
-//		(desde..hasta).forEach { n =>
-//		}
+
+
+
+
 		numeroCorazonesActuales = (numeroCorazonesActuales+numeroCorazones).min(maximoNumeroCorazones-1)
 		self.actualizarDisplay()
 	}
@@ -171,7 +171,7 @@ class DisplayPuntajes {
 		const width = registry.get("grid_width")
 		const height = registry.get("grid_height")
 		display = new Texto(
-	  		text="Puntaje: "+puntajeActual,//+jugador.puntaje(),//Agregar aca eo puntaje 
+	  		text="Puntaje: "+puntajeActual,
 	  		x=width-20,
 	  		y=height-20,
 	  		textColor="#FFFFFF"

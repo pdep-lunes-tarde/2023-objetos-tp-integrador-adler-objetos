@@ -7,11 +7,11 @@ import proyectiles.*
 
 class Fantasma inherits ObjetoConVida {
 	
-	const jugador = gameEngine.jugador() // si no funciona, se debe definir al crear una instancia
+	const jugador = gameEngine.jugador() 
 	const mirandoHacia = norte.versor()
 	var congelado = false
 	
-	var coolDownDisparos = 3500 // en no se que unidad de tiempo
+	var coolDownDisparos = 3500 
 	
 	method nuevoCoolDownDisparos(tiempo) {
 		coolDownDisparos = tiempo
@@ -21,7 +21,7 @@ class Fantasma inherits ObjetoConVida {
 		gameEngine.removeTickEvent("disparar"+self.identity())	
 	}
 	method iniciarDisparos() {
-		// le ponemos un identificador unico para que no se confunda con el onTickEvent de los demas fantasmas
+		
 		gameEngine.onTick(coolDownDisparos, "disparar"+self.identity(), {self.dispararAlJugador()})
 	}
 	method reiniciarCoolDownDisparos() {
@@ -32,7 +32,7 @@ class Fantasma inherits ObjetoConVida {
 	override method vidaMaxima() = 3
 	
 	override method image() = "assets/FANTASMA/rojo_arriba1.png"
-//	override method image() = "assets/PACMAN/cerrado.png"
+
 	override method initialize() {
 		super()
 		gameEngine.enemigos().add(self)
@@ -40,12 +40,12 @@ class Fantasma inherits ObjetoConVida {
 	}
 	
 	method dispararAlJugador() {
-		self.mirarAlJugador() // actualiza "mirandoHacia"
+		self.mirarAlJugador() 
 		const aceleracionInstantaneaDisparo = 2
 		const vectorDisparo = mirandoHacia * aceleracionInstantaneaDisparo 
 		
-//		const vel_x = x - old_x 
-//		const vel_y = y - old_y 
+
+
 		const proyectil = new ProyectilEnemigo(
 			tipo = fuego,
 			hayFriccion=false,
@@ -65,27 +65,27 @@ class Fantasma inherits ObjetoConVida {
 		const pos_x = pos.x()
 		const pox_y = pos.y()
 		
-//		const desplazamiento = jugador_pos - pos
+
 		const desplazamiento_x = jugador_pos_x - pos_x
 		const desplazamiento_y = jugador_pos_y - pox_y
 		
-//		const hacia = desplazamiento.versor()
+
 		const desplazamiento_magnitud = (desplazamiento_x**2+desplazamiento_y**2).squareRoot() 
 		const hacia_x = desplazamiento_x / desplazamiento_magnitud
 		const hacia_y = desplazamiento_y / desplazamiento_magnitud
 		
-		// mejor rendimiento modificar un vector ya existente que crear uno nuevo cada vez que se llama la funcion
-		mirandoHacia.xy(hacia_x, hacia_y) // actualizamos la mirada del fantasma 
+		
+		mirandoHacia.xy(hacia_x, hacia_y) 
 	}
 	
 	method applyMovement() {
-		var randomX = (-1..1).anyOne()
-	  	var randomY = (-1..1).anyOne()
+		const randomX = (-1..1).anyOne()
+	  	const randomY = (-1..1).anyOne()
 	  	self.accelerate(randomX, randomY)
 	}
 	
 	override method update(dt) {
-//		self.applyGravity()
+
 		self.applyMovement()
 		self.applyCirclePathConstraint(registry.get("centro"), 75)
 		if (not congelado) {
@@ -95,7 +95,7 @@ class Fantasma inherits ObjetoConVida {
 	}
 	
 	override method eliminar() {
-		gameEngine.enemigos().remove(self) // lo sacamos primero así deja de detectar sus colisiones
+		gameEngine.enemigos().remove(self) 
 		self.dejarDeDisparar()
 		super()
 	}

@@ -11,18 +11,18 @@ import ui.*
 
 object tp {
 	method iniciar(width, height, title, pixeles){
-		// iniciar ventana
-		game.width(width/pixeles) // nro de celdas
+		
+		game.width(width/pixeles) 
 	  	game.height(height/pixeles) 
-	  	game.cellSize(pixeles) // fijado a 1 píxel
+	  	game.cellSize(pixeles) 
 	  	game.title(title)
 	  	game.ground("assets/background.png")
 	  	
-	  	// guardo valores globales
+	  	
 	  	const grid_width = width/pixeles
 	  	const grid_height = height/pixeles
 	  	const centro = vector.at(grid_width/2, grid_height/2)
-	  	registry.put("grid_width", grid_width) // ancho (numero de celdas) de la grilla 
+	  	registry.put("grid_width", grid_width) 
 	  	registry.put("grid_height", grid_height)
 	  	registry.put("casillas_pixeles", pixeles)
 	  	registry.put("centro", centro)
@@ -31,8 +31,8 @@ object tp {
 		menu.iniciar()
 	  	menu.mostrar()
 	}
-	method jugar() { // empezar a jugar
-		updater.start(1) // 1 ms
+	method jugar() { 
+		updater.start(1) 
 		mapa.iniciar()
 		ui.iniciar()
 		teclas.iniciar()

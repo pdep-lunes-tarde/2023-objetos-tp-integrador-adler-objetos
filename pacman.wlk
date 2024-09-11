@@ -5,27 +5,6 @@ import proyectiles.*
 import vectores.*
 import ui.*
 
-
-//objeto glandulaGeneradoraDeProyectiles {
-//	const coolDownDisparos = 2000
-//	var contadorDisparosConsecutivos = 0
-//	const numeroDisparosConsecutivos = 3 // consecutivos seria en menos de 1 segundo
-//	
-//	method disparar() {
-//		const proyectil = new ProyectilJugador(
-//			tipo = self.tipoProyectilActivo(),
-//			hayFriccion=false, 
-//			x0=x, y0=y, 
-//			vel_x0=0, 
-//			vel_y0=0
-//		)
-//		const sentidoDelDisparo = self.orientacion().versor()
-//		const aceleracionInstantaneaDisparo = 6
-//		const vectorDisparo = sentidoDelDisparo * aceleracionInstantaneaDisparo 
-//		proyectil.accelerate(vectorDisparo)
-//	}
-//}
-
 class Pacman inherits ObjetoConVida {
 	
 	const limiteBalasEnMapa = 10
@@ -47,7 +26,7 @@ class Pacman inherits ObjetoConVida {
 	
 	override method initialize() {
 		super()
-		game.onTick(80, "animacion-pacman", { pacmanFrames.avanzar() }) // usamos game y no gameEngine xq no queremos que la camara lenta lo afecte
+		game.onTick(80, "animacion-pacman", { pacmanFrames.avanzar() }) 
 		gameEngine.jugador(self)
 	}
 	
@@ -104,8 +83,8 @@ class Pacman inherits ObjetoConVida {
 	}
 	
 	override method restarVida(_vida) {
-		super(_vida) // acá ya se resta la vida
-		ui.displayCorazones().asignarCorazones(vida) // reflejamos su vida en el display
+		super(_vida) 
+		ui.displayCorazones().asignarCorazones(vida) 
 		sonidos.playSound("assets/SONIDOS/damage.wav", 1)
 	}
 	method sumarVida(_vida) {
@@ -129,7 +108,7 @@ class Pacman inherits ObjetoConVida {
 
 
 
-//orientaciones
+
 object derecha {
 	override method toString() = "der"
 	method versor() = este.versor() 
@@ -146,7 +125,7 @@ object abajo {
 	override method toString() = "abajo"
 	method versor() = sur.versor()
 }
-//estados
+
 object cerrado {
 	override method toString() = "cerrado"
 }
@@ -160,7 +139,7 @@ object abierto {
 object pacmanFrames {
 	const secuenciaEstados = [cerrado, medio, abierto, medio]
 	
-	var i = 0 // lleva la cuenta del estado actual
+	var i = 0 
 	method actual(jugador) {
 		const estadoActual = secuenciaEstados.get(i)
 		return "assets/PACMAN/"+estadoActual+"-"+jugador.orientacion()+".png"

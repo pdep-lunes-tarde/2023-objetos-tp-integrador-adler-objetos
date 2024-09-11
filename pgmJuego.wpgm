@@ -1,33 +1,33 @@
 import tp.*
 
 program juego {
-	tp.iniciar(1200, 900, "PAC-MAN 2", 5) // altura y ancho (en pixeles) de la ventana, nombre de ventana, pixeles por celda
+	tp.iniciar(1200, 900, "PAC-MAN 2", 5) 
 	tp.mostrarMenu()
 }
 
-// iniciar(ANCHO, ALTURA, "PAC-MAN 2", PIXELES_CELDA) 
-// NECESITAMOS QUE:
-// (ANCHO / PIXELES_CELDA) y (ALTURA / PIXELES_CELDA) sean PARES, 
-// para que exista un centro de una sola celda
-// (ANCHO / PIXELES_CELDA) y (ALTURA / PIXELES_CELDA) 
-// divididos por 2 deben dar un numero par tambien
-// Esto se debe a que se comienza a contar desde el 0, 
-// por lo que las celdas con coordenadas pares son realmente celdas impares.  
 
 
 
-// HAY QUE REINICIAR LOS OnTick y los Schedule CON LOS NUEVOS VALORES CUANDO SE ACTIVA LA CAMARA LENTA
-
-// PREGUNTAR XQ ????????????????
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// OBJETOS YA GENERADOS NO CAMBIAN SU VELOCIDAD A PESAR DE ESTAR LA CAMARA LENTA ACTIVADA. POR EJEMPLO LOS PROYECTILES.
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-//NOTA : las imágenes se importan con el tamaño original.
 
-// NOTA: el numero de pixeles de celda debe ser divisor de los pixeles del personaje, sino se ven mal las colisiones
 
-// 20 pixels de celda, y 40 pixeles de personaje
-// 25 pixels de celda, y 50 pixeles de personaje
-// 20 pixels de celda, y 40 pixeles de personaje
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

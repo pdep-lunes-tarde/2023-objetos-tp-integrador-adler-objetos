@@ -5,7 +5,7 @@ import colisiones.*
 
 
 class Proyectil inherits VerletObject{
-	const tipo // debe ser definido
+	const tipo 
 	
 	var contadorTiempoEnVida = 0
 	method tiempoDeVida()
@@ -21,11 +21,11 @@ class Proyectil inherits VerletObject{
 	
 	method siSeSaleDeLasParedesSeElimina() {
 		const piso = 0
-		const techo = registry.get("grid_height") - self.height() // hay q tener en cuenta el tamaño del sprite,
-		const derecha = registry.get("grid_width") - self.width() // ya que el pivot está en la esquina abajo-izquierda del sprite.
+		const techo = registry.get("grid_height") - self.height() 
+		const derecha = registry.get("grid_width") - self.width() 
 		const izquierda = 0
 		
-		// si se sale de las paredes entonces los borramos, para mejorar la performance
+		
 		if ((y < piso)or(x < izquierda)or(y > techo)or(x > derecha)) {
 			self.eliminar()
 		}
@@ -52,7 +52,7 @@ class ProyectilJugador inherits Proyectil {
 		gameEngine.proyectilesJugador().remove(self)
 	}
 	override method update(dt) {
-		if (tipo == elastico) { // ya se que es poco objetoso :(
+		if (tipo == elastico) { 
 			self.applyWallConstraint()
 		} else {
 			self.siSeSaleDeLasParedesSeElimina()
@@ -73,7 +73,7 @@ class ProyectilEnemigo inherits Proyectil {
 
 }
 
-// tipos de proyectiles
+
 class TipoDeProyectil {
 	method image()
 	method efectosSobre(objeto) {
@@ -99,7 +99,7 @@ object elastico inherits TipoDeProyectil {
 		super(objeto)
 		sonidos.playSound("assets/SONIDOS/slime-hit.mp3", 1)
 	}
-	// puede rebotar 
+	
 }
 object criogenico inherits TipoDeProyectil {
 	override method image() = "assets/PROYECTIL/snowball.png"

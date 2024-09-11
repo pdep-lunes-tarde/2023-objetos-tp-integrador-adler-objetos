@@ -25,7 +25,7 @@ object teclas {
 		}
 	}
 	method teclasFantasmas() {
-		keyboard.f().onPressDo { // spawnear más fantasmas giratorios
+		keyboard.f().onPressDo { 
 			mapa.spawnearFantasmas(1)
 		}
 	}
@@ -50,14 +50,14 @@ object teclas {
 			console.println(jugador.toString()+": rapidez = "+jugador.rapidez())
 			jugador.tp(jugador.x0(), jugador.y0())
 		}
-		keyboard.r().onPressDo { // reiniciar su posicion, con velocidad 0
+		keyboard.r().onPressDo { 
 			jugador.reiniciar()	
 		}
-		keyboard.m().onPressDo { // matar al jugador
+		keyboard.m().onPressDo { 
 			jugador.morir()
 		}
-		keyboard.x().onPressDo { // deletear al jugador
-			jugador.eliminar() // EXISTE MANERA DE BORRAR EL OBJETO DEL PROGRAMA Y NO SOLO DEL MAPA? 
+		keyboard.x().onPressDo { 
+			jugador.eliminar() 
 		}
 	}
 }

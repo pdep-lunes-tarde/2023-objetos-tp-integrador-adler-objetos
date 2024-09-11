@@ -8,16 +8,16 @@ import ui.*
 
 object menu {
 	method iniciar() {
-		const fondoNegro = new Imagen(x=0,y=0, image="assets/fondonegro.png")
-		const titulo = new Imagen(x=70, y=120, image="assets/tituloPacman.png")
-		const explicaciones = new Imagen(x=20, y=30, image="assets/explicaciones.png")
+		const fondoNegro = new Imagen(x=0,y=0, image="assets/fondonegro.png", height=null, width=null)
+		const titulo = new Imagen(x=70, y=120, image="assets/tituloPacman.png", height=null, width=null)
+		const explicaciones = new Imagen(x=20, y=30, image="assets/explicaciones.png", height=null, width=null)
 
 		sonidos.startMusic()
 
-		// PRESIONAR ENTER PARA EMPEZAR EL JUEGO
+		
 	  	keyboard.enter().onPressDo {
-	  		game.clear() // limpia todo
-	  		tp.jugar()   // empieza el juego en sí
+	  		game.clear() 
+	  		tp.jugar()   
 		}
 	}
 	method mostrar() {

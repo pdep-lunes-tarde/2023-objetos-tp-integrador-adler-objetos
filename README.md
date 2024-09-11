@@ -21,7 +21,7 @@ Boton derecho sobre `juego.wpgm > Run as > Wollok Program`.
 # Entregas
 
 Van a haber varios checkpoints presenciales en los cuales vamos a ver el estado del tp, dar correcciones y junto con ustedes decidir en qué continuar trabajando.
-Los checkpoints presenciales están en la página: https://www.pdep.com.ar/cursos/lunes-tarde
+Los checkpoints presenciales están en la página: https:
 
 # Parte teórica
 

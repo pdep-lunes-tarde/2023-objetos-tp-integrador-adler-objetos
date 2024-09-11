@@ -5,7 +5,7 @@ import vectores.*
 class Visual {
 	var property x = game.center().x()
 	var property y = game.center().y()
-	method position() = game.at(x,y) // es lo que wollok game lee para posicionarlo 
+	method position() = game.at(x,y)
 	 
 	override method initialize() {
 		super()
@@ -22,56 +22,56 @@ class Visual {
 class Texto inherits Visual {
 	var property text
 	const property textColor
-	override method initialize() {
-		super()
-	}
+
 	method text(_text) {
 		text = _text
 	}
 }
 class Imagen inherits Visual {
-	const height // en pixeles
+	const height 
 	const width
 	
 	var image
 	
 	override method position() {
+		var another_x
+		var another_y
 		if (height!=null and width!=null) {
-			return game.at(x-(width/registry.get("casillas_pixeles")/2),y-(height/registry.get("casillas_pixeles")/2))
+			another_x = x-(width/registry.get("casillas_pixeles")/2)
+			another_y = y-(height/registry.get("casillas_pixeles")/2)
 		} else {
-			return game.at(x,y)
+			another_x = x
+			another_y = y
 		}
+		return game.at(another_x, another_y)
 	}
 	
 	method image() = image
 	method image(_path) {
 		image = _path
 	}
-	override method initialize() {
-		super()
-	}
 }
 
-// para guardar datos importantes y que sean accesibles por cualqueir objeto del programa
+
 object registry {
 	const registry = new Dictionary()
 	
-	method put(keyName, value) { // guarda el valor dado bajo la llave dada
+	method put(keyName, value) { 
 		registry.put(keyName, value)
 	}
-	method get(keyName) = registry.get(keyName) // devuelve el valor asociada a la llave dada
+	method get(keyName) = registry.get(keyName) 
 } 
 
-// un actualizador global
-// se agregan objetos actualizables (osea que entienden el mensaje "update") 
-// y se actualizan en cada tick de programa 
+
+
+
 object updater {
-	const update_list = new Set() // lista que almacena updatableObjects
-	var prev_dt
-	var property dt_global
+	const update_list = new Set() 
+	var prev_dt = null
+	var property dt_global = null
 	var enCamaraLenta = false
 	
-	// definimos como updatableObject a aquellos objetos que entienden el mensaje "update".
+	
 	method add(updatableObject) {
 		update_list.add(updatableObject)
 	}
@@ -80,13 +80,13 @@ object updater {
 	}
 	
 	method update(dt) {
-		// envia el mensaje "update" a cada objeto guardado en la lista update_list
+		
 		update_list.forEach({updatableObject => updatableObject.update(dt)})
 		colisiones.checkearColisiones() 
 	}
 	
-	// dt es el tiempo (en ms) que pasa por cada tick
-	// framesPerTick son los numeros de frames por cada tick
+	
+	
 	method start(dt) {
 		game.onTick(dt, "actualizar", { self.update(dt) })	
 		dt_global = dt	
@@ -104,8 +104,8 @@ object updater {
 	method activarCamaraLenta() {
 		if (not enCamaraLenta) {
 			self.stop()
-			prev_dt = dt_global // guardamos su estado actual
-			dt_global *= 20	// cambiamos su valor
+			prev_dt = dt_global 
+			dt_global *= 20	
 			game.onTick(dt_global, "actualizar", { self.update(prev_dt/3) })
 			gameEngine.restartAllOnTickEvents()
 			console.println("Camara lenta activada")
@@ -117,8 +117,8 @@ object updater {
 	}
 	method desactivarCamaraLenta() {
 		if (enCamaraLenta) {
-			dt_global = prev_dt // restauramos el valor de dt_global
-			self.restart(prev_dt) // volvemos a empezar el updater con los valores viejos
+			dt_global = prev_dt 
+			self.restart(prev_dt) 
 			gameEngine.restartAllOnTickEvents()
 			console.println("Camara lenta desactivada")
 			
@@ -162,7 +162,7 @@ object sonidos {
 		musica.volume(0.05)
 		slowMotionIn.volume(0.5)
 		game.schedule(1000, {musica.pause()})
-//		self.musica().pause()
+
 		slowMotionIn.play()	
 	}
 	method startSlowMotionOut_SFX() {
@@ -191,7 +191,7 @@ object gameEngine {
 		jugador = _jugador
 	}
 	
-	method schedule(time, block) { // falta hacer que la camara lenta lo afecte
+	method schedule(time, block) { 
 		game.schedule(time*updater.dt_global(), block)
 	}
 	method onTick(time, name, block) {
